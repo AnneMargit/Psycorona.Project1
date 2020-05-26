@@ -26,13 +26,14 @@ library(forcats)
 library(mice)
 library(VIM)
 library(rockchalk)
-library(ggplot2)
 ```
 
 Calculate number of participants per country & select countries with >500 participants:
 ```{r}
-coronadataBS <- load("coronadataBS.Rdata")
+load("coronadataBS.Rdata")
+
 coronadataBS$country <- as.factor(coronadataBS$country)
+
 coronadataBS <- as_tibble(coronadataBS)
 
 countrytableN <- coronadataBS %>%
