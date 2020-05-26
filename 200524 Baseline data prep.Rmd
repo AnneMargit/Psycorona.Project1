@@ -1,17 +1,19 @@
 ---
 title: "Baseline data prep"
+author:
+- address: Department of Psychology, University of Groningen, Grote Kruisstraat 2/1,
+    9712TS Groningen, the Netherlands
+  affiliation: '1'
+  corresponding: yes
+  email: a.m.reitsema@rug.nl
+  name: A.M. Reitsema
 date: "5/24/2020"
-author: 
-  - name          : "A.M. Reitsema"
-    affiliation   : "1"
-    corresponding : yes    # Define only one corresponding author
-    address       : "Department of Psychology, University of Groningen, Grote Kruisstraat 2/1, 9712TS Groningen, the Netherlands"
-    email         : "a.m.reitsema@rug.nl"
-affiliation       :
-    
-  - id            : "1"
-    institution   : "University of Groningen"
-output: github_document
+output:
+  github_document: default
+  rmarkdown::github_document: default
+affiliation:
+- id: '1'
+  institution: University of Groningen
 ---
 
 ```{r setup, include=FALSE}
