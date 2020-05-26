@@ -1,0 +1,79 @@
+---
+title: "Descriptives"
+date: "5/22/2020"
+author: 
+  - name          : "A.M. Reitsema"
+    affiliation   : "1"
+    corresponding : yes    # Define only one corresponding author
+    address       : "Department of Psychology, University of Groningen, Grote Kruisstraat 2/1, 9712TS Groningen, the Netherlands"
+    email         : "a.m.reitsema@rug.nl"
+affiliation       :
+    
+  - id            : "1"
+    institution   : "University of Groningen"
+output:
+  github_document: default
+  html_document: default
+  word_document: default
+  papaja::apa6_word: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=F, message=F}
+library(MASS)
+library(tidyverse)
+library(tidyselect)
+library(papaja)
+library(dplyr)
+```
+
+```{r, echo=F}
+# Install devtools package if necessary
+# if(!"devtools" %in% rownames(installed.packages())) install.packages("devtools")
+```
+
+```{r, echo=F}
+# Install the stable development verions from GitHub
+# devtools::install_github("crsh/papaja")
+```
+```{r}
+source("Code/Helper.R")
+load("Data/coronadataBSfill.Rdata")
+coronadataBSfill <- as.data.frame(coronadataBSfill)
+ordered <- emotion.descriptives(coronadataBSfill)
+head(ordered, 5)
+# apa_table(ordered, caption="ordered data")
+```
+
+```{r}
+partial.combine <- function(name) {
+  func.template <- "function(row) paste0(row$%s_mean, \" (\", row$%s_sd, \")\")"
+  func.def <- sprintf(func.template, name, name)
+  func <- eval(parse(text=func.def))
+  return(func)
+}
+
+combine.m.sd <- function(row) paste0(row$affAnx_mean, " (", row$affAnx_sd, ")")
+
+func <- partial.combine("affAnx")
+ordered$affAnx <- ordered %>% (partial.combine("affAnx"))
+ordered$affBor <- ordered %>% (partial.combine("affBor"))
+ordered$affCalm <- ordered%>% (partial.combine("affCalm"))
+ordered$affContent <- ordered%>% (partial.combine("affContent"))
+ordered$affDepr <- ordered%>% (partial.combine("affDepr"))
+ordered$affEnerg <- ordered%>% (partial.combine("affEnerg"))
+ordered$affExc <- ordered%>% (partial.combine("affExc"))
+ordered$affNerv <- ordered%>% (partial.combine("affNerv"))
+ordered$affExh <- ordered%>% (partial.combine("affExh"))
+ordered$affInsp <- ordered%>% (partial.combine("affInsp"))
+ordered$affRel <- ordered%>% (partial.combine("affRel"))
+ordered$happy <- ordered%>% (partial.combine("happy"))
+
+
+ordered.small <- ordered %>% dplyr::select(country, affAnx, affBor, affCalm, affContent, affDepr, affEnerg, affExc, affNerv, affExh, affInsp, affRel, happy)
+
+apa_table(ordered.small, caption="ordered data")
+```

@@ -1,0 +1,88 @@
+---
+title: "Baseline data prep"
+date: "5/24/2020"
+author: 
+  - name          : "A.M. Reitsema"
+    affiliation   : "1"
+    corresponding : yes    # Define only one corresponding author
+    address       : "Department of Psychology, University of Groningen, Grote Kruisstraat 2/1, 9712TS Groningen, the Netherlands"
+    email         : "a.m.reitsema@rug.nl"
+affiliation       :
+    
+  - id            : "1"
+    institution   : "University of Groningen"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include= FALSE}
+library(Hmisc)
+library(dplyr)
+library(tidyr)
+library(forcats)
+library(mice)
+library(VIM)
+library(rockchalk)
+library(ggplot2)
+```
+
+Calculate number of participants per country & select countries with >500 participants:
+```{r}
+coronadataBS <- load("coronadataBS.Rdata")
+coronadataBS$country <- as.factor(coronadataBS$country)
+coronadataBS <- as_tibble(coronadataBS)
+
+countrytableN <- coronadataBS %>%
+  dplyr::group_by(country) %>%
+  dplyr::mutate(N=n())
+
+coronadataBS500 <- countrytableN %>%
+  dplyr::filter(N>500)
+
+coronadataBS500 <- coronadataBS500 %>%
+  select(-Citizen)
+
+summary(coronadataBS500)
+```
+
+Impute Stringency Index, fill empty rows with last previously reported index score:
+```{r}
+coronadataBS500<-coronadataBS500[with(coronadataBS500, order(country, dateB)),]
+
+coronadataBSfill <- coronadataBS500 %>%
+  group_by(country) %>%
+  fill(StringencyIndexB1, .direction = "down")
+```
+
+Which countries are there in the dataset?
+```{r}
+coronadataBSfill$country <- as_factor(coronadataBSfill$country)
+levels(coronadataBSfill$country)
+```
+
+How much missing data is left?
+```{r}
+#Missing data
+missing.values <- coronadataBSfill %>%
+  gather(key = "key", value = "val") %>%
+  dplyr::mutate(is.missing = is.na(val)) %>%
+  dplyr::group_by(key, is.missing) %>%
+  dplyr::summarise(num.missing = n()) %>%
+  dplyr::filter(is.missing==T) %>%
+  dplyr::select(-is.missing) %>%
+  dplyr::arrange(desc(num.missing))
+
+missing.values
+```
+
+Centering Stringency Index per country
+```{r}
+coronadataBSfill <- gmc(coronadataBSfill, "StringencyIndexB1", "country", FUN = mean, suffix = c("_mn", "_dev"),
+    fulldataframe = TRUE)
+
+save(coronadataBSfill, file="coronadataBSfill.Rdata")
+```
+
