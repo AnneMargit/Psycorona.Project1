@@ -12,9 +12,10 @@ affiliation       :
   - id            : "1"
     institution   : "University of Groningen"
 output:
-  papaja::apa6_word: default
+  github_document: default
   html_document: default
   word_document: default
+  papaja::apa6_word: default
 ---
 
 ```{r setup, include=FALSE}
@@ -39,8 +40,8 @@ library(dplyr)
 # devtools::install_github("crsh/papaja")
 ```
 ```{r}
-source("Helper.R")
-load("coronadataBSfill.Rdata")
+source("Code/Helper.R")
+load("Data/coronadataBSfill.Rdata")
 coronadataBSfill <- as.data.frame(coronadataBSfill)
 ordered <- emotion.descriptives(coronadataBSfill)
 head(ordered, 5)
