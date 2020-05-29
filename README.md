@@ -1,5 +1,6 @@
 # Psycorona.Project1
-Codes and some output of analyses I'm working on for PsyCorona RMS06<br>   
+
+Codes and some output of analyses I'm working on for PsyCorona RMS06.
 
 Files:<br>
 200524 Baseline data prep = Code/ output of baseline data preparation <br>
