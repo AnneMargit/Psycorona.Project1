@@ -697,7 +697,7 @@ rm(data_Ang, data_Anx, data_Bored, data_Calm, data_Close1, data_Close2, data_Clo
 data_long <- as_tibble(data_long)
 data_long <- data_long[,c("X", "Wave", "RecordedDate", "age", "gender", "coded_country", "countryCitizen", "Citizen",
                            "Ang", "Anxiety", "Bored", "Calm", "Content", "Energ", "Exc", "Exh", "Insp", "Lov", "Nerv", "Rel",
-                           "Close1", "Close2", "Close3", "Close3", "Close4", "Close5")]
+                           "Close1", "Close2", "Close3", "Close4", "Close5", "Close6")]
 save(data_long, file="data_long.Rdata")
 ```
 

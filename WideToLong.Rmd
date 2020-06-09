@@ -190,6 +190,23 @@ data_new5 <- left_join(data_new4, data_Depr, by=c("X", "Wave"))
 ```
 
 ```{r, results = "hide"}
+data_Exc <- melt(data.all,
+    id.vars=c("X"),
+    measure.vars=c("affExc"),
+    variable.name="Wave",
+    value.name="Exc")
+
+data_Exc$Wave <- data_Exc$Wave %>%
+  recode(affExc = "w0")
+         
+```
+
+```{r, results = "hide"}
+data_new6 <- left_join(data_new5, data_Exc, by=c("X", "Wave"))
+```
+
+
+```{r, results = "hide"}
 data_Energ <- melt(data.all,
     id.vars=c("X"),
     measure.vars=c("affEnerg", "w1_affEnerg", "w2_affEnerg", "w3_affEnerg", "w4_affEnerg", "w5_affEnerg", "w6_affEnerg", "w7_affEnerg"),
@@ -209,24 +226,10 @@ data_Energ$Wave <- data_Energ$Wave %>%
 ```
 
 ```{r, results = "hide"}
-data_new5 <- left_join(data_new4, data_Energ, by=c("X", "Wave"))
+data_new7 <- left_join(data_new6, data_Energ, by=c("X", "Wave"))
 ```
 
-```{r, results = "hide"}
-data_Exc <- melt(data.all,
-    id.vars=c("X"),
-    measure.vars=c("affExc"),
-    variable.name="Wave",
-    value.name="Exc")
 
-data_Exc$Wave <- data_Exc$Wave %>%
-  recode(affExc = "w0")
-         
-```
-
-```{r, results = "hide"}
-data_new6 <- left_join(data_new5, data_Exc, by=c("X", "Wave"))
-```
 
 ```{r, results = "hide"}
 data_Nerv <- melt(data.all,
@@ -248,7 +251,7 @@ data_Nerv$Wave <- data_Nerv$Wave %>%
 ```
 
 ```{r, results = "hide"}
-data_new7 <- left_join(data_new6, data_Nerv, by=c("X", "Wave"))
+data_new8 <- left_join(data_new7, data_Nerv, by=c("X", "Wave"))
 ```
 
 ```{r, results = "hide"}
@@ -271,7 +274,7 @@ data_Exh$Wave <- data_Exh$Wave %>%
 ```
 
 ```{r, results = "hide"}
-data_new8 <- left_join(data_new7, data_Exh, by=c("X", "Wave"))
+data_new9 <- left_join(data_new8, data_Exh, by=c("X", "Wave"))
 ```
 
 ```{r, results = "hide"}
@@ -294,7 +297,7 @@ data_Insp$Wave <- data_Insp$Wave %>%
 ```
 
 ```{r, results = "hide"}
-data_new9 <- left_join(data_new8, data_Insp, by=c("X", "Wave"))
+data_new10 <- left_join(data_new9, data_Insp, by=c("X", "Wave"))
 ```
 
 ```{r, results = "hide"}
@@ -317,7 +320,7 @@ data_Rel$Wave <- data_Rel$Wave %>%
 ```
 
 ```{r, results = "hide"}
-data_new10 <- left_join(data_new9, data_Rel, by=c("X", "Wave"))
+data_new11 <- left_join(data_new10, data_Rel, by=c("X", "Wave"))
 ```
 
 ```{r, results = "hide"}
@@ -339,7 +342,7 @@ data_Ang$Wave <- data_Ang$Wave %>%
 ```
 
 ```{r, results = "hide"}
-data_new11 <- left_join(data_new10, data_Ang, by=c("X", "Wave"))
+data_new12 <- left_join(data_new11, data_Ang, by=c("X", "Wave"))
 ```
 
 ```{r, results = "hide"}
@@ -361,7 +364,7 @@ data_Lov$Wave <- data_Lov$Wave %>%
 ```
 
 ```{r, results = "hide"}
-data_new12 <- left_join(data_new11, data_Lov, by=c("X", "Wave"))
+data_new13 <- left_join(data_new12, data_Lov, by=c("X", "Wave"))
 ```
 
 ```{r, results = "hide"}
@@ -384,7 +387,7 @@ data_Close1$Wave <- data_Close1$Wave %>%
 ```
 
 ```{r, results = "hide"}
-data_new13 <- left_join(data_new12, data_Close1, by=c("X", "Wave"))
+data_new14 <- left_join(data_new13, data_Close1, by=c("X", "Wave"))
 ```
 
 ```{r, results = "hide"}
@@ -407,7 +410,7 @@ data_Close2$Wave <- data_Close2$Wave %>%
 ```
 
 ```{r, results = "hide"}
-data_new14 <- left_join(data_new13, data_Close2, by=c("X", "Wave"))
+data_new15 <- left_join(data_new14, data_Close2, by=c("X", "Wave"))
 ```
 
 ```{r, results = "hide"}
@@ -430,7 +433,7 @@ data_Close3$Wave <- data_Close3$Wave %>%
 ```
 
 ```{r, results = "hide"}
-data_new15 <- left_join(data_new14, data_Close3, by=c("X", "Wave"))
+data_new16 <- left_join(data_new15, data_Close3, by=c("X", "Wave"))
 ```
 
 ```{r, results = "hide"}
@@ -453,7 +456,7 @@ data_Close4$Wave <- data_Close4$Wave %>%
 ```
 
 ```{r, results = "hide"}
-data_new16 <- left_join(data_new15, data_Close4, by=c("X", "Wave"))
+data_new17 <- left_join(data_new16, data_Close4, by=c("X", "Wave"))
 ```
 
 ```{r,results = "hide"}
@@ -476,7 +479,7 @@ data_Close5$Wave <- data_Close5$Wave %>%
 ```
 
 ```{r, results = "hide"}
-data_new17 <- left_join(data_new16, data_Close5, by=c("X", "Wave"))
+data_new18 <- left_join(data_new17, data_Close5, by=c("X", "Wave"))
 ```
 
 ```{r, results = "hide"}
@@ -499,7 +502,7 @@ data_Close6$Wave <- data_Close6$Wave %>%
 ```
 
 ```{r, results = "hide"}
-data_new18 <- left_join(data_new17, data_Close6, by=c("X", "Wave"))
+data_new19 <- left_join(data_new18, data_Close6, by=c("X", "Wave"))
 ```
 
 ```{r}
@@ -507,19 +510,16 @@ apa_table(data_new18[1:5,1:10])
 ```
 
 ```{r, results = "hide"}
-data_long <- data_new18
-rm(data_Ang, data_Anx, data_Bored, data_Calm, data_Close1, data_Close2, data_Close3, data_Close4, data_Close5, data_Close6,
-   data_Cont, data_Date, data_Depr, data_Energ, data_Exc, data_Exh, data_Insp, data_Lov, data_Nerv, data_Rel,
-   data_new, data_new1, data_new2, data_new3, data_new4, data_new5, data_new6, data_new7, data_new8, data_new9, data_new10,
-   data_new11, data_new12, data_new13, data_new14, data_new15, data_new16, data_new17, data_new18)
+data_long <- data_new19
+
 ```
 
 
 ```{r, results = "hide"}
 data_long <- as_tibble(data_long)
 data_long <- data_long[,c("X", "Wave", "RecordedDate", "age", "gender", "coded_country", "countryCitizen", "Citizen",
-                           "Ang", "Anxiety", "Bored", "Calm", "Content", "Energ", "Exc", "Exh", "Insp", "Lov", "Nerv", "Rel",
-                           "Close1", "Close2", "Close3", "Close3", "Close4", "Close5")]
+                           "Ang", "Anxiety", "Bored", "Calm", "Content", "Depr", "Energ", "Exc", "Exh", "Insp", "Lov", "Nerv", "Rel",
+                           "Close1", "Close2", "Close3", "Close4", "Close5", "Close6")]
 save(data_long, file="data_long.Rdata")
 ```
 
