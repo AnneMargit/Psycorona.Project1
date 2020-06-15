@@ -1,9 +1,11 @@
 ---
-title: "Factor analysis"
+title: "Factor analysis between-person"
 author: "Anne Margit"
 date: "6/8/2020"
 output: github_document
 ---
+
+This is the confirmatory factor analysis of between-person emotion scores (i.e., mean scores across waves)
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -20,12 +22,12 @@ library(knitr)
 ```
 
 ```{r, results = "hide"}
-load("data_long.Rdata")
+load("data_long_min3.Rdata")
 ```
 
 ```{r, results = "hide"}
-data_long <- as_tibble(data_long)
-data_factor <- data_long %>% select(X, Wave, Ang, Anxiety, Bored, Calm, Content, Depr, Energ, Exc, Exh, Insp, Lov, Nerv, Rel)
+data_long_min3 <- as_tibble(data_long_min3)
+data_factor <- data_long_min3 %>% select(X, Wave, Ang, Anxiety, Bored, Calm, Content, Depr, Energ, Exc, Exh, Insp, Lov, Nerv, Rel)
   
 ```
 
@@ -42,7 +44,7 @@ round(cor(data_means[,c("Ang", "Anxiety", "Bored", "Depr","Exh","Nerv","Calm", "
 ```
 
 ```{r}
-corrplot(cor(data_means[,c("Ang", "Anxiety", "Bored", "Depr","Exh","Nerv","Calm", "Content","Energ","Exc", "Insp", "Lov","Rel")], use="complete.obs"), order = "original", tl.col='black', tl.cex=.75) 
+corrplot(cor(data_means[,c("Ang", "Anxiety", "Bored", "Depr","Exh","Nerv","Calm", "Content","Energ","Exc", "Insp", "Lov","Rel")], use="complete.obs"), order = "original", tl.col='black', tl.cex=.75)
 ```
 
 ```{r, results = "hide"}
