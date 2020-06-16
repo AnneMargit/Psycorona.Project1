@@ -38,6 +38,9 @@ data_means <- data_factor %>%
                           Ang, Anxiety, Bored, Calm, Content, Depr, Energ, Exc, Exh, Insp, Lov, Nerv, Rel)
 ```
 
+```{r, results = "hide"}
+save(data_means, file="data_means.Rdata")
+```
 
 ```{r}
 round(cor(data_means[,c("Ang", "Anxiety", "Bored", "Depr","Exh","Nerv","Calm", "Content","Energ","Exc", "Insp", "Lov","Rel")],use= "complete.obs"),2)

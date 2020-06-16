@@ -22,7 +22,12 @@ data_means <- data_factor %>%
                           Ang, Anxiety, Bored, Calm, Content, Depr, Energ, Exc, Exh, Insp, Lov, Nerv, Rel)
 ```
 
-    ## Warning: funs() is soft deprecated as of dplyr 0.8.0
+    ## Warning: `summarise_each_()` is deprecated as of dplyr 0.7.0.
+    ## Please use `across()` instead.
+    ## This warning is displayed once every 8 hours.
+    ## Call `lifecycle::last_warnings()` to see where this warning was generated.
+
+    ## Warning: `funs()` is deprecated as of dplyr 0.8.0.
     ## Please use a list of either functions or lambdas: 
     ## 
     ##   # Simple named list: 
@@ -33,7 +38,12 @@ data_means <- data_factor %>%
     ## 
     ##   # Using lambdas
     ##   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))
-    ## This warning is displayed once per session.
+    ## This warning is displayed once every 8 hours.
+    ## Call `lifecycle::last_warnings()` to see where this warning was generated.
+
+``` r
+save(data_means, file="data_means.Rdata")
+```
 
 ``` r
 round(cor(data_means[,c("Ang", "Anxiety", "Bored", "Depr","Exh","Nerv","Calm", "Content","Energ","Exc", "Insp", "Lov","Rel")],use= "complete.obs"),2)
@@ -72,7 +82,7 @@ round(cor(data_means[,c("Ang", "Anxiety", "Bored", "Depr","Exh","Nerv","Calm", "
 corrplot(cor(data_means[,c("Ang", "Anxiety", "Bored", "Depr","Exh","Nerv","Calm", "Content","Energ","Exc", "Insp", "Lov","Rel")], use="complete.obs"), order = "original", tl.col='black', tl.cex=.75)
 ```
 
-![](Factor-analysis_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](Factor-analysis_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 ``` r
 model <- '

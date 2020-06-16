@@ -9,7 +9,6 @@ author:
   name: A.M. Reitsema
 date: "5/24/2020"
 output:
-  github_document: default
   rmarkdown::github_document: default
 affiliation:
 - id: '1'
