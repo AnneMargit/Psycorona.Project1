@@ -6,20 +6,27 @@ Anne Margit
 This is the confirmatory factor analysis of between-person emotion
 scores (i.e., mean scores across waves)
 
-``` r
-load("data_long_min3.Rdata")
-```
+This dataset includes measurements from participants that (1) provided
+at least 3 measurements, (2) that are residents of the country they
+currently live in, (3) from countries with at least 20 participants, (4)
+provided data on age
 
 ``` r
-data_long_min3 <- as_tibble(data_long_min3)
-data_factor <- data_long_min3 %>% select(X, Wave, Ang, Anxiety, Bored, Calm, Content, Depr, Energ, Exc, Exh, Insp, Lov, Nerv, Rel)
+load("data_long_min3_20.Rdata")
+```
+
+Content and Excited are only measured at baseline, so not using these
+
+``` r
+data_long_min3_20 <- as_tibble(data_long_min3_20)
+data_factor <- data_long_min3_20 %>% select(ID, Wave, Ang, Anxiety, Bored, Calm, Depr, Energ, Exh, Insp, Lov, Nerv, Rel)
 ```
 
 ``` r
 data_means <- data_factor %>%
-    dplyr::group_by(X) %>%
+    dplyr::group_by(ID) %>%
     dplyr::summarise_each(funs(mean(., na.rm=TRUE)), 
-                          Ang, Anxiety, Bored, Calm, Content, Depr, Energ, Exc, Exh, Insp, Lov, Nerv, Rel)
+                          Ang, Anxiety, Bored, Calm, Depr, Energ, Exh, Insp, Lov, Nerv, Rel)
 ```
 
     ## Warning: `summarise_each_()` is deprecated as of dplyr 0.7.0.
@@ -46,40 +53,24 @@ save(data_means, file="data_means.Rdata")
 ```
 
 ``` r
-round(cor(data_means[,c("Ang", "Anxiety", "Bored", "Depr","Exh","Nerv","Calm", "Content","Energ","Exc", "Insp", "Lov","Rel")],use= "complete.obs"),2)
+round(cor(data_means[,c("Ang", "Anxiety", "Bored", "Depr","Exh","Nerv","Calm","Energ", "Insp", "Lov","Rel")],use= "complete.obs"),2)
 ```
 
-    ##           Ang Anxiety Bored  Depr   Exh  Nerv  Calm Content Energ   Exc  Insp
-    ## Ang      1.00    0.54  0.31  0.58  0.48  0.59 -0.44   -0.24 -0.26  0.00 -0.21
-    ## Anxiety  0.54    1.00  0.33  0.69  0.60  0.84 -0.67   -0.37 -0.38 -0.09 -0.34
-    ## Bored    0.31    0.33  1.00  0.41  0.28  0.32 -0.24   -0.23 -0.26 -0.12 -0.27
-    ## Depr     0.58    0.69  0.41  1.00  0.62  0.70 -0.58   -0.36 -0.43 -0.12 -0.37
-    ## Exh      0.48    0.60  0.28  0.62  1.00  0.62 -0.52   -0.27 -0.41 -0.05 -0.28
-    ## Nerv     0.59    0.84  0.32  0.70  0.62  1.00 -0.67   -0.34 -0.35 -0.06 -0.30
-    ## Calm    -0.44   -0.67 -0.24 -0.58 -0.52 -0.67  1.00    0.50  0.58  0.21  0.53
-    ## Content -0.24   -0.37 -0.23 -0.36 -0.27 -0.34  0.50    1.00  0.42  0.32  0.42
-    ## Energ   -0.26   -0.38 -0.26 -0.43 -0.41 -0.35  0.58    0.42  1.00  0.33  0.70
-    ## Exc      0.00   -0.09 -0.12 -0.12 -0.05 -0.06  0.21    0.32  0.33  1.00  0.40
-    ## Insp    -0.21   -0.34 -0.27 -0.37 -0.28 -0.30  0.53    0.42  0.70  0.40  1.00
-    ## Lov     -0.20   -0.19 -0.20 -0.33 -0.20 -0.18  0.34    0.27  0.37  0.18  0.37
-    ## Rel     -0.41   -0.61 -0.20 -0.53 -0.53 -0.60  0.84    0.50  0.59  0.23  0.54
-    ##           Lov   Rel
-    ## Ang     -0.20 -0.41
-    ## Anxiety -0.19 -0.61
-    ## Bored   -0.20 -0.20
-    ## Depr    -0.33 -0.53
-    ## Exh     -0.20 -0.53
-    ## Nerv    -0.18 -0.60
-    ## Calm     0.34  0.84
-    ## Content  0.27  0.50
-    ## Energ    0.37  0.59
-    ## Exc      0.18  0.23
-    ## Insp     0.37  0.54
-    ## Lov      1.00  0.35
-    ## Rel      0.35  1.00
+    ##           Ang Anxiety Bored  Depr   Exh  Nerv  Calm Energ  Insp   Lov   Rel
+    ## Ang      1.00    0.54  0.32  0.59  0.48  0.59 -0.45 -0.26 -0.21 -0.20 -0.42
+    ## Anxiety  0.54    1.00  0.34  0.70  0.60  0.83 -0.67 -0.38 -0.34 -0.19 -0.61
+    ## Bored    0.32    0.34  1.00  0.41  0.29  0.33 -0.24 -0.25 -0.27 -0.20 -0.21
+    ## Depr     0.59    0.70  0.41  1.00  0.63  0.70 -0.58 -0.43 -0.37 -0.33 -0.54
+    ## Exh      0.48    0.60  0.29  0.63  1.00  0.63 -0.53 -0.41 -0.28 -0.20 -0.53
+    ## Nerv     0.59    0.83  0.33  0.70  0.63  1.00 -0.67 -0.35 -0.30 -0.18 -0.61
+    ## Calm    -0.45   -0.67 -0.24 -0.58 -0.53 -0.67  1.00  0.58  0.54  0.34  0.84
+    ## Energ   -0.26   -0.38 -0.25 -0.43 -0.41 -0.35  0.58  1.00  0.71  0.37  0.59
+    ## Insp    -0.21   -0.34 -0.27 -0.37 -0.28 -0.30  0.54  0.71  1.00  0.37  0.54
+    ## Lov     -0.20   -0.19 -0.20 -0.33 -0.20 -0.18  0.34  0.37  0.37  1.00  0.35
+    ## Rel     -0.42   -0.61 -0.21 -0.54 -0.53 -0.61  0.84  0.59  0.54  0.35  1.00
 
 ``` r
-corrplot(cor(data_means[,c("Ang", "Anxiety", "Bored", "Depr","Exh","Nerv","Calm", "Content","Energ","Exc", "Insp", "Lov","Rel")], use="complete.obs"), order = "original", tl.col='black', tl.cex=.75)
+corrplot(cor(data_means[,c("Ang", "Anxiety", "Bored", "Depr","Exh","Nerv","Calm", "Energ", "Insp", "Lov","Rel")], use="complete.obs"), order = "original", tl.col='black', tl.cex=.75)
 ```
 
 ![](Factor-analysis_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
@@ -87,7 +78,7 @@ corrplot(cor(data_means[,c("Ang", "Anxiety", "Bored", "Depr","Exh","Nerv","Calm"
 ``` r
 model <- '
 f1 =~ Ang + Anxiety + Bored + Depr + Exh + Nerv 
-f2 =~ Calm + Content + Energ + Exc + Insp + Lov + Rel 
+f2 =~ Calm  + Energ  + Insp + Lov + Rel 
 
 # latent variable variances
 f1 ~~ 1*f1
@@ -104,9 +95,7 @@ f1 ~~ f2
   Exh ~~ Exh
   Nerv ~~ Nerv
   Calm ~~ Calm
-  Content ~~ Content
   Energ ~~ Energ
-  Exc ~~ Exc
   Insp ~~ Insp
   Lov ~~ Lov
   Rel ~~ Rel
@@ -119,9 +108,7 @@ f1 ~~ f2
   Exh ~ 1
   Nerv ~ 1
   Calm ~ 1
-  Content ~ 1
   Energ ~ 1
-  Exc ~ 1
   Insp ~ 1
   Lov ~ 1
   Rel ~ 1
@@ -133,51 +120,51 @@ fit <- cfa(model, data = data_means, std.lv=TRUE, missing="fiml")
 summary(fit, standardized=TRUE, fit.measures=TRUE)
 ```
 
-    ## lavaan 0.6-6 ended normally after 41 iterations
+    ## lavaan 0.6-6 ended normally after 44 iterations
     ## 
     ##   Estimator                                         ML
     ##   Optimization method                           NLMINB
-    ##   Number of free parameters                         40
+    ##   Number of free parameters                         34
     ##                                                       
-    ##   Number of observations                          9752
-    ##   Number of missing patterns                        13
+    ##   Number of observations                          9177
+    ##   Number of missing patterns                         7
     ##                                                       
     ## Model Test User Model:
     ##                                                       
-    ##   Test statistic                              8959.250
-    ##   Degrees of freedom                                64
+    ##   Test statistic                              6730.025
+    ##   Degrees of freedom                                43
     ##   P-value (Chi-square)                           0.000
     ## 
     ## Model Test Baseline Model:
     ## 
-    ##   Test statistic                             72242.926
-    ##   Degrees of freedom                                78
+    ##   Test statistic                             62896.569
+    ##   Degrees of freedom                                55
     ##   P-value                                        0.000
     ## 
     ## User Model versus Baseline Model:
     ## 
-    ##   Comparative Fit Index (CFI)                    0.877
-    ##   Tucker-Lewis Index (TLI)                       0.850
+    ##   Comparative Fit Index (CFI)                    0.894
+    ##   Tucker-Lewis Index (TLI)                       0.864
     ## 
     ## Loglikelihood and Information Criteria:
     ## 
-    ##   Loglikelihood user model (H0)            -143435.167
-    ##   Loglikelihood unrestricted model (H1)    -138955.542
+    ##   Loglikelihood user model (H0)            -109964.838
+    ##   Loglikelihood unrestricted model (H1)    -106599.825
     ##                                                       
-    ##   Akaike (AIC)                              286950.335
-    ##   Bayesian (BIC)                            287237.744
-    ##   Sample-size adjusted Bayesian (BIC)       287110.630
+    ##   Akaike (AIC)                              219997.675
+    ##   Bayesian (BIC)                            220239.907
+    ##   Sample-size adjusted Bayesian (BIC)       220131.860
     ## 
     ## Root Mean Square Error of Approximation:
     ## 
-    ##   RMSEA                                          0.119
-    ##   90 Percent confidence interval - lower         0.117
-    ##   90 Percent confidence interval - upper         0.121
+    ##   RMSEA                                          0.130
+    ##   90 Percent confidence interval - lower         0.128
+    ##   90 Percent confidence interval - upper         0.133
     ##   P-value RMSEA <= 0.05                          0.000
     ## 
     ## Standardized Root Mean Square Residual:
     ## 
-    ##   SRMR                                           0.064
+    ##   SRMR                                           0.057
     ## 
     ## Parameter Estimates:
     ## 
@@ -188,41 +175,37 @@ summary(fit, standardized=TRUE, fit.measures=TRUE)
     ## Latent Variables:
     ##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
     ##   f1 =~                                                                 
-    ##     Ang               0.619    0.009   69.512    0.000    0.619    0.646
-    ##     Anxiety           0.895    0.008  111.154    0.000    0.895    0.893
-    ##     Bored             0.430    0.011   39.049    0.000    0.430    0.394
-    ##     Depr              0.756    0.008   93.051    0.000    0.756    0.800
-    ##     Exh               0.686    0.009   77.597    0.000    0.686    0.703
-    ##     Nerv              0.865    0.008  113.437    0.000    0.865    0.904
+    ##     Ang               0.626    0.009   68.082    0.000    0.626    0.651
+    ##     Anxiety           0.896    0.008  107.694    0.000    0.896    0.892
+    ##     Bored             0.433    0.011   38.195    0.000    0.433    0.397
+    ##     Depr              0.759    0.008   90.624    0.000    0.759    0.802
+    ##     Exh               0.692    0.009   75.862    0.000    0.692    0.707
+    ##     Nerv              0.868    0.008  110.162    0.000    0.868    0.905
     ##   f2 =~                                                                 
-    ##     Calm              0.782    0.007  114.973    0.000    0.782    0.914
-    ##     Content           0.618    0.011   58.617    0.000    0.618    0.565
-    ##     Energ             0.582    0.008   73.261    0.000    0.582    0.677
-    ##     Exc               0.301    0.011   27.507    0.000    0.301    0.286
-    ##     Insp              0.564    0.008   66.901    0.000    0.564    0.632
-    ##     Lov               0.417    0.010   40.162    0.000    0.417    0.405
-    ##     Rel               0.785    0.007  112.282    0.000    0.785    0.900
+    ##     Calm              0.794    0.007  113.001    0.000    0.794    0.923
+    ##     Energ             0.579    0.008   69.780    0.000    0.579    0.667
+    ##     Insp              0.555    0.009   63.271    0.000    0.555    0.618
+    ##     Lov               0.410    0.011   38.168    0.000    0.410    0.397
+    ##     Rel               0.792    0.007  108.934    0.000    0.792    0.901
     ## 
     ## Covariances:
     ##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
     ##   f1 ~~                                                                 
-    ##     f2               -0.750    0.005 -139.381    0.000   -0.750   -0.750
+    ##     f2               -0.758    0.005 -140.148    0.000   -0.758   -0.758
     ## 
     ## Intercepts:
     ##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
-    ##    .Ang               1.999    0.010  206.033    0.000    1.999    2.087
-    ##    .Anxiety           2.475    0.010  243.984    0.000    2.475    2.471
-    ##    .Bored             2.282    0.011  206.258    0.000    2.282    2.090
-    ##    .Depr              2.068    0.010  216.295    0.000    2.068    2.190
-    ##    .Exh               2.378    0.010  240.666    0.000    2.378    2.437
-    ##    .Nerv              2.344    0.010  241.949    0.000    2.344    2.450
-    ##    .Calm              3.028    0.009  349.554    0.000    3.028    3.540
-    ##    .Content           2.639    0.011  237.547    0.000    2.639    2.411
-    ##    .Energ             2.600    0.009  298.406    0.000    2.600    3.022
-    ##    .Exc               1.998    0.011  186.498    0.000    1.998    1.896
-    ##    .Insp              2.437    0.009  269.242    0.000    2.437    2.727
-    ##    .Lov               3.404    0.010  326.594    0.000    3.404    3.308
-    ##    .Rel               2.840    0.009  321.622    0.000    2.840    3.257
+    ##    .Ang               2.001    0.010  199.234    0.000    2.001    2.080
+    ##    .Anxiety           2.466    0.010  235.257    0.000    2.466    2.456
+    ##    .Bored             2.276    0.011  199.650    0.000    2.276    2.085
+    ##    .Depr              2.064    0.010  208.836    0.000    2.064    2.180
+    ##    .Exh               2.362    0.010  231.295    0.000    2.362    2.415
+    ##    .Nerv              2.334    0.010  233.047    0.000    2.334    2.433
+    ##    .Calm              3.031    0.009  337.362    0.000    3.031    3.522
+    ##    .Energ             2.600    0.009  286.901    0.000    2.600    2.995
+    ##    .Insp              2.438    0.009  259.945    0.000    2.438    2.714
+    ##    .Lov               3.401    0.011  315.357    0.000    3.401    3.292
+    ##    .Rel               2.845    0.009  310.350    0.000    2.845    3.240
     ##     f1                0.000                               0.000    0.000
     ##     f2                0.000                               0.000    0.000
     ## 
@@ -230,19 +213,17 @@ summary(fit, standardized=TRUE, fit.measures=TRUE)
     ##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
     ##     f1                1.000                               1.000    1.000
     ##     f2                1.000                               1.000    1.000
-    ##    .Ang               0.534    0.008   65.734    0.000    0.534    0.582
-    ##    .Anxiety           0.203    0.004   48.040    0.000    0.203    0.202
-    ##    .Bored             1.007    0.015   68.746    0.000    1.007    0.845
-    ##    .Depr              0.320    0.005   58.787    0.000    0.320    0.360
-    ##    .Exh               0.481    0.008   64.145    0.000    0.481    0.506
-    ##    .Nerv              0.166    0.004   44.851    0.000    0.166    0.182
-    ##    .Calm              0.121    0.003   39.946    0.000    0.121    0.165
-    ##    .Content           0.815    0.012   66.850    0.000    0.815    0.681
-    ##    .Energ             0.401    0.006   63.932    0.000    0.401    0.542
-    ##    .Exc               1.019    0.015   68.965    0.000    1.019    0.918
-    ##    .Insp              0.480    0.007   65.071    0.000    0.480    0.601
-    ##    .Lov               0.885    0.013   68.651    0.000    0.885    0.836
-    ##    .Rel               0.145    0.003   45.410    0.000    0.145    0.191
+    ##    .Ang               0.533    0.008   63.695    0.000    0.533    0.576
+    ##    .Anxiety           0.205    0.004   46.973    0.000    0.205    0.204
+    ##    .Bored             1.004    0.015   66.684    0.000    1.004    0.842
+    ##    .Depr              0.319    0.006   57.003    0.000    0.319    0.356
+    ##    .Exh               0.479    0.008   62.135    0.000    0.479    0.500
+    ##    .Nerv              0.167    0.004   43.568    0.000    0.167    0.181
+    ##    .Calm              0.110    0.003   34.521    0.000    0.110    0.149
+    ##    .Energ             0.418    0.007   62.480    0.000    0.418    0.555
+    ##    .Insp              0.499    0.008   63.677    0.000    0.499    0.618
+    ##    .Lov               0.899    0.013   66.665    0.000    0.899    0.842
+    ##    .Rel               0.145    0.003   42.202    0.000    0.145    0.188
 
 ``` r
 parameterEstimates(fit, standardized=TRUE) %>% 
@@ -253,18 +234,16 @@ parameterEstimates(fit, standardized=TRUE) %>%
 
 | Latent Factor | Indicator |     B |    SE |       Z | p-value |  Beta |
 | :------------ | :-------- | ----: | ----: | ------: | ------: | ----: |
-| f1            | Ang       | 0.619 | 0.009 |  69.512 |       0 | 0.646 |
-| f1            | Anxiety   | 0.895 | 0.008 | 111.154 |       0 | 0.893 |
-| f1            | Bored     | 0.430 | 0.011 |  39.049 |       0 | 0.394 |
-| f1            | Depr      | 0.756 | 0.008 |  93.051 |       0 | 0.800 |
-| f1            | Exh       | 0.686 | 0.009 |  77.597 |       0 | 0.703 |
-| f1            | Nerv      | 0.865 | 0.008 | 113.437 |       0 | 0.904 |
-| f2            | Calm      | 0.782 | 0.007 | 114.973 |       0 | 0.914 |
-| f2            | Content   | 0.618 | 0.011 |  58.617 |       0 | 0.565 |
-| f2            | Energ     | 0.582 | 0.008 |  73.261 |       0 | 0.677 |
-| f2            | Exc       | 0.301 | 0.011 |  27.507 |       0 | 0.286 |
-| f2            | Insp      | 0.564 | 0.008 |  66.901 |       0 | 0.632 |
-| f2            | Lov       | 0.417 | 0.010 |  40.162 |       0 | 0.405 |
-| f2            | Rel       | 0.785 | 0.007 | 112.282 |       0 | 0.900 |
+| f1            | Ang       | 0.626 | 0.009 |  68.082 |       0 | 0.651 |
+| f1            | Anxiety   | 0.896 | 0.008 | 107.694 |       0 | 0.892 |
+| f1            | Bored     | 0.433 | 0.011 |  38.195 |       0 | 0.397 |
+| f1            | Depr      | 0.759 | 0.008 |  90.624 |       0 | 0.802 |
+| f1            | Exh       | 0.692 | 0.009 |  75.862 |       0 | 0.707 |
+| f1            | Nerv      | 0.868 | 0.008 | 110.162 |       0 | 0.905 |
+| f2            | Calm      | 0.794 | 0.007 | 113.001 |       0 | 0.923 |
+| f2            | Energ     | 0.579 | 0.008 |  69.780 |       0 | 0.667 |
+| f2            | Insp      | 0.555 | 0.009 |  63.271 |       0 | 0.618 |
+| f2            | Lov       | 0.410 | 0.011 |  38.168 |       0 | 0.397 |
+| f2            | Rel       | 0.792 | 0.007 | 108.934 |       0 | 0.901 |
 
 Factor Loadings

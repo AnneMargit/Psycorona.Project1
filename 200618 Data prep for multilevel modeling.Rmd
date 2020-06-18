@@ -1,0 +1,143 @@
+---
+title: "Data preparation for multilevel modeling"
+author: "Anne Margit"
+date: "6/16/2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(lme4)
+library(lmerTest)
+library(tidyverse)
+library(anytime)
+library(rockchalk)
+```
+
+```{r}
+load("data_long_min3.Rdata")
+oxforddata <- read.csv("OxCGRT_latest.csv", header=TRUE)
+```
+
+Some data preparation
+```{r rename countries, echo= T, results='hide'}
+data_long_min3$coded_country <- 
+  plyr::revalue(data_long_min3$coded_country , c("Hong Kong S.A.R."="Hong Kong", 
+                                       "Kyrgyzstan" = "Kyrgyz Republic",
+                                       "United Republic of Tanzania" = "Tanzania", 
+                                       "United States of America" = "United States",
+                                       "Republic of Serbia" = "Serbia"))
+```
+
+Renaming and recoding variables:
+```{r, echo= T, results='hide'}
+data_long_min3$gender <- as.factor(data_long_min3$gender)
+data_long_min3$age <- as.factor(data_long_min3$age)
+names(data_long_min3)[names(data_long_min3) == "coded_country"] <- "Country"
+names(data_long_min3)[names(data_long_min3) == "X"] <- "ID"
+names(data_long_min3)[names(data_long_min3) == "RecordedDate"] <- "Date"
+```
+
+Recoding NA into zero's:
+```{r, echo= T, results='hide'}
+data_long_min3$Close1[is.na(data_long_min3$Close1)] <- 0
+data_long_min3$Close2[is.na(data_long_min3$Close2)] <- 0
+data_long_min3$Close3[is.na(data_long_min3$Close3)] <- 0
+data_long_min3$Close4[is.na(data_long_min3$Close4)] <- 0
+data_long_min3$Close5[is.na(data_long_min3$Close5)] <- 0
+data_long_min3$Close6[is.na(data_long_min3$Close6)] <- 0
+```
+
+Delete participants with missing data on which country they currently live:
+```{r, echo= T, results='hide'}
+data_long_min3$Country[data_long_min3$Country == ""] <- NA
+
+data_long_min3 <- data_long_min3 %>%
+  filter(!is.na(Country))
+```
+
+Delete participants that are not residents of the country they currently live in:
+```{r, echo= T, results='hide'}
+data_long_min3 <- data_long_min3 %>%
+  filter(countryCitizen == 1)
+```
+
+Calculate number of participants per country & select countries with >20 participants:
+```{r}
+data_long_min3$Country <- as_factor(data_long_min3$Country)
+data_long_min3 <- as_tibble(data_long_min3)
+
+data_long_min3_20 <- data_long_min3 %>%
+  dplyr::group_by(Country) %>%
+  dplyr::mutate(N=n()) %>%
+  filter(N>20)
+
+data_long_min3_20 <- data_long_min3_20 %>%
+  select(-Citizen)
+
+summary(data_long_min3_20)
+summary(data_long_min3_20$Country)
+```
+
+Remove participants with missing data on age
+```{r}
+data_long_min3_20 <-data_long_min3_20 %>%
+filter(!is.na(age))
+```
+
+Save
+```{r}
+save(data_long_min3_20, file="data_long_min3_20.Rdata")
+```
+
+Recode oxford data:
+```{r, echo= T, results='hide'}
+oxforddata$Date <-anydate(oxforddata$Date)
+oxforddata$Country <- oxforddata$CountryName
+```
+
+Drop not used variables:
+```{r, echo= T, results='hide'}
+Stringency_data <- oxforddata %>% select(Date, Country, StringencyIndex, ConfirmedCases, ConfirmedDeaths)
+```
+
+Impute Stringency Index, fill empty rows with last previously reported index score:
+Create new Stringency Index variable first
+
+```{r}
+Stringency_data$StringencyIndex_imp <- Stringency_data$StringencyIndex
+```
+
+```{r}
+Stringency_data<-Stringency_data[with(Stringency_data, order(Country, Date)),]
+
+Stringency_data <- Stringency_data %>%
+  group_by(Country) %>%
+  fill(StringencyIndex_imp, .direction = "down")
+```
+
+Join with psycorona data by country and date, rename, and save:
+This dataset includes measurements from participants that (1) provided at least 3 measurements, (2) that are residents of the country they currently live in, (3) from countries with at least 20 participants, (4) provided data on age, and (5) with imputed Stringency index values
+
+```{r, echo= T, results='hide'}
+data_long_min3_str <- left_join(data_long_min3_20, Stringency_data, by=c("Country", "Date"))
+
+save(data_long_min3_str, file ="data_long_min3_str.Rdata")
+```
+
+Centering Stringency Index
+```{r}
+data_long_min3_strc <- gmc(data_long_min3_str, "StringencyIndex", "Country", FUN = mean, suffix = c("_mn", "_dev"),
+    fulldataframe = TRUE)
+```
+
+This dataset also adds the country mean centered stringency index 
+```{r}
+save(data_long_min3_strc, file="data_long_min3_strc.Rdata")
+```

@@ -47,8 +47,14 @@ Anne Margit
     ## 
     ##     summarize
 
+This dataset includes measurements from participants that (1) provided
+at least 3 measurements, (2) that are residents of the country they
+currently live in, (3) from countries with at least 20 participants, (4)
+provided data on age, and (5) with imputed Stringency index values that
+are (6) centered around country means
+
 ``` r
-load("data_long_min3_strc2.Rdata")
+load("data_long_min3_strc.Rdata")
 ```
 
 # Anxiety
@@ -57,39 +63,33 @@ Multilevel anxiety random
 intercept
 
 ``` r
-model.anx0 <- lmer(Anxiety ~ 1 + (1 | Country/ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.anx0 <- lmer(Anxiety ~ 1 + (1 | Country/ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.anx0)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Anxiety ~ 1 + (1 | Country/ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 109721.6
+    ## REML criterion at convergence: 109309.9
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.8632 -0.5593 -0.1260  0.5538  4.1464 
+    ## -3.8673 -0.5591 -0.1257  0.5542  4.1501 
     ## 
     ## Random effects:
     ##  Groups     Name        Variance Std.Dev.
-    ##  ID:Country (Intercept) 0.76759  0.8761  
-    ##  Country    (Intercept) 0.07799  0.2793  
-    ##  Residual               0.58982  0.7680  
-    ## Number of obs: 40040, groups:  ID:Country, 9202; Country, 78
+    ##  ID:Country (Intercept) 0.76896  0.8769  
+    ##  Country    (Intercept) 0.08117  0.2849  
+    ##  Residual               0.58879  0.7673  
+    ## Number of obs: 39904, groups:  ID:Country, 9174; Country, 58
     ## 
     ## Fixed effects:
     ##             Estimate Std. Error       df t value Pr(>|t|)    
-    ## (Intercept)  2.51703    0.04453 62.80993   56.53   <2e-16 ***
+    ## (Intercept)  2.52339    0.04651 53.79197   54.26   <2e-16 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Calculate variance accounted for by country
-
-total variance 0.76735 + 0.07755 + 0.58988 = 1.43478 variance accounted
-for by country: 0.07755 / 1.43478 = 0.0540501 between persons: 0.76735 /
-1.43478 = 0.5348207 within persons: 0.58988 / 1.43478 = 0.4111292
 
 Variance in anxiety explained by country is pretty low, equal variance
 explained between and within persons
@@ -98,31 +98,31 @@ Two level models using uncentered
 Stringency:
 
 ``` r
-model.anx1 <- lmer(Anxiety ~ StringencyIndex + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.anx1 <- lmer(Anxiety ~ StringencyIndex + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.anx1)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Anxiety ~ StringencyIndex + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 110389.8
+    ## REML criterion at convergence: 110015.7
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.8966 -0.5582 -0.1130  0.5715  4.0604 
+    ## -3.9001 -0.5580 -0.1128  0.5713  4.0637 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.8555   0.9249  
-    ##  Residual             0.5899   0.7681  
-    ## Number of obs: 40005, groups:  ID, 9194
+    ##  ID       (Intercept) 0.8571   0.9258  
+    ##  Residual             0.5890   0.7675  
+    ## Number of obs: 39881, groups:  ID, 9168
     ## 
     ## Fixed effects:
     ##                   Estimate Std. Error         df t value Pr(>|t|)    
-    ## (Intercept)      2.480e+00  5.068e-02  3.849e+04  48.931   <2e-16 ***
-    ## StringencyIndex -2.148e-04  6.284e-04  3.939e+04  -0.342    0.732    
+    ## (Intercept)      2.482e+00  5.075e-02  3.841e+04  48.900   <2e-16 ***
+    ## StringencyIndex -2.335e-04  6.292e-04  3.929e+04  -0.371    0.711    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -131,54 +131,54 @@ summary(model.anx1)
     ## StrngncyInd -0.979
 
 ``` r
-model.anx2 <- lmer(Anxiety ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.anx2 <- lmer(Anxiety ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.anx2)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Anxiety ~ StringencyIndex + age + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 109802.9
+    ## REML criterion at convergence: 109430.5
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.8956 -0.5688 -0.1367  0.5580  4.0398 
+    ## -3.8991 -0.5689 -0.1365  0.5584  4.0431 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.7913   0.8895  
-    ##  Residual             0.5899   0.7680  
-    ## Number of obs: 40005, groups:  ID, 9194
+    ##  ID       (Intercept) 0.7927   0.8904  
+    ##  Residual             0.5890   0.7675  
+    ## Number of obs: 39881, groups:  ID, 9168
     ## 
     ## Fixed effects:
     ##                   Estimate Std. Error         df t value Pr(>|t|)    
-    ## (Intercept)      2.810e+00  5.784e-02  3.111e+04  48.584  < 2e-16 ***
-    ## StringencyIndex -9.492e-04  6.239e-04  3.912e+04  -1.521  0.12815    
-    ## age2            -3.834e-02  3.581e-02  9.167e+03  -1.071  0.28436    
-    ## age3            -1.546e-01  3.638e-02  9.185e+03  -4.249 2.17e-05 ***
-    ## age4            -2.788e-01  3.665e-02  9.181e+03  -7.608 3.06e-14 ***
-    ## age5            -4.675e-01  3.717e-02  9.160e+03 -12.575  < 2e-16 ***
-    ## age6            -7.504e-01  3.994e-02  9.197e+03 -18.788  < 2e-16 ***
-    ## age7            -8.940e-01  8.011e-02  9.051e+03 -11.159  < 2e-16 ***
-    ## age8            -8.627e-01  3.071e-01  9.105e+03  -2.809  0.00498 ** 
+    ## (Intercept)      2.813e+00  5.793e-02  3.107e+04  48.564  < 2e-16 ***
+    ## StringencyIndex -9.711e-04  6.247e-04  3.903e+04  -1.555  0.12006    
+    ## age2            -3.827e-02  3.590e-02  9.141e+03  -1.066  0.28650    
+    ## age3            -1.559e-01  3.645e-02  9.158e+03  -4.277 1.92e-05 ***
+    ## age4            -2.799e-01  3.671e-02  9.155e+03  -7.623 2.72e-14 ***
+    ## age5            -4.689e-01  3.723e-02  9.134e+03 -12.592  < 2e-16 ***
+    ## age6            -7.504e-01  4.002e-02  9.170e+03 -18.753  < 2e-16 ***
+    ## age7            -8.951e-01  8.018e-02  9.026e+03 -11.164  < 2e-16 ***
+    ## age8            -8.638e-01  3.073e-01  9.079e+03  -2.811  0.00495 ** 
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
     ## Correlation of Fixed Effects:
     ##             (Intr) StrngI age2   age3   age4   age5   age6   age7  
-    ## StrngncyInd -0.879                                                 
+    ## StrngncyInd -0.878                                                 
     ## age2        -0.404  0.040                                          
     ## age3        -0.408  0.052  0.588                                   
-    ## age4        -0.405  0.051  0.584  0.575                            
-    ## age5        -0.395  0.046  0.575  0.567  0.563                     
-    ## age6        -0.379  0.055  0.536  0.528  0.525  0.517              
+    ## age4        -0.405  0.051  0.583  0.575                            
+    ## age5        -0.396  0.046  0.575  0.567  0.563                     
+    ## age6        -0.379  0.056  0.536  0.528  0.525  0.517              
     ## age7        -0.198  0.038  0.268  0.264  0.262  0.258  0.241       
     ## age8        -0.058  0.017  0.070  0.069  0.069  0.068  0.063  0.032
 
 ``` r
-model.anx3 <- lmer(Anxiety ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.anx3 <- lmer(Anxiety ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.anx3)
 ```
 
@@ -186,38 +186,38 @@ summary(model.anx3)
     ## lmerModLmerTest]
     ## Formula: Anxiety ~ StringencyIndex + age + StringencyIndex * age + (1 |  
     ##     ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 109844.6
+    ## REML criterion at convergence: 109472.6
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.8910 -0.5669 -0.1318  0.5590  4.0446 
+    ## -3.8947 -0.5670 -0.1315  0.5592  4.0478 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.7914   0.8896  
-    ##  Residual             0.5895   0.7678  
-    ## Number of obs: 40005, groups:  ID, 9194
+    ##  ID       (Intercept) 0.7929   0.8904  
+    ##  Residual             0.5886   0.7672  
+    ## Number of obs: 39881, groups:  ID, 9168
     ## 
     ## Fixed effects:
     ##                        Estimate Std. Error         df t value Pr(>|t|)    
-    ## (Intercept)           2.977e+00  1.276e-01  3.804e+04  23.322  < 2e-16 ***
-    ## StringencyIndex      -2.992e-03  1.530e-03  3.914e+04  -1.956  0.05050 .  
-    ## age2                  3.283e-02  1.686e-01  3.749e+04   0.195  0.84564    
-    ## age3                 -7.611e-02  1.781e-01  3.787e+04  -0.427  0.66904    
-    ## age4                 -5.222e-01  1.751e-01  3.878e+04  -2.982  0.00287 ** 
-    ## age5                 -9.881e-01  1.805e-01  3.830e+04  -5.474 4.44e-08 ***
-    ## age6                 -1.269e+00  1.907e-01  3.835e+04  -6.655 2.87e-11 ***
-    ## age7                 -1.457e+00  4.559e-01  3.724e+04  -3.196  0.00140 ** 
-    ## age8                 -4.581e-01  1.464e+00  3.018e+04  -0.313  0.75426    
-    ## StringencyIndex:age2 -9.583e-04  2.048e-03  3.866e+04  -0.468  0.63987    
-    ## StringencyIndex:age3 -1.080e-03  2.181e-03  3.890e+04  -0.495  0.62054    
-    ## StringencyIndex:age4  3.024e-03  2.141e-03  3.960e+04   1.413  0.15779    
-    ## StringencyIndex:age5  6.543e-03  2.207e-03  3.925e+04   2.965  0.00303 ** 
-    ## StringencyIndex:age6  6.570e-03  2.348e-03  3.932e+04   2.798  0.00515 ** 
-    ## StringencyIndex:age7  7.217e-03  5.831e-03  3.812e+04   1.238  0.21585    
-    ## StringencyIndex:age8 -5.754e-03  1.953e-02  3.190e+04  -0.295  0.76825    
+    ## (Intercept)           2.976e+00  1.277e-01  3.794e+04  23.307  < 2e-16 ***
+    ## StringencyIndex      -2.967e-03  1.530e-03  3.903e+04  -1.939  0.05254 .  
+    ## age2                  3.999e-02  1.689e-01  3.739e+04   0.237  0.81280    
+    ## age3                 -8.402e-02  1.782e-01  3.779e+04  -0.472  0.63722    
+    ## age4                 -5.067e-01  1.753e-01  3.872e+04  -2.890  0.00386 ** 
+    ## age5                 -9.841e-01  1.806e-01  3.820e+04  -5.450 5.06e-08 ***
+    ## age6                 -1.269e+00  1.908e-01  3.827e+04  -6.653 2.91e-11 ***
+    ## age7                 -1.456e+00  4.558e-01  3.716e+04  -3.195  0.00140 ** 
+    ## age8                 -4.593e-01  1.463e+00  3.013e+04  -0.314  0.75363    
+    ## StringencyIndex:age2 -1.047e-03  2.052e-03  3.855e+04  -0.510  0.60988    
+    ## StringencyIndex:age3 -9.932e-04  2.182e-03  3.881e+04  -0.455  0.64898    
+    ## StringencyIndex:age4  2.815e-03  2.144e-03  3.951e+04   1.313  0.18907    
+    ## StringencyIndex:age5  6.476e-03  2.207e-03  3.915e+04   2.934  0.00335 ** 
+    ## StringencyIndex:age6  6.573e-03  2.349e-03  3.923e+04   2.798  0.00515 ** 
+    ## StringencyIndex:age7  7.194e-03  5.830e-03  3.803e+04   1.234  0.21720    
+    ## StringencyIndex:age8 -5.748e-03  1.952e-02  3.185e+04  -0.294  0.76844    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -231,7 +231,7 @@ plot anxiety and stringency for different age groups / LOESS plot
 this)
 
 ``` r
-plot_anx <- ggplot(data = data_long_min3_strc2, aes(x = StringencyIndex, y = Anxiety, group = ID, color = age))
+plot_anx <- ggplot(data = data_long_min3_strc, aes(x = StringencyIndex, y = Anxiety, group = ID, color = age))
 
 plot_anx + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Anxiety by Stringency for different age groups")
@@ -248,45 +248,58 @@ labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")
 
 ![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
-# Anger
+Plot Anxiety by
+Date
 
-Multilevel anger random
+``` r
+plot_anx2 <- ggplot(data = data_long_min3_strc, aes(x = Date, y = Anxiety, group = ID, color = age))
+
+plot_anx2 + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Anxiety by Date for different age groups")
+```
+
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+GAM
+plot
+
+``` r
+plot_anx2 + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Anxiety by Date for different age groups")
+```
+
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# Anger
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# Multilevel anger random
 intercept
 
 ``` r
-model.ang0 <- lmer(Ang ~ 1 + (1 | Country/ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.ang0 <- lmer(Ang ~ 1 + (1 | Country/ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.ang0)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Ang ~ 1 + (1 | Country/ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 83475.6
+    ## REML criterion at convergence: 83173.1
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.9714 -0.4576 -0.1679  0.4939  4.2707 
+    ## -3.9738 -0.4571 -0.1675  0.4937  4.2726 
     ## 
     ## Random effects:
     ##  Groups     Name        Variance Std.Dev.
-    ##  ID:Country (Intercept) 0.68842  0.8297  
-    ##  Country    (Intercept) 0.04261  0.2064  
-    ##  Residual               0.54052  0.7352  
-    ## Number of obs: 30859, groups:  ID:Country, 9200; Country, 78
+    ##  ID:Country (Intercept) 0.68928  0.8302  
+    ##  Country    (Intercept) 0.04372  0.2091  
+    ##  Residual               0.54006  0.7349  
+    ## Number of obs: 30750, groups:  ID:Country, 9172; Country, 58
     ## 
     ## Fixed effects:
     ##             Estimate Std. Error       df t value Pr(>|t|)    
-    ## (Intercept)  2.09244    0.03542 47.84874   59.08   <2e-16 ***
+    ## (Intercept)  2.09234    0.03647 42.80693   57.37   <2e-16 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Calculate variance accounted for by country
-
-total variance 0.68842 + 0.04261 + 0.54052 = 1.27155 variance accounted
-for by country: 0.04261 / 1.27155 = 0.03351028 between persons: 0.68842
-/ 1.27155 = 0.5414022 within persons: 0.54052 / 1.27155 = 0.4250875
 
 Variance in anger explained by country is pretty low, equal variance
 explained between and within persons
@@ -295,31 +308,31 @@ Using two level models Predicted by
 stringency
 
 ``` r
-model.ang1 <- lmer(Ang ~ StringencyIndex + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.ang1 <- lmer(Ang ~ StringencyIndex + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.ang1)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Ang ~ StringencyIndex + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 83691.1
+    ## REML criterion at convergence: 83420.4
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.9771 -0.4627 -0.1845  0.4979  4.3777 
+    ## -3.9787 -0.4631 -0.1841  0.4982  4.3775 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.7221   0.8497  
-    ##  Residual             0.5406   0.7353  
-    ## Number of obs: 30832, groups:  ID, 9192
+    ##  ID       (Intercept) 0.7230   0.8503  
+    ##  Residual             0.5403   0.7350  
+    ## Number of obs: 30733, groups:  ID, 9166
     ## 
     ## Fixed effects:
     ##                  Estimate Std. Error        df t value Pr(>|t|)    
-    ## (Intercept)     1.649e+00  5.603e-02 2.943e+04  29.434  < 2e-16 ***
-    ## StringencyIndex 4.447e-03  6.995e-04 2.992e+04   6.358 2.08e-10 ***
+    ## (Intercept)     1.655e+00  5.612e-02 2.937e+04  29.496  < 2e-16 ***
+    ## StringencyIndex 4.363e-03  7.007e-04 2.985e+04   6.227 4.83e-10 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -328,38 +341,38 @@ summary(model.ang1)
     ## StrngncyInd -0.984
 
 ``` r
-model.ang2 <- lmer(Ang ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.ang2 <- lmer(Ang ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.ang2)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Ang ~ StringencyIndex + age + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 83431.1
+    ## REML criterion at convergence: 83160.7
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.9592 -0.4585 -0.1697  0.4807  4.3437 
+    ## -3.9609 -0.4580 -0.1694  0.4807  4.3434 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.6953   0.8339  
-    ##  Residual             0.5405   0.7352  
-    ## Number of obs: 30832, groups:  ID, 9192
+    ##  ID       (Intercept) 0.6962   0.8344  
+    ##  Residual             0.5401   0.7349  
+    ## Number of obs: 30733, groups:  ID, 9166
     ## 
     ## Fixed effects:
     ##                   Estimate Std. Error         df t value Pr(>|t|)    
-    ## (Intercept)      1.893e+00  6.293e-02  2.608e+04  30.089  < 2e-16 ***
-    ## StringencyIndex  3.650e-03  6.983e-04  2.987e+04   5.227 1.74e-07 ***
-    ## age2            -4.434e-02  3.468e-02  9.062e+03  -1.279   0.2010    
-    ## age3            -7.552e-02  3.524e-02  9.087e+03  -2.143   0.0321 *  
-    ## age4            -1.981e-01  3.550e-02  9.084e+03  -5.581 2.45e-08 ***
-    ## age5            -3.083e-01  3.600e-02  9.057e+03  -8.563  < 2e-16 ***
-    ## age6            -5.047e-01  3.871e-02  9.108e+03 -13.037  < 2e-16 ***
-    ## age7            -5.360e-01  7.746e-02  8.886e+03  -6.920 4.85e-12 ***
-    ## age8            -6.210e-01  2.968e-01  8.954e+03  -2.093   0.0364 *  
+    ## (Intercept)      1.901e+00  6.303e-02  2.604e+04  30.157  < 2e-16 ***
+    ## StringencyIndex  3.562e-03  6.995e-04  2.981e+04   5.092 3.56e-07 ***
+    ## age2            -4.549e-02  3.476e-02  9.038e+03  -1.309   0.1906    
+    ## age3            -7.656e-02  3.530e-02  9.062e+03  -2.169   0.0301 *  
+    ## age4            -1.984e-01  3.556e-02  9.060e+03  -5.580 2.47e-08 ***
+    ## age5            -3.089e-01  3.605e-02  9.033e+03  -8.568  < 2e-16 ***
+    ## age6            -5.064e-01  3.878e-02  9.082e+03 -13.059  < 2e-16 ***
+    ## age7            -5.367e-01  7.750e-02  8.861e+03  -6.925 4.68e-12 ***
+    ## age8            -6.220e-01  2.969e-01  8.930e+03  -2.095   0.0362 *  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -371,49 +384,49 @@ summary(model.ang2)
     ## age4        -0.377  0.063  0.584  0.576                            
     ## age5        -0.373  0.063  0.576  0.568  0.564                     
     ## age6        -0.364  0.078  0.536  0.529  0.526  0.518              
-    ## age7        -0.191  0.049  0.269  0.265  0.263  0.260  0.242       
+    ## age7        -0.192  0.049  0.269  0.265  0.264  0.260  0.243       
     ## age8        -0.057  0.020  0.070  0.070  0.069  0.068  0.064  0.032
 
 ``` r
-model.ang3 <- lmer(Ang ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.ang3 <- lmer(Ang ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.ang3)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Ang ~ StringencyIndex + age + StringencyIndex * age + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 83473.4
+    ## REML criterion at convergence: 83204.3
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.9735 -0.4589 -0.1715  0.4814  4.2376 
+    ## -3.9748 -0.4583 -0.1710  0.4808  4.2386 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.6947   0.8335  
-    ##  Residual             0.5402   0.7350  
-    ## Number of obs: 30832, groups:  ID, 9192
+    ##  ID       (Intercept) 0.6957   0.8341  
+    ##  Residual             0.5399   0.7348  
+    ## Number of obs: 30733, groups:  ID, 9166
     ## 
     ## Fixed effects:
     ##                        Estimate Std. Error         df t value Pr(>|t|)    
-    ## (Intercept)           2.061e+00  1.450e-01  2.893e+04  14.217  < 2e-16 ***
-    ## StringencyIndex       1.591e-03  1.747e-03  2.951e+04   0.911 0.362461    
-    ## age2                 -4.485e-01  1.917e-01  2.838e+04  -2.340 0.019306 *  
-    ## age3                  1.472e-01  2.010e-01  2.887e+04   0.732 0.463880    
-    ## age4                 -6.712e-01  1.989e-01  2.962e+04  -3.374 0.000742 ***
-    ## age5                 -3.328e-01  1.995e-01  2.957e+04  -1.668 0.095275 .  
-    ## age6                 -7.581e-01  2.088e-01  2.971e+04  -3.631 0.000283 ***
-    ## age7                 -5.450e-01  4.739e-01  2.979e+04  -1.150 0.250148    
-    ## age8                 -3.861e+00  1.420e+00  2.666e+04  -2.719 0.006546 ** 
-    ## StringencyIndex:age2  5.034e-03  2.339e-03  2.897e+04   2.152 0.031370 *  
-    ## StringencyIndex:age3 -2.919e-03  2.473e-03  2.940e+04  -1.180 0.237818    
-    ## StringencyIndex:age4  5.952e-03  2.446e-03  3.009e+04   2.433 0.014980 *  
-    ## StringencyIndex:age5  2.281e-04  2.454e-03  3.007e+04   0.093 0.925938    
-    ## StringencyIndex:age6  3.165e-03  2.589e-03  3.022e+04   1.222 0.221555    
-    ## StringencyIndex:age7 -2.942e-05  6.107e-03  3.018e+04  -0.005 0.996157    
-    ## StringencyIndex:age8  4.421e-02  1.903e-02  2.783e+04   2.323 0.020189 *  
+    ## (Intercept)           2.056e+00  1.451e-01  2.886e+04  14.176  < 2e-16 ***
+    ## StringencyIndex       1.655e-03  1.748e-03  2.945e+04   0.947 0.343828    
+    ## age2                 -4.175e-01  1.921e-01  2.829e+04  -2.173 0.029752 *  
+    ## age3                  1.533e-01  2.012e-01  2.881e+04   0.762 0.446139    
+    ## age4                 -6.524e-01  1.992e-01  2.958e+04  -3.275 0.001059 ** 
+    ## age5                 -3.305e-01  1.996e-01  2.949e+04  -1.656 0.097809 .  
+    ## age6                 -7.558e-01  2.089e-01  2.964e+04  -3.618 0.000298 ***
+    ## age7                 -5.390e-01  4.739e-01  2.971e+04  -1.137 0.255439    
+    ## age8                 -3.857e+00  1.420e+00  2.660e+04  -2.717 0.006598 ** 
+    ## StringencyIndex:age2  4.633e-03  2.344e-03  2.888e+04   1.977 0.048060 *  
+    ## StringencyIndex:age3 -3.003e-03  2.475e-03  2.934e+04  -1.213 0.224988    
+    ## StringencyIndex:age4  5.715e-03  2.450e-03  3.004e+04   2.332 0.019681 *  
+    ## StringencyIndex:age5  1.965e-04  2.455e-03  2.999e+04   0.080 0.936218    
+    ## StringencyIndex:age6  3.122e-03  2.591e-03  3.015e+04   1.205 0.228315    
+    ## StringencyIndex:age7 -1.069e-04  6.107e-03  3.009e+04  -0.017 0.986039    
+    ## StringencyIndex:age8  4.416e-02  1.903e-02  2.776e+04   2.321 0.020316 *  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -426,13 +439,13 @@ LOESS plot anger and stringency for different age
 groups
 
 ``` r
-plot_ang <- ggplot(data = data_long_min3_strc2, aes(x = StringencyIndex, y = Ang, group = ID, color = age))
+plot_ang <- ggplot(data = data_long_min3_strc, aes(x = StringencyIndex, y = Ang, group = ID, color = age))
 
 plot_ang + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Anger by Stringency for different age groups", y ="Anger")
 ```
 
-![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 GAM
 plot
 
@@ -441,7 +454,28 @@ plot_ang + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Anger by Stringency for different age groups", y ="Anger")
 ```
 
-![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+
+Plot Anger by Date for different age
+groups
+
+``` r
+plot_ang2 <- ggplot(data = data_long_min3_strc, aes(x = Date, y = Ang, group = ID, color = age))
+
+plot_ang2 + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Anger by Date for different age groups", y ="Anger")
+```
+
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+GAM
+plot
+
+``` r
+plot_ang2 + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Anger by Date for different age groups", y ="Anger")
+```
+
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 # Bored
 
@@ -449,39 +483,33 @@ Multilevel random
 intercept
 
 ``` r
-model.bor0 <- lmer(Bored ~ 1 + (1 | Country/ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.bor0 <- lmer(Bored ~ 1 + (1 | Country/ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.bor0)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Bored ~ 1 + (1 | Country/ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 71390.4
+    ## REML criterion at convergence: 71137
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.4207 -0.5316 -0.1869  0.5393  3.7506 
+    ## -3.4254 -0.5300 -0.1865  0.5398  3.7547 
     ## 
     ## Random effects:
     ##  Groups     Name        Variance Std.Dev.
-    ##  ID:Country (Intercept) 0.7841   0.8855  
-    ##  Country    (Intercept) 0.1123   0.3351  
-    ##  Residual               0.6517   0.8073  
-    ## Number of obs: 24338, groups:  ID:Country, 9196; Country, 78
+    ##  ID:Country (Intercept) 0.7853   0.8862  
+    ##  Country    (Intercept) 0.1140   0.3376  
+    ##  Residual               0.6503   0.8064  
+    ## Number of obs: 24262, groups:  ID:Country, 9168; Country, 58
     ## 
     ## Fixed effects:
     ##             Estimate Std. Error       df t value Pr(>|t|)    
-    ## (Intercept)  2.35694    0.05215 55.41077    45.2   <2e-16 ***
+    ## (Intercept)  2.36007    0.05415 48.58024   43.58   <2e-16 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Calculate variance accounted for by country
-
-total variance 0.7841 + 0.1123 + 0.6517 = 1.5481 variance accounted for
-by country: 0.1123 / 1.5481 = 0.07254053 between persons: 0.7841 /
-1.5481 = 0.5064918 within persons: 0.6517 / 1.5481 = 0.4209676
 
 Variance in bored explained by country is pretty low, equal variance
 explained between and within persons
@@ -490,31 +518,31 @@ Using two level models Predicted by
 stringency
 
 ``` r
-model.bor1 <- lmer(Bored ~ StringencyIndex + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.bor1 <- lmer(Bored ~ StringencyIndex + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.bor1)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Bored ~ StringencyIndex + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 71777.8
+    ## REML criterion at convergence: 71550.3
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.4353 -0.5238 -0.1757  0.5347  3.7166 
+    ## -3.4398 -0.5237 -0.1754  0.5359  3.7206 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.868    0.9317  
-    ##  Residual             0.646    0.8037  
-    ## Number of obs: 24319, groups:  ID, 9188
+    ##  ID       (Intercept) 0.8693   0.9324  
+    ##  Residual             0.6446   0.8029  
+    ## Number of obs: 24251, groups:  ID, 9162
     ## 
     ## Fixed effects:
     ##                  Estimate Std. Error        df t value Pr(>|t|)    
-    ## (Intercept)     1.687e+00  5.884e-02 2.430e+04   28.68   <2e-16 ***
-    ## StringencyIndex 7.386e-03  7.424e-04 2.431e+04    9.95   <2e-16 ***
+    ## (Intercept)     1.690e+00  5.890e-02 2.424e+04  28.688   <2e-16 ***
+    ## StringencyIndex 7.353e-03  7.432e-04 2.424e+04   9.895   <2e-16 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -523,38 +551,38 @@ summary(model.bor1)
     ## StrngncyInd -0.982
 
 ``` r
-model.bor2 <- lmer(Bored ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.bor2 <- lmer(Bored ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.bor2)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Bored ~ StringencyIndex + age + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 71334.4
+    ## REML criterion at convergence: 71109.6
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.4246 -0.5198 -0.1883  0.5335  3.7519 
+    ## -3.4293 -0.5184 -0.1882  0.5337  3.7558 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.8138   0.9021  
-    ##  Residual             0.6451   0.8032  
-    ## Number of obs: 24319, groups:  ID, 9188
+    ##  ID       (Intercept) 0.8152   0.9029  
+    ##  Residual             0.6438   0.8023  
+    ## Number of obs: 24251, groups:  ID, 9162
     ## 
     ## Fixed effects:
     ##                   Estimate Std. Error         df t value Pr(>|t|)    
-    ## (Intercept)      2.241e+00  6.624e-02  2.266e+04  33.835  < 2e-16 ***
-    ## StringencyIndex  6.540e-03  7.366e-04  2.431e+04   8.879  < 2e-16 ***
-    ## age2            -3.166e-01  3.953e-02  9.554e+03  -8.009 1.29e-15 ***
-    ## age3            -4.739e-01  4.001e-02  9.437e+03 -11.845  < 2e-16 ***
-    ## age4            -6.180e-01  4.007e-02  9.239e+03 -15.425  < 2e-16 ***
-    ## age5            -6.805e-01  4.046e-02  9.096e+03 -16.821  < 2e-16 ***
-    ## age6            -7.738e-01  4.307e-02  8.861e+03 -17.968  < 2e-16 ***
-    ## age7            -7.874e-01  8.502e-02  8.263e+03  -9.261  < 2e-16 ***
-    ## age8            -3.056e-01  3.226e-01  8.082e+03  -0.947    0.343    
+    ## (Intercept)      2.242e+00  6.632e-02  2.263e+04  33.802  < 2e-16 ***
+    ## StringencyIndex  6.509e-03  7.374e-04  2.424e+04   8.827  < 2e-16 ***
+    ## age2            -3.136e-01  3.962e-02  9.526e+03  -7.916 2.73e-15 ***
+    ## age3            -4.711e-01  4.007e-02  9.411e+03 -11.757  < 2e-16 ***
+    ## age4            -6.150e-01  4.013e-02  9.212e+03 -15.327  < 2e-16 ***
+    ## age5            -6.786e-01  4.051e-02  9.070e+03 -16.753  < 2e-16 ***
+    ## age6            -7.729e-01  4.314e-02  8.836e+03 -17.917  < 2e-16 ***
+    ## age7            -7.854e-01  8.507e-02  8.243e+03  -9.232  < 2e-16 ***
+    ## age8            -3.037e-01  3.228e-01  8.062e+03  -0.941    0.347    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -562,24 +590,24 @@ summary(model.bor2)
     ##             (Intr) StrngI age2   age3   age4   age5   age6   age7  
     ## StrngncyInd -0.887                                                 
     ## age2        -0.389  0.038                                          
-    ## age3        -0.392  0.045  0.591                                   
-    ## age4        -0.392  0.046  0.590  0.583                            
-    ## age5        -0.378  0.034  0.584  0.577  0.576                     
-    ## age6        -0.366  0.044  0.549  0.543  0.542  0.536              
-    ## age7        -0.195  0.033  0.279  0.275  0.275  0.272  0.256       
+    ## age3        -0.392  0.045  0.590                                   
+    ## age4        -0.391  0.045  0.590  0.583                            
+    ## age5        -0.378  0.034  0.584  0.577  0.577                     
+    ## age6        -0.366  0.045  0.549  0.543  0.542  0.536              
+    ## age7        -0.195  0.033  0.279  0.276  0.275  0.272  0.256       
     ## age8        -0.058  0.016  0.074  0.073  0.073  0.072  0.068  0.035
 
 ``` r
-model.bor3 <- lmer(Bored ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.bor3 <- lmer(Bored ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 print(summary(model.bor3), digits=2)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Bored ~ StringencyIndex + age + StringencyIndex * age + (1 |      ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 71379.9
+    ## REML criterion at convergence: 71154.2
     ## 
     ## Scaled residuals: 
     ##    Min     1Q Median     3Q    Max 
@@ -588,26 +616,26 @@ print(summary(model.bor3), digits=2)
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
     ##  ID       (Intercept) 0.81     0.9     
-    ##  Residual             0.65     0.8     
-    ## Number of obs: 24319, groups:  ID, 9188
+    ##  Residual             0.64     0.8     
+    ## Number of obs: 24251, groups:  ID, 9162
     ## 
     ## Fixed effects:
     ##                      Estimate Std. Error       df t value Pr(>|t|)    
-    ## (Intercept)           2.4e+00    1.5e-01  2.4e+04    15.7   <2e-16 ***
+    ## (Intercept)           2.3e+00    1.5e-01  2.4e+04    15.6   <2e-16 ***
     ## StringencyIndex       5.2e-03    1.8e-03  2.4e+04     2.8    0.005 ** 
-    ## age2                 -1.8e-01    2.0e-01  2.4e+04    -0.9    0.361    
-    ## age3                 -4.3e-01    2.1e-01  2.4e+04    -2.0    0.041 *  
+    ## age2                 -1.6e-01    2.0e-01  2.4e+04    -0.8    0.431    
+    ## age3                 -4.1e-01    2.1e-01  2.4e+04    -1.9    0.051 .  
     ## age4                 -9.3e-01    2.1e-01  2.4e+04    -4.5    6e-06 ***
-    ## age5                 -7.0e-01    2.1e-01  2.4e+04    -3.4    7e-04 ***
-    ## age6                 -1.4e+00    2.2e-01  2.4e+04    -6.3    2e-10 ***
-    ## age7                 -9.8e-01    5.1e-01  2.4e+04    -1.9    0.055 .  
-    ## age8                 -2.8e+00    1.6e+00  2.2e+04    -1.8    0.077 .  
-    ## StringencyIndex:age2 -1.8e-03    2.5e-03  2.4e+04    -0.7    0.471    
-    ## StringencyIndex:age3 -6.5e-04    2.6e-03  2.4e+04    -0.2    0.804    
-    ## StringencyIndex:age4  4.0e-03    2.6e-03  2.4e+04     1.6    0.121    
-    ## StringencyIndex:age5  2.6e-04    2.6e-03  2.4e+04     0.1    0.919    
-    ## StringencyIndex:age6  7.9e-03    2.7e-03  2.4e+04     2.9    0.004 ** 
-    ## StringencyIndex:age7  2.5e-03    6.6e-03  2.4e+04     0.4    0.709    
+    ## age5                 -7.0e-01    2.1e-01  2.4e+04    -3.4    8e-04 ***
+    ## age6                 -1.4e+00    2.2e-01  2.4e+04    -6.3    3e-10 ***
+    ## age7                 -9.7e-01    5.1e-01  2.4e+04    -1.9    0.056 .  
+    ## age8                 -2.8e+00    1.6e+00  2.2e+04    -1.8    0.078 .  
+    ## StringencyIndex:age2 -2.1e-03    2.5e-03  2.4e+04    -0.8    0.405    
+    ## StringencyIndex:age3 -8.7e-04    2.6e-03  2.4e+04    -0.3    0.738    
+    ## StringencyIndex:age4  4.0e-03    2.6e-03  2.4e+04     1.6    0.117    
+    ## StringencyIndex:age5  2.5e-04    2.6e-03  2.4e+04     0.1    0.923    
+    ## StringencyIndex:age6  7.8e-03    2.7e-03  2.4e+04     2.9    0.004 ** 
+    ## StringencyIndex:age7  2.4e-03    6.6e-03  2.4e+04     0.4    0.716    
     ## StringencyIndex:age8  3.4e-02    2.1e-02  2.2e+04     1.6    0.109    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
@@ -622,13 +650,13 @@ missing data in
 Boredom
 
 ``` r
-plot_bor <- ggplot(data = data_long_min3_strc2, aes(x = StringencyIndex, y = Bored, group = ID, color = age))
+plot_bor <- ggplot(data = data_long_min3_strc, aes(x = StringencyIndex, y = Bored, group = ID, color = age))
 
 plot_bor + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Boredom by Stringency for different age groups", y ="Boredom")
 ```
 
-![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
 GAM
 plot
 
@@ -637,7 +665,28 @@ plot_bor + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Boredom by Stringency for different age groups", y ="Boredom")
 ```
 
-![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
+
+Plot Boredom by Date for different age groups / lot of missing data in
+Boredom
+
+``` r
+plot_bor2 <- ggplot(data = data_long_min3_strc, aes(x = Date, y = Bored, group = ID, color = age))
+
+plot_bor2 + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Boredom by Date for different age groups", y ="Boredom")
+```
+
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
+GAM
+plot
+
+``` r
+plot_bor2 + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Boredom by Date for different age groups", y ="Boredom")
+```
+
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
 
 # Calm
 
@@ -645,31 +694,31 @@ Multilevel random
 intercept
 
 ``` r
-model.calm0 <- lmer(Calm ~ 1 + (1 | Country/ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.calm0 <- lmer(Calm ~ 1 + (1 | Country/ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.calm0)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Calm ~ 1 + (1 | Country/ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 102918.4
+    ## REML criterion at convergence: 102586.8
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -4.2465 -0.5749  0.0549  0.5869  3.6866 
+    ## -4.2465 -0.5750  0.0548  0.5865  3.6866 
     ## 
     ## Random effects:
     ##  Groups     Name        Variance Std.Dev.
-    ##  ID:Country (Intercept) 0.56615  0.7524  
-    ##  Country    (Intercept) 0.03436  0.1854  
-    ##  Residual               0.51382  0.7168  
-    ## Number of obs: 40042, groups:  ID:Country, 9205; Country, 78
+    ##  ID:Country (Intercept) 0.56728  0.7532  
+    ##  Country    (Intercept) 0.03549  0.1884  
+    ##  Residual               0.51390  0.7169  
+    ## Number of obs: 39904, groups:  ID:Country, 9177; Country, 58
     ## 
     ## Fixed effects:
     ##             Estimate Std. Error       df t value Pr(>|t|)    
-    ## (Intercept)  3.06605    0.03174 47.73390   96.61   <2e-16 ***
+    ## (Intercept)  3.06198    0.03277 42.41198   93.44   <2e-16 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -677,31 +726,31 @@ Using two level models Predicted by
 stringency
 
 ``` r
-model.calm1 <- lmer(Calm ~ StringencyIndex + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.calm1 <- lmer(Calm ~ StringencyIndex + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.calm1)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Calm ~ StringencyIndex + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 103307.8
+    ## REML criterion at convergence: 103003.8
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -4.2319 -0.5828  0.0259  0.5940  3.6485 
+    ## -4.2319 -0.5828  0.0270  0.5936  3.6487 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.6085   0.7800  
+    ##  ID       (Intercept) 0.6097   0.7808  
     ##  Residual             0.5138   0.7168  
-    ## Number of obs: 40008, groups:  ID, 9197
+    ## Number of obs: 39882, groups:  ID, 9171
     ## 
     ## Fixed effects:
     ##                  Estimate Std. Error        df t value Pr(>|t|)    
-    ## (Intercept)     2.906e+00  4.600e-02 3.726e+04  63.183  < 2e-16 ***
-    ## StringencyIndex 1.612e-03  5.717e-04 3.833e+04   2.819  0.00481 ** 
+    ## (Intercept)     2.908e+00  4.609e-02 3.719e+04  63.105  < 2e-16 ***
+    ## StringencyIndex 1.578e-03  5.728e-04 3.825e+04   2.754  0.00589 ** 
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -710,38 +759,38 @@ summary(model.calm1)
     ## StrngncyInd -0.981
 
 ``` r
-model.calm2 <- lmer(Calm ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.calm2 <- lmer(Calm ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.calm2)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Calm ~ StringencyIndex + age + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 103125.3
+    ## REML criterion at convergence: 102819.9
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -4.2191 -0.5759  0.0299  0.5890  3.6736 
+    ## -4.2192 -0.5754  0.0304  0.5888  3.6738 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.5920   0.7694  
+    ##  ID       (Intercept) 0.5930   0.7701  
     ##  Residual             0.5138   0.7168  
-    ## Number of obs: 40008, groups:  ID, 9197
+    ## Number of obs: 39882, groups:  ID, 9171
     ## 
     ## Fixed effects:
     ##                   Estimate Std. Error         df t value Pr(>|t|)    
-    ## (Intercept)      2.831e+00  5.244e-02  3.048e+04  53.997  < 2e-16 ***
-    ## StringencyIndex  1.871e-03  5.710e-04  3.827e+04   3.276 0.001055 ** 
-    ## age2            -3.987e-02  3.137e-02  9.162e+03  -1.271 0.203846    
-    ## age3            -6.221e-02  3.187e-02  9.182e+03  -1.952 0.051004 .  
-    ## age4             4.011e-02  3.210e-02  9.180e+03   1.249 0.211621    
-    ## age5             1.106e-01  3.255e-02  9.157e+03   3.397 0.000685 ***
-    ## age6             3.222e-01  3.497e-02  9.186e+03   9.215  < 2e-16 ***
-    ## age7             4.427e-01  7.017e-02  9.040e+03   6.308 2.95e-10 ***
-    ## age8             4.415e-01  2.690e-01  9.098e+03   1.641 0.100742    
+    ## (Intercept)      2.833e+00  5.254e-02  3.044e+04  53.922  < 2e-16 ***
+    ## StringencyIndex  1.840e-03  5.722e-04  3.818e+04   3.216 0.001302 ** 
+    ## age2            -4.067e-02  3.145e-02  9.137e+03  -1.293 0.195988    
+    ## age3            -6.238e-02  3.193e-02  9.156e+03  -1.953 0.050815 .  
+    ## age4             4.070e-02  3.217e-02  9.155e+03   1.265 0.205855    
+    ## age5             1.117e-01  3.261e-02  9.131e+03   3.427 0.000614 ***
+    ## age6             3.237e-01  3.504e-02  9.160e+03   9.240  < 2e-16 ***
+    ## age7             4.435e-01  7.024e-02  9.015e+03   6.314 2.85e-10 ***
+    ## age8             4.422e-01  2.692e-01  9.072e+03   1.643 0.100465    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -750,51 +799,51 @@ summary(model.calm2)
     ## StrngncyInd -0.887                                                 
     ## age2        -0.393  0.042                                          
     ## age3        -0.399  0.054  0.588                                   
-    ## age4        -0.396  0.054  0.584  0.575                            
-    ## age5        -0.386  0.048  0.576  0.567  0.563                     
+    ## age4        -0.396  0.054  0.583  0.575                            
+    ## age5        -0.386  0.048  0.575  0.567  0.563                     
     ## age6        -0.371  0.058  0.536  0.529  0.525  0.517              
-    ## age7        -0.194  0.040  0.268  0.264  0.262  0.258  0.241       
+    ## age7        -0.195  0.040  0.268  0.264  0.262  0.259  0.241       
     ## age8        -0.057  0.018  0.070  0.069  0.069  0.068  0.063  0.032
 
 ``` r
-model.calm3 <- lmer(Calm ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.calm3 <- lmer(Calm ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 print(summary(model.calm3), digits=2)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Calm ~ StringencyIndex + age + StringencyIndex * age + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 103173
+    ## REML criterion at convergence: 102868.2
     ## 
     ## Scaled residuals: 
     ##    Min     1Q Median     3Q    Max 
-    ##  -4.22  -0.58   0.03   0.59   3.68 
+    ##  -4.22  -0.58   0.04   0.59   3.68 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
     ##  ID       (Intercept) 0.59     0.77    
     ##  Residual             0.51     0.72    
-    ## Number of obs: 40008, groups:  ID, 9197
+    ## Number of obs: 39882, groups:  ID, 9171
     ## 
     ## Fixed effects:
     ##                      Estimate Std. Error       df t value Pr(>|t|)    
     ## (Intercept)           2.9e+00    1.2e-01  3.7e+04    25.3   <2e-16 ***
-    ## StringencyIndex       4.2e-04    1.4e-03  3.8e+04     0.3    0.764    
-    ## age2                 -2.7e-01    1.5e-01  3.6e+04    -1.7    0.084 .  
-    ## age3                 -5.4e-01    1.6e-01  3.7e+04    -3.3    8e-04 ***
-    ## age4                  1.4e-02    1.6e-01  3.8e+04     0.1    0.929    
-    ## age5                  7.7e-03    1.6e-01  3.7e+04     0.0    0.963    
+    ## StringencyIndex       4.1e-04    1.4e-03  3.8e+04     0.3    0.770    
+    ## age2                 -2.6e-01    1.5e-01  3.6e+04    -1.7    0.094 .  
+    ## age3                 -5.4e-01    1.6e-01  3.7e+04    -3.3    9e-04 ***
+    ## age4                  8.0e-03    1.6e-01  3.8e+04     0.1    0.960    
+    ## age5                  1.3e-02    1.7e-01  3.7e+04     0.1    0.936    
     ## age6                  4.8e-01    1.7e-01  3.7e+04     2.8    0.005 ** 
     ## age7                  1.0e+00    4.1e-01  3.6e+04     2.5    0.012 *  
     ## age8                  3.0e-01    1.3e+00  2.8e+04     0.2    0.818    
-    ## StringencyIndex:age2  2.8e-03    1.9e-03  3.8e+04     1.5    0.134    
-    ## StringencyIndex:age3  6.1e-03    2.0e-03  3.8e+04     3.0    0.002 ** 
-    ## StringencyIndex:age4  2.7e-04    2.0e-03  3.9e+04     0.1    0.890    
-    ## StringencyIndex:age5  1.3e-03    2.0e-03  3.8e+04     0.6    0.534    
-    ## StringencyIndex:age6 -2.2e-03    2.2e-03  3.9e+04    -1.0    0.317    
-    ## StringencyIndex:age7 -8.0e-03    5.3e-03  3.7e+04    -1.5    0.134    
+    ## StringencyIndex:age2  2.7e-03    1.9e-03  3.7e+04     1.4    0.149    
+    ## StringencyIndex:age3  6.0e-03    2.0e-03  3.8e+04     3.0    0.003 ** 
+    ## StringencyIndex:age4  3.6e-04    2.0e-03  3.9e+04     0.2    0.854    
+    ## StringencyIndex:age5  1.2e-03    2.0e-03  3.8e+04     0.6    0.552    
+    ## StringencyIndex:age6 -2.1e-03    2.2e-03  3.8e+04    -1.0    0.324    
+    ## StringencyIndex:age7 -8.0e-03    5.3e-03  3.7e+04    -1.5    0.135    
     ## StringencyIndex:age8  1.7e-03    1.8e-02  3.0e+04     0.1    0.923    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
@@ -804,18 +853,17 @@ print(summary(model.calm3), digits=2)
     ## Use print(summary(model.calm3), correlation=TRUE)  or
     ##     vcov(summary(model.calm3))        if you need it
 
-LOESS plot calm and stringency for different age groups / lot of missing
-data in
-Boredom
+LOESS plot calm and stringency for different age
+groups
 
 ``` r
-plot_calm <- ggplot(data = data_long_min3_strc2, aes(x = StringencyIndex, y = Calm, group = ID, color = age))
+plot_calm <- ggplot(data = data_long_min3_strc, aes(x = StringencyIndex, y = Calm, group = ID, color = age))
 
 plot_calm + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Calm by Stringency for different age groups", y ="Calm")
 ```
 
-![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
 
 GAM
 plot
@@ -825,41 +873,64 @@ plot_calm + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Calm by Stringency for different age groups", y ="Calm")
 ```
 
-    ## Warning: Removed 33632 rows containing non-finite values (stat_smooth).
+    ## Warning: Removed 33534 rows containing non-finite values (stat_smooth).
 
-![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
 
-# Depressed
+LOESS plot calm and date for different age
+groups
 
-Multilevel depressed random
+``` r
+plot_calm2 <- ggplot(data = data_long_min3_strc, aes(x = Date, y = Calm, group = ID, color = age))
+
+plot_calm2 + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Calm by Date for different age groups", y ="Calm")
+```
+
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
+
+GAM
+plot
+
+``` r
+plot_calm2 + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Calm by Date for different age groups", y ="Calm")
+```
+
+    ## Warning: Removed 33512 rows containing non-finite values (stat_smooth).
+
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# Depressed
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# Multilevel depressed
+random
 intercept
 
 ``` r
-model.depr0 <- lmer(Depr ~ 1 + (1 | Country/ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.depr0 <- lmer(Depr ~ 1 + (1 | Country/ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.depr0)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Depr ~ 1 + (1 | Country/ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 104632.7
+    ## REML criterion at convergence: 104270.4
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.8734 -0.5138 -0.1597  0.5188  4.7407 
+    ## -3.8759 -0.5129 -0.1594  0.5188  4.7427 
     ## 
     ## Random effects:
     ##  Groups     Name        Variance Std.Dev.
-    ##  ID:Country (Intercept) 0.73550  0.8576  
-    ##  Country    (Intercept) 0.04277  0.2068  
-    ##  Residual               0.51030  0.7144  
-    ## Number of obs: 40013, groups:  ID:Country, 9202; Country, 78
+    ##  ID:Country (Intercept) 0.7369   0.8584  
+    ##  Country    (Intercept) 0.0445   0.2109  
+    ##  Residual               0.5099   0.7141  
+    ## Number of obs: 39877, groups:  ID:Country, 9174; Country, 58
     ## 
     ## Fixed effects:
-    ##             Estimate Std. Error      df t value Pr(>|t|)    
-    ## (Intercept)   2.1002     0.0354 37.7164   59.33   <2e-16 ***
+    ##             Estimate Std. Error       df t value Pr(>|t|)    
+    ## (Intercept)  2.11235    0.03665 33.92375   57.64   <2e-16 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -867,31 +938,31 @@ Using two level models Predicted by
 stringency
 
 ``` r
-model.depr1 <- lmer(Depr ~ StringencyIndex + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.depr1 <- lmer(Depr ~ StringencyIndex + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.depr1)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Depr ~ StringencyIndex + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 104762.1
+    ## REML criterion at convergence: 104432.2
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.8814 -0.5128 -0.1728  0.4976  4.7284 
+    ## -3.8839 -0.5127 -0.1726  0.4964  4.7306 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.7640   0.8741  
-    ##  Residual             0.5101   0.7142  
-    ## Number of obs: 39979, groups:  ID, 9194
+    ##  ID       (Intercept) 0.7656   0.8750  
+    ##  Residual             0.5097   0.7139  
+    ## Number of obs: 39855, groups:  ID, 9168
     ## 
     ## Fixed effects:
     ##                  Estimate Std. Error        df t value Pr(>|t|)    
-    ## (Intercept)     1.891e+00  4.735e-02 3.862e+04  39.928  < 2e-16 ***
-    ## StringencyIndex 2.157e-03  5.869e-04 3.948e+04   3.676 0.000237 ***
+    ## (Intercept)     1.895e+00  4.743e-02 3.854e+04  39.954  < 2e-16 ***
+    ## StringencyIndex 2.113e-03  5.878e-04 3.938e+04   3.594 0.000326 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -900,38 +971,38 @@ summary(model.depr1)
     ## StrngncyInd -0.978
 
 ``` r
-model.depr2 <- lmer(Depr ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.depr2 <- lmer(Depr ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.depr2)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Depr ~ StringencyIndex + age + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 104272.8
+    ## REML criterion at convergence: 103940.4
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.8850 -0.5187 -0.1487  0.5166  4.7077 
+    ## -3.8879 -0.5181 -0.1488  0.5162  4.7096 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.7152   0.8457  
-    ##  Residual             0.5101   0.7142  
-    ## Number of obs: 39979, groups:  ID, 9194
+    ##  ID       (Intercept) 0.7164   0.8464  
+    ##  Residual             0.5097   0.7140  
+    ## Number of obs: 39855, groups:  ID, 9168
     ## 
     ## Fixed effects:
     ##                   Estimate Std. Error         df t value Pr(>|t|)    
-    ## (Intercept)      2.291e+00  5.427e-02  3.123e+04  42.216  < 2e-16 ***
-    ## StringencyIndex  1.361e-03  5.836e-04  3.929e+04   2.333  0.01967 *  
-    ## age2            -1.739e-01  3.393e-02  9.145e+03  -5.124 3.06e-07 ***
-    ## age3            -2.865e-01  3.447e-02  9.164e+03  -8.312  < 2e-16 ***
-    ## age4            -3.544e-01  3.472e-02  9.159e+03 -10.208  < 2e-16 ***
-    ## age5            -4.891e-01  3.522e-02  9.140e+03 -13.884  < 2e-16 ***
-    ## age6            -7.429e-01  3.785e-02  9.177e+03 -19.628  < 2e-16 ***
-    ## age7            -7.895e-01  7.597e-02  9.054e+03 -10.393  < 2e-16 ***
-    ## age8            -8.724e-01  2.910e-01  9.085e+03  -2.998  0.00273 ** 
+    ## (Intercept)      2.296e+00  5.436e-02  3.118e+04  42.240  < 2e-16 ***
+    ## StringencyIndex  1.314e-03  5.845e-04  3.919e+04   2.249   0.0245 *  
+    ## age2            -1.720e-01  3.402e-02  9.119e+03  -5.057 4.35e-07 ***
+    ## age3            -2.863e-01  3.454e-02  9.137e+03  -8.290  < 2e-16 ***
+    ## age4            -3.552e-01  3.479e-02  9.134e+03 -10.210  < 2e-16 ***
+    ## age5            -4.913e-01  3.528e-02  9.115e+03 -13.926  < 2e-16 ***
+    ## age6            -7.445e-01  3.792e-02  9.150e+03 -19.636  < 2e-16 ***
+    ## age7            -7.909e-01  7.603e-02  9.028e+03 -10.402  < 2e-16 ***
+    ## age8            -8.739e-01  2.912e-01  9.059e+03  -3.001   0.0027 ** 
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -940,23 +1011,23 @@ summary(model.depr2)
     ## StrngncyInd -0.876                                                 
     ## age2        -0.407  0.039                                          
     ## age3        -0.411  0.051  0.588                                   
-    ## age4        -0.408  0.051  0.584  0.575                            
+    ## age4        -0.408  0.051  0.583  0.575                            
     ## age5        -0.398  0.045  0.575  0.567  0.563                     
     ## age6        -0.382  0.055  0.536  0.528  0.524  0.517              
-    ## age7        -0.199  0.037  0.267  0.264  0.262  0.258  0.240       
+    ## age7        -0.199  0.037  0.267  0.264  0.262  0.258  0.241       
     ## age8        -0.058  0.016  0.070  0.069  0.069  0.068  0.063  0.032
 
 ``` r
-model.depr3 <- lmer(Depr ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.depr3 <- lmer(Depr ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 print(summary(model.depr3), digits=2)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Depr ~ StringencyIndex + age + StringencyIndex * age + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 104332.7
+    ## REML criterion at convergence: 104000
     ## 
     ## Scaled residuals: 
     ##    Min     1Q Median     3Q    Max 
@@ -964,26 +1035,26 @@ print(summary(model.depr3), digits=2)
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.71     0.85    
+    ##  ID       (Intercept) 0.72     0.85    
     ##  Residual             0.51     0.71    
-    ## Number of obs: 39979, groups:  ID, 9194
+    ## Number of obs: 39855, groups:  ID, 9168
     ## 
     ## Fixed effects:
     ##                      Estimate Std. Error       df t value Pr(>|t|)    
     ## (Intercept)           2.2e+00    1.2e-01  3.8e+04    18.3   <2e-16 ***
     ## StringencyIndex       2.7e-03    1.4e-03  3.9e+04     1.9     0.06 .  
-    ## age2                  6.8e-02    1.6e-01  3.8e+04     0.4     0.67    
-    ## age3                 -1.9e-02    1.7e-01  3.8e+04    -0.1     0.91    
-    ## age4                 -2.7e-01    1.6e-01  3.9e+04    -1.7     0.09 .  
+    ## age2                  7.8e-02    1.6e-01  3.8e+04     0.5     0.62    
+    ## age3                 -2.2e-02    1.7e-01  3.8e+04    -0.1     0.90    
+    ## age4                 -2.7e-01    1.6e-01  3.9e+04    -1.6     0.10 .  
     ## age5                 -4.0e-01    1.7e-01  3.8e+04    -2.4     0.02 *  
-    ## age6                 -8.5e-01    1.8e-01  3.9e+04    -4.8    2e-06 ***
+    ## age6                 -8.6e-01    1.8e-01  3.8e+04    -4.8    2e-06 ***
     ## age7                 -6.6e-01    4.3e-01  3.7e+04    -1.5     0.12    
     ## age8                 -2.6e+00    1.4e+00  3.1e+04    -1.9     0.06 .  
-    ## StringencyIndex:age2 -3.0e-03    1.9e-03  3.9e+04    -1.6     0.12    
-    ## StringencyIndex:age3 -3.4e-03    2.0e-03  3.9e+04    -1.6     0.10 .  
-    ## StringencyIndex:age4 -9.8e-04    2.0e-03  4.0e+04    -0.5     0.62    
-    ## StringencyIndex:age5 -1.1e-03    2.1e-03  3.9e+04    -0.5     0.59    
-    ## StringencyIndex:age6  1.5e-03    2.2e-03  3.9e+04     0.7     0.51    
+    ## StringencyIndex:age2 -3.1e-03    1.9e-03  3.9e+04    -1.6     0.10    
+    ## StringencyIndex:age3 -3.3e-03    2.0e-03  3.9e+04    -1.6     0.10    
+    ## StringencyIndex:age4 -1.0e-03    2.0e-03  4.0e+04    -0.5     0.61    
+    ## StringencyIndex:age5 -1.1e-03    2.1e-03  3.9e+04    -0.5     0.60    
+    ## StringencyIndex:age6  1.5e-03    2.2e-03  3.9e+04     0.7     0.49    
     ## StringencyIndex:age7 -1.6e-03    5.5e-03  3.8e+04    -0.3     0.77    
     ## StringencyIndex:age8  2.3e-02    1.8e-02  3.2e+04     1.3     0.21    
     ## ---
@@ -998,13 +1069,13 @@ LOESS plot depressed and stringency for different age
 groups
 
 ``` r
-plot_depr <- ggplot(data = data_long_min3_strc2, aes(x = StringencyIndex, y = Depr, group = ID, color = age))
+plot_depr <- ggplot(data = data_long_min3_strc, aes(x = StringencyIndex, y = Depr, group = ID, color = age))
 
 plot_depr + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Depressed by Stringency for different age groups", y ="Depr")
 ```
 
-![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-39-1.png)<!-- -->
 GAM
 plot
 
@@ -1013,39 +1084,58 @@ plot_depr + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Depressed by Stringency for different age groups", y ="Depr")
 ```
 
-![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-40-1.png)<!-- -->
 
-# Energetic
+LOESS plot depressed and stringency for different age
+groups
 
-Multilevel random
+``` r
+plot_depr2 <- ggplot(data = data_long_min3_strc, aes(x = Date, y = Depr, group = ID, color = age))
+
+plot_depr2 + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Depressed by Date for different age groups", y ="Depr")
+```
+
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-41-1.png)<!-- -->
+GAM
+plot
+
+``` r
+plot_depr2 + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Depressed by Date for different age groups", y ="Depr")
+```
+
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-42-1.png)<!-- -->
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# Energetic
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# Multilevel random
 intercept
 
 ``` r
-model.energ0 <- lmer(Energ ~ 1 + (1 | Country/ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.energ0 <- lmer(Energ ~ 1 + (1 | Country/ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.energ0)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Energ ~ 1 + (1 | Country/ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 102782.7
+    ## REML criterion at convergence: 102434.8
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -4.1920 -0.5799  0.0155  0.5798  4.1266 
+    ## -4.1928 -0.5800  0.0154  0.5802  4.1271 
     ## 
     ## Random effects:
     ##  Groups     Name        Variance Std.Dev.
-    ##  ID:Country (Intercept) 0.53329  0.7303  
-    ##  Country    (Intercept) 0.05774  0.2403  
-    ##  Residual               0.52037  0.7214  
-    ## Number of obs: 39992, groups:  ID:Country, 9204; Country, 78
+    ##  ID:Country (Intercept) 0.53379  0.7306  
+    ##  Country    (Intercept) 0.05895  0.2428  
+    ##  Residual               0.52024  0.7213  
+    ## Number of obs: 39856, groups:  ID:Country, 9177; Country, 58
     ## 
     ## Fixed effects:
     ##             Estimate Std. Error       df t value Pr(>|t|)    
-    ## (Intercept)  2.66032    0.03824 59.13647   69.58   <2e-16 ***
+    ## (Intercept)  2.66645    0.03964 51.88677   67.27   <2e-16 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -1053,31 +1143,31 @@ Using two level models Predicted by
 stringency
 
 ``` r
-model.energ1 <- lmer(Energ ~ StringencyIndex + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.energ1 <- lmer(Energ ~ StringencyIndex + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.energ1)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Energ ~ StringencyIndex + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 103762.1
+    ## REML criterion at convergence: 103443.3
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -4.1187 -0.5569  0.0681  0.5755  4.0150 
+    ## -4.1198 -0.5566  0.0680  0.5756  4.0158 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.6213   0.7882  
-    ##  Residual             0.5205   0.7214  
-    ## Number of obs: 39958, groups:  ID, 9196
+    ##  ID       (Intercept) 0.6220   0.7887  
+    ##  Residual             0.5203   0.7213  
+    ## Number of obs: 39834, groups:  ID, 9171
     ## 
     ## Fixed effects:
     ##                  Estimate Std. Error        df t value Pr(>|t|)    
-    ## (Intercept)     2.583e+00  4.639e-02 3.727e+04  55.676   <2e-16 ***
-    ## StringencyIndex 2.269e-04  5.765e-04 3.833e+04   0.394    0.694    
+    ## (Intercept)     2.582e+00  4.647e-02 3.720e+04  55.561   <2e-16 ***
+    ## StringencyIndex 2.390e-04  5.775e-04 3.824e+04   0.414    0.679    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -1086,38 +1176,38 @@ summary(model.energ1)
     ## StrngncyInd -0.981
 
 ``` r
-model.energ2 <- lmer(Energ ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.energ2 <- lmer(Energ ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.energ2)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Energ ~ StringencyIndex + age + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 103758.6
+    ## REML criterion at convergence: 103439.6
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -4.1376 -0.5754  0.0641  0.5718  4.0227 
+    ## -4.1385 -0.5748  0.0644  0.5735  4.0235 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.6189   0.7867  
-    ##  Residual             0.5205   0.7214  
-    ## Number of obs: 39958, groups:  ID, 9196
+    ##  ID       (Intercept) 0.6197   0.7872  
+    ##  Residual             0.5203   0.7213  
+    ## Number of obs: 39834, groups:  ID, 9171
     ## 
     ## Fixed effects:
     ##                   Estimate Std. Error         df t value Pr(>|t|)    
-    ## (Intercept)      2.594e+00  5.313e-02  3.061e+04  48.821   <2e-16 ***
-    ## StringencyIndex  2.676e-04  5.777e-04  3.842e+04   0.463   0.6432    
-    ## age2            -4.805e-02  3.199e-02  9.177e+03  -1.502   0.1331    
-    ## age3            -7.460e-02  3.250e-02  9.198e+03  -2.295   0.0217 *  
-    ## age4            -4.061e-02  3.274e-02  9.196e+03  -1.240   0.2149    
-    ## age5             1.604e-02  3.320e-02  9.174e+03   0.483   0.6290    
-    ## age6             8.933e-02  3.568e-02  9.211e+03   2.504   0.0123 *  
-    ## age7             1.063e-01  7.162e-02  9.083e+03   1.485   0.1377    
-    ## age8             2.031e-01  2.743e-01  9.113e+03   0.740   0.4590    
+    ## (Intercept)      2.594e+00  5.322e-02  3.057e+04  48.743   <2e-16 ***
+    ## StringencyIndex  2.786e-04  5.787e-04  3.833e+04   0.481   0.6302    
+    ## age2            -4.925e-02  3.206e-02  9.152e+03  -1.536   0.1246    
+    ## age3            -7.662e-02  3.255e-02  9.172e+03  -2.353   0.0186 *  
+    ## age4            -4.139e-02  3.279e-02  9.171e+03  -1.262   0.2069    
+    ## age5             1.546e-02  3.325e-02  9.150e+03   0.465   0.6420    
+    ## age6             8.783e-02  3.573e-02  9.186e+03   2.458   0.0140 *  
+    ## age7             1.053e-01  7.166e-02  9.057e+03   1.469   0.1419    
+    ## age8             2.020e-01  2.744e-01  9.087e+03   0.736   0.4616    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -1126,23 +1216,23 @@ summary(model.energ2)
     ## StrngncyInd -0.886                                                 
     ## age2        -0.395  0.041                                          
     ## age3        -0.400  0.054  0.588                                   
-    ## age4        -0.397  0.053  0.584  0.575                            
+    ## age4        -0.397  0.053  0.583  0.575                            
     ## age5        -0.387  0.047  0.575  0.567  0.563                     
     ## age6        -0.372  0.057  0.536  0.528  0.525  0.517              
-    ## age7        -0.195  0.040  0.267  0.264  0.262  0.258  0.241       
+    ## age7        -0.195  0.040  0.268  0.264  0.262  0.258  0.241       
     ## age8        -0.057  0.017  0.070  0.069  0.069  0.068  0.063  0.032
 
 ``` r
-model.energ3 <- lmer(Energ ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.energ3 <- lmer(Energ ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 print(summary(model.energ3), digits=2)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Energ ~ StringencyIndex + age + StringencyIndex * age + (1 |      ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 103798.6
+    ## REML criterion at convergence: 103479.3
     ## 
     ## Scaled residuals: 
     ##    Min     1Q Median     3Q    Max 
@@ -1152,26 +1242,26 @@ print(summary(model.energ3), digits=2)
     ##  Groups   Name        Variance Std.Dev.
     ##  ID       (Intercept) 0.62     0.79    
     ##  Residual             0.52     0.72    
-    ## Number of obs: 39958, groups:  ID, 9196
+    ## Number of obs: 39834, groups:  ID, 9171
     ## 
     ## Fixed effects:
     ##                      Estimate Std. Error       df t value Pr(>|t|)    
     ## (Intercept)           2.5e+00    1.2e-01  3.7e+04    21.5   <2e-16 ***
-    ## StringencyIndex       1.0e-03    1.4e-03  3.8e+04     0.7    0.465    
-    ## age2                 -2.1e-01    1.6e-01  3.7e+04    -1.3    0.181    
-    ## age3                 -2.4e-01    1.6e-01  3.7e+04    -1.5    0.141    
-    ## age4                  7.0e-02    1.6e-01  3.8e+04     0.4    0.666    
-    ## age5                  2.4e-01    1.7e-01  3.8e+04     1.4    0.150    
+    ## StringencyIndex       1.0e-03    1.4e-03  3.8e+04     0.7    0.474    
+    ## age2                 -2.1e-01    1.6e-01  3.6e+04    -1.4    0.170    
+    ## age3                 -2.5e-01    1.6e-01  3.7e+04    -1.5    0.127    
+    ## age4                  6.8e-02    1.6e-01  3.8e+04     0.4    0.674    
+    ## age5                  2.4e-01    1.7e-01  3.7e+04     1.4    0.155    
     ## age6                  5.1e-01    1.8e-01  3.8e+04     2.9    0.004 ** 
     ## age7                  1.4e+00    4.2e-01  3.6e+04     3.4    7e-04 ***
-    ## age8                  8.2e-01    1.3e+00  2.9e+04     0.6    0.541    
-    ## StringencyIndex:age2  2.0e-03    1.9e-03  3.8e+04     1.1    0.280    
-    ## StringencyIndex:age3  2.2e-03    2.0e-03  3.8e+04     1.1    0.283    
-    ## StringencyIndex:age4 -1.4e-03    2.0e-03  3.9e+04    -0.7    0.487    
-    ## StringencyIndex:age5 -2.8e-03    2.0e-03  3.9e+04    -1.4    0.168    
+    ## age8                  8.2e-01    1.3e+00  2.9e+04     0.6    0.543    
+    ## StringencyIndex:age2  2.1e-03    1.9e-03  3.8e+04     1.1    0.268    
+    ## StringencyIndex:age3  2.3e-03    2.0e-03  3.8e+04     1.1    0.264    
+    ## StringencyIndex:age4 -1.4e-03    2.0e-03  3.9e+04    -0.7    0.491    
+    ## StringencyIndex:age5 -2.8e-03    2.0e-03  3.8e+04    -1.4    0.172    
     ## StringencyIndex:age6 -5.3e-03    2.2e-03  3.9e+04    -2.5    0.014 *  
     ## StringencyIndex:age7 -1.7e-02    5.4e-03  3.7e+04    -3.2    0.001 ** 
-    ## StringencyIndex:age8 -8.3e-03    1.8e-02  3.0e+04    -0.5    0.642    
+    ## StringencyIndex:age8 -8.3e-03    1.8e-02  3.0e+04    -0.5    0.643    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -1184,13 +1274,13 @@ LOESS plot energetic and stringency for different age
 groups
 
 ``` r
-plot_energ <- ggplot(data = data_long_min3_strc2, aes(x = StringencyIndex, y = Energ, group = ID, color = age))
+plot_energ <- ggplot(data = data_long_min3_strc, aes(x = StringencyIndex, y = Energ, group = ID, color = age))
 
 plot_energ + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Energetic by Stringency for different age groups", y ="Energ")
 ```
 
-![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-37-1.png)<!-- -->
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-47-1.png)<!-- -->
 GAM
 plot
 
@@ -1199,7 +1289,28 @@ plot_energ + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Energetic by Stringency for different age groups", y ="Energ")
 ```
 
-![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-48-1.png)<!-- -->
+
+LOESS plot energetic and date for different age
+groups
+
+``` r
+plot_energ2 <- ggplot(data = data_long_min3_strc, aes(x = Date, y = Energ, group = ID, color = age))
+
+plot_energ2 + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Energetic by Date for different age groups", y ="Energ")
+```
+
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-49-1.png)<!-- -->
+GAM
+plot
+
+``` r
+plot_energ2 + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Energetic by Date for different age groups", y ="Energ")
+```
+
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-50-1.png)<!-- -->
 
 # Exhausted
 
@@ -1207,31 +1318,31 @@ Multilevel random
 intercept
 
 ``` r
-model.exh0 <- lmer(Exh ~ 1 + (1 | Country/ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.exh0 <- lmer(Exh ~ 1 + (1 | Country/ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.exh0)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Exh ~ 1 + (1 | Country/ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 112513.3
+    ## REML criterion at convergence: 112136.3
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.9943 -0.5706 -0.1529  0.5807  3.8388 
+    ## -3.9955 -0.5706 -0.1526  0.5810  3.8396 
     ## 
     ## Random effects:
     ##  Groups     Name        Variance Std.Dev.
-    ##  ID:Country (Intercept) 0.75385  0.8682  
-    ##  Country    (Intercept) 0.05456  0.2336  
-    ##  Residual               0.64826  0.8051  
-    ## Number of obs: 39996, groups:  ID:Country, 9201; Country, 78
+    ##  ID:Country (Intercept) 0.7550   0.8689  
+    ##  Country    (Intercept) 0.0565   0.2377  
+    ##  Residual               0.6480   0.8050  
+    ## Number of obs: 39861, groups:  ID:Country, 9174; Country, 58
     ## 
     ## Fixed effects:
     ##             Estimate Std. Error       df t value Pr(>|t|)    
-    ## (Intercept)  2.43769    0.03904 47.16887   62.45   <2e-16 ***
+    ## (Intercept)  2.44728    0.04043 42.19746   60.53   <2e-16 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -1239,31 +1350,31 @@ Using two level models Predicted by
 stringency
 
 ``` r
-model.exh1 <- lmer(Exh ~ StringencyIndex + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.exh1 <- lmer(Exh ~ StringencyIndex + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.exh1)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Exh ~ StringencyIndex + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 112716
+    ## REML criterion at convergence: 112369.8
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.9883 -0.5673 -0.1544  0.5759  3.8747 
+    ## -3.9898 -0.5671 -0.1549  0.5759  3.8755 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.7906   0.8891  
-    ##  Residual             0.6484   0.8053  
-    ## Number of obs: 39962, groups:  ID, 9193
+    ##  ID       (Intercept) 0.7919   0.8899  
+    ##  Residual             0.6481   0.8051  
+    ## Number of obs: 39839, groups:  ID, 9168
     ## 
     ## Fixed effects:
     ##                  Estimate Std. Error        df t value Pr(>|t|)    
-    ## (Intercept)     2.350e+00  5.192e-02 3.742e+04  45.266   <2e-16 ***
-    ## StringencyIndex 1.331e-04  6.451e-04 3.846e+04   0.206    0.837    
+    ## (Intercept)     2.348e+00  5.201e-02 3.735e+04  45.135   <2e-16 ***
+    ## StringencyIndex 1.701e-04  6.463e-04 3.838e+04   0.263    0.792    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -1272,38 +1383,38 @@ summary(model.exh1)
     ## StrngncyInd -0.981
 
 ``` r
-model.exh2 <- lmer(Exh ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.exh2 <- lmer(Exh ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.exh2)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Exh ~ StringencyIndex + age + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 111761.4
+    ## REML criterion at convergence: 111417.1
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.9510 -0.5642 -0.1501  0.5854  3.8776 
+    ## -3.9526 -0.5642 -0.1500  0.5851  3.8782 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.6943   0.8332  
-    ##  Residual             0.6485   0.8053  
-    ## Number of obs: 39962, groups:  ID, 9193
+    ##  ID       (Intercept) 0.6954   0.8339  
+    ##  Residual             0.6482   0.8051  
+    ## Number of obs: 39839, groups:  ID, 9168
     ## 
     ## Fixed effects:
     ##                   Estimate Std. Error         df t value Pr(>|t|)    
-    ## (Intercept)      2.746e+00  5.812e-02  3.010e+04  47.243  < 2e-16 ***
-    ## StringencyIndex -7.989e-04  6.358e-04  3.771e+04  -1.257 0.208903    
-    ## age2            -5.221e-02  3.420e-02  9.159e+03  -1.527 0.126898    
-    ## age3            -1.184e-01  3.475e-02  9.180e+03  -3.407 0.000659 ***
-    ## age4            -3.565e-01  3.500e-02  9.178e+03 -10.186  < 2e-16 ***
-    ## age5            -5.872e-01  3.550e-02  9.153e+03 -16.542  < 2e-16 ***
-    ## age6            -9.020e-01  3.816e-02  9.198e+03 -23.640  < 2e-16 ***
-    ## age7            -9.550e-01  7.654e-02  9.058e+03 -12.477  < 2e-16 ***
-    ## age8            -9.842e-01  2.932e-01  9.095e+03  -3.357 0.000792 ***
+    ## (Intercept)      2.743e+00  5.822e-02  3.006e+04  47.114  < 2e-16 ***
+    ## StringencyIndex -7.648e-04  6.369e-04  3.764e+04  -1.201 0.229860    
+    ## age2            -5.038e-02  3.428e-02  9.134e+03  -1.469 0.141767    
+    ## age3            -1.187e-01  3.481e-02  9.154e+03  -3.409 0.000654 ***
+    ## age4            -3.556e-01  3.507e-02  9.153e+03 -10.140  < 2e-16 ***
+    ## age5            -5.873e-01  3.556e-02  9.128e+03 -16.519  < 2e-16 ***
+    ## age6            -9.020e-01  3.822e-02  9.173e+03 -23.599  < 2e-16 ***
+    ## age7            -9.549e-01  7.660e-02  9.032e+03 -12.466  < 2e-16 ***
+    ## age8            -9.840e-01  2.934e-01  9.069e+03  -3.354 0.000800 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -1312,23 +1423,23 @@ summary(model.exh2)
     ## StrngncyInd -0.891                                                 
     ## age2        -0.388  0.043                                          
     ## age3        -0.394  0.055  0.588                                   
-    ## age4        -0.391  0.055  0.584  0.575                            
+    ## age4        -0.391  0.055  0.583  0.575                            
     ## age5        -0.381  0.049  0.575  0.567  0.563                     
-    ## age6        -0.367  0.059  0.536  0.528  0.524  0.517              
-    ## age7        -0.193  0.041  0.268  0.264  0.262  0.258  0.241       
+    ## age6        -0.367  0.059  0.536  0.528  0.525  0.517              
+    ## age7        -0.193  0.041  0.268  0.264  0.262  0.259  0.241       
     ## age8        -0.057  0.018  0.070  0.069  0.069  0.068  0.063  0.032
 
 ``` r
-model.exh3 <- lmer(Exh ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.exh3 <- lmer(Exh ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 print(summary(model.exh3), digits=2)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Exh ~ StringencyIndex + age + StringencyIndex * age + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 111818.7
+    ## REML criterion at convergence: 111474.5
     ## 
     ## Scaled residuals: 
     ##    Min     1Q Median     3Q    Max 
@@ -1338,25 +1449,25 @@ print(summary(model.exh3), digits=2)
     ##  Groups   Name        Variance Std.Dev.
     ##  ID       (Intercept) 0.69     0.83    
     ##  Residual             0.65     0.81    
-    ## Number of obs: 39962, groups:  ID, 9193
+    ## Number of obs: 39839, groups:  ID, 9168
     ## 
     ## Fixed effects:
     ##                      Estimate Std. Error       df t value Pr(>|t|)    
     ## (Intercept)           2.7e+00    1.3e-01  3.6e+04    21.0   <2e-16 ***
-    ## StringencyIndex      -5.4e-04    1.6e-03  3.8e+04    -0.3    0.730    
-    ## age2                 -1.4e-02    1.7e-01  3.6e+04    -0.1    0.934    
-    ## age3                  1.3e-01    1.8e-01  3.6e+04     0.7    0.465    
-    ## age4                 -5.0e-01    1.8e-01  3.8e+04    -2.8    0.005 ** 
+    ## StringencyIndex      -5.3e-04    1.6e-03  3.8e+04    -0.3    0.733    
+    ## age2                 -2.3e-02    1.7e-01  3.6e+04    -0.1    0.894    
+    ## age3                  1.3e-01    1.8e-01  3.6e+04     0.7    0.482    
+    ## age4                 -5.0e-01    1.8e-01  3.7e+04    -2.8    0.005 ** 
     ## age5                 -5.0e-01    1.8e-01  3.7e+04    -2.7    0.006 ** 
     ## age6                 -9.9e-01    1.9e-01  3.7e+04    -5.1    3e-07 ***
     ## age7                 -1.1e+00    4.6e-01  3.5e+04    -2.4    0.019 *  
     ## age8                 -4.0e+00    1.5e+00  2.7e+04    -2.7    0.006 ** 
-    ## StringencyIndex:age2 -4.7e-04    2.1e-03  3.7e+04    -0.2    0.820    
-    ## StringencyIndex:age3 -3.2e-03    2.2e-03  3.7e+04    -1.4    0.152    
-    ## StringencyIndex:age4  1.8e-03    2.2e-03  3.9e+04     0.8    0.403    
-    ## StringencyIndex:age5 -1.1e-03    2.2e-03  3.8e+04    -0.5    0.635    
-    ## StringencyIndex:age6  1.1e-03    2.4e-03  3.8e+04     0.5    0.638    
-    ## StringencyIndex:age7  1.8e-03    6.0e-03  3.6e+04     0.3    0.763    
+    ## StringencyIndex:age2 -3.4e-04    2.1e-03  3.7e+04    -0.2    0.871    
+    ## StringencyIndex:age3 -3.1e-03    2.2e-03  3.7e+04    -1.4    0.159    
+    ## StringencyIndex:age4  1.8e-03    2.2e-03  3.8e+04     0.8    0.410    
+    ## StringencyIndex:age5 -1.1e-03    2.2e-03  3.8e+04    -0.5    0.626    
+    ## StringencyIndex:age6  1.1e-03    2.4e-03  3.8e+04     0.5    0.635    
+    ## StringencyIndex:age7  1.8e-03    6.0e-03  3.6e+04     0.3    0.764    
     ## StringencyIndex:age8  4.1e-02    2.0e-02  2.9e+04     2.1    0.035 *  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
@@ -1370,13 +1481,13 @@ LOESS plot exhausted and stringency for different age
 groups
 
 ``` r
-plot_exh <- ggplot(data = data_long_min3_strc2, aes(x = StringencyIndex, y = Exh, group = ID, color = age))
+plot_exh <- ggplot(data = data_long_min3_strc, aes(x = StringencyIndex, y = Exh, group = ID, color = age))
 
 plot_exh + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Exhausted by Stringency for different age groups", y ="Exh")
 ```
 
-![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-43-1.png)<!-- -->
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-55-1.png)<!-- -->
 GAM
 plot
 
@@ -1385,7 +1496,28 @@ plot_exh + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Exhausted by Stringency for different age groups", y ="Exh")
 ```
 
-![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-44-1.png)<!-- -->
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-56-1.png)<!-- -->
+
+LOESS plot exhausted and date for different age
+groups
+
+``` r
+plot_exh2 <- ggplot(data = data_long_min3_strc, aes(x = Date, y = Exh, group = ID, color = age))
+
+plot_exh2 + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Exhausted by Date for different age groups", y ="Exh")
+```
+
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-57-1.png)<!-- -->
+GAM
+plot
+
+``` r
+plot_exh2 + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Exhausted by Date for different age groups", y ="Exh")
+```
+
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-58-1.png)<!-- -->
 
 # Inspired
 
@@ -1393,31 +1525,31 @@ Multilevel random
 intercept
 
 ``` r
-model.insp0 <- lmer(Insp ~ 1 + (1 | Country/ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.insp0 <- lmer(Insp ~ 1 + (1 | Country/ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.insp0)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Insp ~ 1 + (1 | Country/ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 106864.6
+    ## REML criterion at convergence: 106503.7
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.7157 -0.5822 -0.0525  0.5903  3.8583 
+    ## -3.7171 -0.5819 -0.0524  0.5908  3.8593 
     ## 
     ## Random effects:
     ##  Groups     Name        Variance Std.Dev.
-    ##  ID:Country (Intercept) 0.60480  0.7777  
-    ##  Country    (Intercept) 0.04819  0.2195  
-    ##  Residual               0.57394  0.7576  
-    ## Number of obs: 39979, groups:  ID:Country, 9204; Country, 78
+    ##  ID:Country (Intercept) 0.60579  0.7783  
+    ##  Country    (Intercept) 0.04979  0.2231  
+    ##  Residual               0.57366  0.7574  
+    ## Number of obs: 39844, groups:  ID:Country, 9177; Country, 58
     ## 
     ## Fixed effects:
     ##             Estimate Std. Error       df t value Pr(>|t|)    
-    ## (Intercept)  2.52669    0.03631 55.19096   69.58   <2e-16 ***
+    ## (Intercept)  2.52895    0.03763 48.52247   67.22   <2e-16 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -1425,31 +1557,31 @@ Using two level models Predicted by
 stringency
 
 ``` r
-model.insp1 <- lmer(Insp ~ StringencyIndex + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.insp1 <- lmer(Insp ~ StringencyIndex + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.insp1)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Insp ~ StringencyIndex + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 107379.5
+    ## REML criterion at convergence: 107047.3
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.6988 -0.5682 -0.0857  0.5690  3.9043 
+    ## -3.7003 -0.5683 -0.0859  0.5688  3.9053 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.6598   0.8123  
-    ##  Residual             0.5744   0.7579  
-    ## Number of obs: 39945, groups:  ID, 9196
+    ##  ID       (Intercept) 0.6610   0.8130  
+    ##  Residual             0.5741   0.7577  
+    ## Number of obs: 39822, groups:  ID, 9171
     ## 
     ## Fixed effects:
     ##                  Estimate Std. Error        df t value Pr(>|t|)    
-    ## (Intercept)     2.382e+00  4.849e-02 3.697e+04  49.130   <2e-16 ***
-    ## StringencyIndex 7.093e-04  6.028e-04 3.804e+04   1.177    0.239    
+    ## (Intercept)     2.383e+00  4.857e-02 3.690e+04  49.072   <2e-16 ***
+    ## StringencyIndex 6.902e-04  6.039e-04 3.797e+04   1.143    0.253    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -1458,91 +1590,91 @@ summary(model.insp1)
     ## StrngncyInd -0.981
 
 ``` r
-model.insp2 <- lmer(Insp ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.insp2 <- lmer(Insp ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.insp2)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Insp ~ StringencyIndex + age + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 107402.4
+    ## REML criterion at convergence: 107070.1
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.7028 -0.5706 -0.0863  0.5697  3.9010 
+    ## -3.7043 -0.5703 -0.0862  0.5693  3.9019 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.6598   0.8123  
-    ##  Residual             0.5744   0.7579  
-    ## Number of obs: 39945, groups:  ID, 9196
+    ##  ID       (Intercept) 0.6610   0.8130  
+    ##  Residual             0.5741   0.7577  
+    ## Number of obs: 39822, groups:  ID, 9171
     ## 
     ## Fixed effects:
     ##                   Estimate Std. Error         df t value Pr(>|t|)    
-    ## (Intercept)      2.404e+00  5.547e-02  3.042e+04  43.337   <2e-16 ***
-    ## StringencyIndex  6.657e-04  6.044e-04  3.817e+04   1.101    0.271    
-    ## age2            -1.118e-02  3.313e-02  9.150e+03  -0.337    0.736    
-    ## age3            -5.206e-02  3.366e-02  9.169e+03  -1.547    0.122    
-    ## age4            -4.207e-02  3.390e-02  9.169e+03  -1.241    0.215    
-    ## age5             5.670e-03  3.438e-02  9.148e+03   0.165    0.869    
-    ## age6             8.662e-03  3.696e-02  9.190e+03   0.234    0.815    
-    ## age7            -4.001e-02  7.421e-02  9.071e+03  -0.539    0.590    
-    ## age8            -3.571e-01  2.840e-01  9.085e+03  -1.257    0.209    
+    ## (Intercept)      2.406e+00  5.557e-02  3.038e+04  43.295   <2e-16 ***
+    ## StringencyIndex  6.467e-04  6.055e-04  3.809e+04   1.068    0.285    
+    ## age2            -1.252e-02  3.321e-02  9.125e+03  -0.377    0.706    
+    ## age3            -5.393e-02  3.372e-02  9.143e+03  -1.599    0.110    
+    ## age4            -4.120e-02  3.397e-02  9.143e+03  -1.213    0.225    
+    ## age5             5.681e-03  3.444e-02  9.122e+03   0.165    0.869    
+    ## age6             8.158e-03  3.702e-02  9.165e+03   0.220    0.826    
+    ## age7            -4.038e-02  7.427e-02  9.045e+03  -0.544    0.587    
+    ## age8            -3.576e-01  2.842e-01  9.059e+03  -1.258    0.208    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
     ## Correlation of Fixed Effects:
     ##             (Intr) StrngI age2   age3   age4   age5   age6   age7  
-    ## StrngncyInd -0.888                                                 
-    ## age2        -0.393  0.042                                          
+    ## StrngncyInd -0.887                                                 
+    ## age2        -0.392  0.042                                          
     ## age3        -0.398  0.054  0.588                                   
-    ## age4        -0.395  0.054  0.584  0.575                            
-    ## age5        -0.385  0.048  0.576  0.567  0.563                     
-    ## age6        -0.370  0.058  0.536  0.528  0.524  0.517              
-    ## age7        -0.194  0.040  0.267  0.264  0.262  0.258  0.241       
+    ## age4        -0.395  0.054  0.583  0.575                            
+    ## age5        -0.385  0.048  0.575  0.567  0.563                     
+    ## age6        -0.371  0.058  0.536  0.528  0.525  0.517              
+    ## age7        -0.194  0.040  0.268  0.264  0.262  0.258  0.241       
     ## age8        -0.057  0.018  0.070  0.069  0.069  0.068  0.063  0.032
 
 ``` r
-model.insp3 <- lmer(Insp ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.insp3 <- lmer(Insp ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 print(summary(model.insp3), digits=2)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Insp ~ StringencyIndex + age + StringencyIndex * age + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 107463.3
+    ## REML criterion at convergence: 107131.4
     ## 
     ## Scaled residuals: 
     ##    Min     1Q Median     3Q    Max 
-    ##  -3.70  -0.57  -0.09   0.57   3.92 
+    ##  -3.70  -0.57  -0.09   0.58   3.92 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
     ##  ID       (Intercept) 0.66     0.81    
     ##  Residual             0.57     0.76    
-    ## Number of obs: 39945, groups:  ID, 9196
+    ## Number of obs: 39822, groups:  ID, 9171
     ## 
     ## Fixed effects:
     ##                      Estimate Std. Error       df t value Pr(>|t|)    
     ## (Intercept)           2.3e+00    1.2e-01  3.7e+04    18.8   <2e-16 ***
-    ## StringencyIndex       1.7e-03    1.5e-03  3.8e+04     1.2     0.24    
-    ## age2                 -5.7e-02    1.6e-01  3.6e+04    -0.4     0.72    
-    ## age3                 -6.2e-02    1.7e-01  3.7e+04    -0.4     0.72    
-    ## age4                  1.8e-01    1.7e-01  3.8e+04     1.1     0.29    
-    ## age5                  1.1e-01    1.7e-01  3.7e+04     0.6     0.54    
-    ## age6                  3.2e-01    1.8e-01  3.7e+04     1.7     0.09 .  
+    ## StringencyIndex       1.8e-03    1.5e-03  3.8e+04     1.2     0.23    
+    ## age2                 -4.4e-02    1.6e-01  3.6e+04    -0.3     0.79    
+    ## age3                 -5.9e-02    1.7e-01  3.7e+04    -0.3     0.73    
+    ## age4                  1.8e-01    1.7e-01  3.8e+04     1.0     0.30    
+    ## age5                  1.1e-01    1.7e-01  3.7e+04     0.6     0.52    
+    ## age6                  3.2e-01    1.8e-01  3.7e+04     1.7     0.08 .  
     ## age7                  4.0e-01    4.4e-01  3.6e+04     0.9     0.37    
-    ## age8                  3.2e-01    1.4e+00  2.8e+04     0.2     0.82    
-    ## StringencyIndex:age2  6.1e-04    2.0e-03  3.8e+04     0.3     0.76    
-    ## StringencyIndex:age3  1.6e-04    2.1e-03  3.8e+04     0.1     0.94    
-    ## StringencyIndex:age4 -2.8e-03    2.1e-03  3.9e+04    -1.3     0.18    
-    ## StringencyIndex:age5 -1.3e-03    2.1e-03  3.8e+04    -0.6     0.56    
-    ## StringencyIndex:age6 -3.9e-03    2.3e-03  3.8e+04    -1.7     0.09 .  
-    ## StringencyIndex:age7 -5.6e-03    5.7e-03  3.7e+04    -1.0     0.32    
+    ## age8                  3.3e-01    1.4e+00  2.8e+04     0.2     0.81    
+    ## StringencyIndex:age2  4.2e-04    2.0e-03  3.7e+04     0.2     0.83    
+    ## StringencyIndex:age3  1.1e-04    2.1e-03  3.8e+04     0.1     0.96    
+    ## StringencyIndex:age4 -2.7e-03    2.1e-03  3.9e+04    -1.3     0.19    
+    ## StringencyIndex:age5 -1.3e-03    2.1e-03  3.8e+04    -0.6     0.54    
+    ## StringencyIndex:age6 -4.0e-03    2.3e-03  3.8e+04    -1.7     0.08 .  
+    ## StringencyIndex:age7 -5.7e-03    5.7e-03  3.7e+04    -1.0     0.32    
     ## StringencyIndex:age8 -9.2e-03    1.9e-02  3.0e+04    -0.5     0.62    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
@@ -1556,13 +1688,13 @@ LOESS plot inspired and stringency for different age
 groups
 
 ``` r
-plot_insp <- ggplot(data = data_long_min3_strc2, aes(x = StringencyIndex, y = Insp, group = ID, color = age))
+plot_insp <- ggplot(data = data_long_min3_strc, aes(x = StringencyIndex, y = Insp, group = ID, color = age))
 
 plot_insp + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Inspired by Stringency for different age groups", y ="Insp")
 ```
 
-![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-49-1.png)<!-- -->
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-63-1.png)<!-- -->
 GAM
 plot
 
@@ -1571,7 +1703,28 @@ plot_insp + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Inspired by Stringency for different age groups", y ="Insp")
 ```
 
-![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-50-1.png)<!-- -->
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-64-1.png)<!-- -->
+
+LOESS plot inspired and date for different age
+groups
+
+``` r
+plot_insp2 <- ggplot(data = data_long_min3_strc, aes(x = Date, y = Insp, group = ID, color = age))
+
+plot_insp2 + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Inspired by Date for different age groups", y ="Insp")
+```
+
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-65-1.png)<!-- -->
+GAM
+plot
+
+``` r
+plot_insp2 + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Inspired by Date for different age groups", y ="Insp")
+```
+
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-66-1.png)<!-- -->
 
 # Loved
 
@@ -1579,31 +1732,31 @@ Multilevel random
 intercept
 
 ``` r
-model.lov0 <- lmer(Lov ~ 1 + (1 | Country/ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.lov0 <- lmer(Lov ~ 1 + (1 | Country/ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.lov0)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Lov ~ 1 + (1 | Country/ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 75460.8
+    ## REML criterion at convergence: 75204.5
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -5.5499 -0.4656  0.0696  0.4632  4.5259 
+    ## -5.5509 -0.4659  0.0695  0.4629  4.5269 
     ## 
     ## Random effects:
     ##  Groups     Name        Variance Std.Dev.
-    ##  ID:Country (Intercept) 0.89658  0.9469  
-    ##  Country    (Intercept) 0.05715  0.2391  
-    ##  Residual               0.34954  0.5912  
-    ## Number of obs: 30870, groups:  ID:Country, 9202; Country, 78
+    ##  ID:Country (Intercept) 0.89749  0.9474  
+    ##  Country    (Intercept) 0.05943  0.2438  
+    ##  Residual               0.34943  0.5911  
+    ## Number of obs: 30762, groups:  ID:Country, 9175; Country, 58
     ## 
     ## Fixed effects:
     ##             Estimate Std. Error       df t value Pr(>|t|)    
-    ## (Intercept)  3.34271    0.04026 48.51913   83.03   <2e-16 ***
+    ## (Intercept)  3.33835    0.04172 42.81655   80.02   <2e-16 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -1611,31 +1764,31 @@ Using two level models Predicted by
 stringency
 
 ``` r
-model.lov1 <- lmer(Lov ~ StringencyIndex + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.lov1 <- lmer(Lov ~ StringencyIndex + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.lov1)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Lov ~ StringencyIndex + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 75707.3
+    ## REML criterion at convergence: 75491.5
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -5.5511 -0.4522  0.0846  0.4336  4.4985 
+    ## -5.5502 -0.4526  0.0845  0.4350  4.4977 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.9432   0.9712  
-    ##  Residual             0.3491   0.5908  
-    ## Number of obs: 30843, groups:  ID, 9194
+    ##  ID       (Intercept) 0.9445   0.9718  
+    ##  Residual             0.3492   0.5909  
+    ## Number of obs: 30745, groups:  ID, 9169
     ## 
     ## Fixed effects:
     ##                   Estimate Std. Error         df t value Pr(>|t|)    
-    ## (Intercept)      3.477e+00  4.978e-02  3.082e+04  69.855   <2e-16 ***
-    ## StringencyIndex -9.267e-04  6.165e-04  3.051e+04  -1.503    0.133    
+    ## (Intercept)      3.476e+00  4.987e-02  3.072e+04  69.705   <2e-16 ***
+    ## StringencyIndex -9.123e-04  6.177e-04  3.041e+04  -1.477     0.14    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -1644,38 +1797,38 @@ summary(model.lov1)
     ## StrngncyInd -0.976
 
 ``` r
-model.lov2 <- lmer(Lov ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.lov2 <- lmer(Lov ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.lov2)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Lov ~ StringencyIndex + age + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 75720.7
+    ## REML criterion at convergence: 75505.1
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -5.5541 -0.4525  0.0811  0.4398  4.4947 
+    ## -5.5530 -0.4521  0.0813  0.4399  4.4938 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.9422   0.9707  
-    ##  Residual             0.3491   0.5908  
-    ## Number of obs: 30843, groups:  ID, 9194
+    ##  ID       (Intercept) 0.9435   0.9713  
+    ##  Residual             0.3492   0.5909  
+    ## Number of obs: 30745, groups:  ID, 9169
     ## 
     ## Fixed effects:
     ##                   Estimate Std. Error         df t value Pr(>|t|)    
-    ## (Intercept)      3.458e+00  5.837e-02  2.817e+04  59.244   <2e-16 ***
-    ## StringencyIndex -8.920e-04  6.181e-04  3.045e+04  -1.443   0.1490    
-    ## age2             2.379e-02  3.811e-02  9.158e+03   0.624   0.5324    
-    ## age3             5.097e-02  3.872e-02  9.178e+03   1.316   0.1881    
-    ## age4             3.882e-02  3.900e-02  9.176e+03   0.995   0.3195    
-    ## age5            -4.104e-02  3.956e-02  9.158e+03  -1.037   0.2996    
-    ## age6            -1.305e-02  4.250e-02  9.181e+03  -0.307   0.7589    
-    ## age7             2.154e-01  8.524e-02  9.035e+03   2.527   0.0115 *  
-    ## age8             2.265e-01  3.267e-01  9.075e+03   0.693   0.4881    
+    ## (Intercept)      3.456e+00  5.847e-02  2.810e+04  59.114   <2e-16 ***
+    ## StringencyIndex -8.782e-04  6.192e-04  3.034e+04  -1.418   0.1562    
+    ## age2             2.514e-02  3.820e-02  9.134e+03   0.658   0.5105    
+    ## age3             4.927e-02  3.879e-02  9.152e+03   1.270   0.2041    
+    ## age4             4.002e-02  3.907e-02  9.152e+03   1.024   0.3058    
+    ## age5            -4.047e-02  3.962e-02  9.133e+03  -1.021   0.3071    
+    ## age6            -1.299e-02  4.258e-02  9.157e+03  -0.305   0.7602    
+    ## age7             2.159e-01  8.530e-02  9.010e+03   2.531   0.0114 *  
+    ## age8             2.270e-01  3.269e-01  9.050e+03   0.695   0.4873    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -1684,23 +1837,23 @@ summary(model.lov2)
     ## StrngncyInd -0.864                                                 
     ## age2        -0.419  0.035                                          
     ## age3        -0.425  0.049  0.588                                   
-    ## age4        -0.424  0.051  0.584  0.575                            
+    ## age4        -0.424  0.051  0.583  0.575                            
     ## age5        -0.418  0.051  0.575  0.567  0.563                     
     ## age6        -0.402  0.062  0.536  0.529  0.525  0.518              
-    ## age7        -0.208  0.040  0.268  0.264  0.262  0.259  0.241       
+    ## age7        -0.208  0.040  0.268  0.264  0.262  0.259  0.242       
     ## age8        -0.059  0.016  0.070  0.069  0.069  0.068  0.063  0.032
 
 ``` r
-model.lov3 <- lmer(Lov ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.lov3 <- lmer(Lov ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 print(summary(model.lov3), digits=2)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Lov ~ StringencyIndex + age + StringencyIndex * age + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 75779.6
+    ## REML criterion at convergence: 75563.8
     ## 
     ## Scaled residuals: 
     ##    Min     1Q Median     3Q    Max 
@@ -1710,26 +1863,26 @@ print(summary(model.lov3), digits=2)
     ##  Groups   Name        Variance Std.Dev.
     ##  ID       (Intercept) 0.94     0.97    
     ##  Residual             0.35     0.59    
-    ## Number of obs: 30843, groups:  ID, 9194
+    ## Number of obs: 30745, groups:  ID, 9169
     ## 
     ## Fixed effects:
     ##                      Estimate Std. Error       df t value Pr(>|t|)    
     ## (Intercept)           3.7e+00    1.3e-01  3.1e+04    28.7   <2e-16 ***
-    ## StringencyIndex      -4.3e-03    1.5e-03  3.1e+04    -2.7    0.006 ** 
-    ## age2                 -3.1e-01    1.7e-01  3.1e+04    -1.8    0.074 .  
-    ## age3                 -3.5e-01    1.8e-01  3.1e+04    -1.9    0.051 .  
-    ## age4                 -3.3e-01    1.8e-01  3.1e+04    -1.9    0.059 .  
-    ## age5                 -4.4e-01    1.8e-01  3.1e+04    -2.5    0.013 *  
-    ## age6                 -1.1e-01    1.9e-01  3.1e+04    -0.6    0.555    
-    ## age7                  4.0e-02    4.2e-01  3.1e+04     0.1    0.924    
-    ## age8                  1.8e-01    1.3e+00  3.1e+04     0.1    0.888    
-    ## StringencyIndex:age2  4.1e-03    2.1e-03  3.1e+04     2.0    0.050 .  
+    ## StringencyIndex      -4.3e-03    1.6e-03  3.0e+04    -2.8    0.006 ** 
+    ## age2                 -3.2e-01    1.7e-01  3.1e+04    -1.8    0.068 .  
+    ## age3                 -3.5e-01    1.8e-01  3.1e+04    -2.0    0.050 *  
+    ## age4                 -3.4e-01    1.8e-01  3.1e+04    -1.9    0.055 .  
+    ## age5                 -4.5e-01    1.8e-01  3.1e+04    -2.5    0.012 *  
+    ## age6                 -1.1e-01    1.9e-01  3.1e+04    -0.6    0.544    
+    ## age7                  3.8e-02    4.2e-01  3.1e+04     0.1    0.928    
+    ## age8                  1.8e-01    1.3e+00  3.0e+04     0.1    0.890    
+    ## StringencyIndex:age2  4.2e-03    2.1e-03  3.1e+04     2.0    0.045 *  
     ## StringencyIndex:age3  5.0e-03    2.2e-03  3.1e+04     2.3    0.023 *  
-    ## StringencyIndex:age4  4.6e-03    2.2e-03  3.0e+04     2.1    0.032 *  
-    ## StringencyIndex:age5  5.0e-03    2.2e-03  3.0e+04     2.3    0.021 *  
-    ## StringencyIndex:age6  1.1e-03    2.3e-03  3.0e+04     0.5    0.642    
-    ## StringencyIndex:age7  2.1e-03    5.4e-03  3.0e+04     0.4    0.702    
-    ## StringencyIndex:age8  2.0e-04    1.7e-02  3.1e+04     0.0    0.991    
+    ## StringencyIndex:age4  4.7e-03    2.2e-03  3.0e+04     2.2    0.029 *  
+    ## StringencyIndex:age5  5.0e-03    2.2e-03  3.0e+04     2.3    0.020 *  
+    ## StringencyIndex:age6  1.1e-03    2.3e-03  3.0e+04     0.5    0.629    
+    ## StringencyIndex:age7  2.1e-03    5.4e-03  3.0e+04     0.4    0.697    
+    ## StringencyIndex:age8  2.4e-04    1.7e-02  3.1e+04     0.0    0.989    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -1742,13 +1895,13 @@ LOESS plot loved and stringency for different age
 groups
 
 ``` r
-plot_lov <- ggplot(data = data_long_min3_strc2, aes(x = StringencyIndex, y = Lov, group = ID, color = age))
+plot_lov <- ggplot(data = data_long_min3_strc, aes(x = StringencyIndex, y = Lov, group = ID, color = age))
 
 plot_lov + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Loved by Stringency for different age groups", y ="Lov")
 ```
 
-![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-55-1.png)<!-- -->
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-71-1.png)<!-- -->
 GAM
 plot
 
@@ -1757,7 +1910,28 @@ plot_lov + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Inspired by Stringency for different age groups", y ="Lov")
 ```
 
-![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-56-1.png)<!-- -->
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-72-1.png)<!-- -->
+
+LOESS plot loved and date for different age
+groups
+
+``` r
+plot_lov2 <- ggplot(data = data_long_min3_strc, aes(x = Date, y = Lov, group = ID, color = age))
+
+plot_lov2 + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Loved by Date for different age groups", y ="Lov")
+```
+
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-73-1.png)<!-- -->
+GAM
+plot
+
+``` r
+plot_lov2 + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Inspired by Date for different age groups", y ="Lov")
+```
+
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-74-1.png)<!-- -->
 
 # Nervous
 
@@ -1765,31 +1939,31 @@ Multilevel random
 intercept
 
 ``` r
-model.nerv0 <- lmer(Nerv ~ 1 + (1 | Country/ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.nerv0 <- lmer(Nerv ~ 1 + (1 | Country/ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.nerv0)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Nerv ~ 1 + (1 | Country/ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 109250.7
+    ## REML criterion at convergence: 108867.8
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.5939 -0.5594 -0.1467  0.5668  4.2540 
+    ## -3.5963 -0.5597 -0.1472  0.5669  4.2562 
     ## 
     ## Random effects:
     ##  Groups     Name        Variance Std.Dev.
-    ##  ID:Country (Intercept) 0.71984  0.8484  
-    ##  Country    (Intercept) 0.04625  0.2151  
-    ##  Residual               0.59190  0.7693  
-    ## Number of obs: 40011, groups:  ID:Country, 9202; Country, 78
+    ##  ID:Country (Intercept) 0.7211   0.8492  
+    ##  Country    (Intercept) 0.0474   0.2177  
+    ##  Residual               0.5913   0.7690  
+    ## Number of obs: 39876, groups:  ID:Country, 9175; Country, 58
     ## 
     ## Fixed effects:
     ##             Estimate Std. Error       df t value Pr(>|t|)    
-    ## (Intercept)  2.37226    0.03648 53.74844   65.04   <2e-16 ***
+    ## (Intercept)  2.37177    0.03757 48.12830   63.14   <2e-16 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -1797,31 +1971,31 @@ Using two level models Predicted by
 stringency
 
 ``` r
-model.nerv1 <- lmer(Nerv ~ StringencyIndex + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.nerv1 <- lmer(Nerv ~ StringencyIndex + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.nerv1)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Nerv ~ StringencyIndex + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 109560.7
+    ## REML criterion at convergence: 109218.9
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.6092 -0.5533 -0.1535  0.5658  4.1904 
+    ## -3.6111 -0.5528 -0.1536  0.5660  4.1922 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.7661   0.8753  
-    ##  Residual             0.5918   0.7693  
-    ## Number of obs: 39977, groups:  ID, 9194
+    ##  ID       (Intercept) 0.7675   0.8761  
+    ##  Residual             0.5914   0.7690  
+    ## Number of obs: 39854, groups:  ID, 9169
     ## 
     ## Fixed effects:
     ##                  Estimate Std. Error        df t value Pr(>|t|)    
-    ## (Intercept)     2.285e+00  5.003e-02 3.780e+04  45.681   <2e-16 ***
-    ## StringencyIndex 5.828e-04  6.212e-04 3.881e+04   0.938    0.348    
+    ## (Intercept)     2.291e+00  5.011e-02 3.773e+04  45.709   <2e-16 ***
+    ## StringencyIndex 5.151e-04  6.222e-04 3.873e+04   0.828    0.408    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -1830,38 +2004,38 @@ summary(model.nerv1)
     ## StrngncyInd -0.980
 
 ``` r
-model.nerv2 <- lmer(Nerv ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.nerv2 <- lmer(Nerv ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.nerv2)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Nerv ~ StringencyIndex + age + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 108692
+    ## REML criterion at convergence: 108351.2
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -3.5484 -0.5626 -0.1484  0.5739  4.2161 
+    ## -3.5506 -0.5626 -0.1471  0.5738  4.2179 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.6824   0.8261  
-    ##  Residual             0.5916   0.7692  
-    ## Number of obs: 39977, groups:  ID, 9194
+    ##  ID       (Intercept) 0.6835   0.8268  
+    ##  Residual             0.5912   0.7689  
+    ## Number of obs: 39854, groups:  ID, 9169
     ## 
     ## Fixed effects:
     ##                   Estimate Std. Error         df t value Pr(>|t|)    
-    ## (Intercept)      2.691e+00  5.632e-02  3.045e+04  47.783  < 2e-16 ***
-    ## StringencyIndex -2.080e-04  6.134e-04  3.823e+04  -0.339 0.734570    
-    ## age2            -9.092e-02  3.368e-02  9.149e+03  -2.700 0.006953 ** 
-    ## age3            -1.993e-01  3.422e-02  9.169e+03  -5.825 5.92e-09 ***
-    ## age4            -3.745e-01  3.446e-02  9.167e+03 -10.867  < 2e-16 ***
-    ## age5            -5.684e-01  3.495e-02  9.144e+03 -16.263  < 2e-16 ***
-    ## age6            -8.834e-01  3.757e-02  9.184e+03 -23.511  < 2e-16 ***
-    ## age7            -1.009e+00  7.539e-02  9.047e+03 -13.384  < 2e-16 ***
-    ## age8            -1.109e+00  2.888e-01  9.085e+03  -3.841 0.000123 ***
+    ## (Intercept)      2.698e+00  5.641e-02  3.041e+04  47.824  < 2e-16 ***
+    ## StringencyIndex -2.794e-04  6.145e-04  3.815e+04  -0.455 0.649305    
+    ## age2            -9.142e-02  3.376e-02  9.125e+03  -2.708 0.006788 ** 
+    ## age3            -2.006e-01  3.428e-02  9.144e+03  -5.852 5.02e-09 ***
+    ## age4            -3.759e-01  3.453e-02  9.142e+03 -10.886  < 2e-16 ***
+    ## age5            -5.702e-01  3.501e-02  9.119e+03 -16.286  < 2e-16 ***
+    ## age6            -8.845e-01  3.764e-02  9.160e+03 -23.503  < 2e-16 ***
+    ## age7            -1.010e+00  7.544e-02  9.022e+03 -13.390  < 2e-16 ***
+    ## age8            -1.111e+00  2.889e-01  9.060e+03  -3.844 0.000122 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -1869,24 +2043,24 @@ summary(model.nerv2)
     ##             (Intr) StrngI age2   age3   age4   age5   age6   age7  
     ## StrngncyInd -0.887                                                 
     ## age2        -0.393  0.042                                          
-    ## age3        -0.399  0.054  0.588                                   
-    ## age4        -0.396  0.054  0.584  0.575                            
-    ## age5        -0.385  0.048  0.575  0.567  0.563                     
-    ## age6        -0.371  0.058  0.536  0.528  0.524  0.517              
+    ## age3        -0.398  0.054  0.588                                   
+    ## age4        -0.395  0.054  0.583  0.575                            
+    ## age5        -0.386  0.048  0.575  0.567  0.563                     
+    ## age6        -0.371  0.058  0.536  0.528  0.525  0.517              
     ## age7        -0.194  0.040  0.268  0.264  0.262  0.258  0.241       
     ## age8        -0.057  0.018  0.070  0.069  0.069  0.068  0.063  0.032
 
 ``` r
-model.nerv3 <- lmer(Nerv ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.nerv3 <- lmer(Nerv ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 print(summary(model.nerv3), digits=2)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Nerv ~ StringencyIndex + age + StringencyIndex * age + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 108743.2
+    ## REML criterion at convergence: 108402.8
     ## 
     ## Scaled residuals: 
     ##    Min     1Q Median     3Q    Max 
@@ -1896,26 +2070,26 @@ print(summary(model.nerv3), digits=2)
     ##  Groups   Name        Variance Std.Dev.
     ##  ID       (Intercept) 0.68     0.83    
     ##  Residual             0.59     0.77    
-    ## Number of obs: 39977, groups:  ID, 9194
+    ## Number of obs: 39854, groups:  ID, 9169
     ## 
     ## Fixed effects:
     ##                      Estimate Std. Error       df t value Pr(>|t|)    
     ## (Intercept)           2.6e+00    1.3e-01  3.7e+04    20.8   <2e-16 ***
-    ## StringencyIndex       8.4e-04    1.5e-03  3.8e+04     0.6     0.57    
-    ## age2                  1.2e-01    1.7e-01  3.6e+04     0.7     0.46    
-    ## age3                  2.1e-01    1.7e-01  3.7e+04     1.2     0.22    
-    ## age4                 -3.1e-01    1.7e-01  3.8e+04    -1.8     0.07 .  
+    ## StringencyIndex       7.9e-04    1.5e-03  3.8e+04     0.5     0.60    
+    ## age2                  1.3e-01    1.7e-01  3.6e+04     0.8     0.43    
+    ## age3                  2.0e-01    1.7e-01  3.7e+04     1.1     0.26    
+    ## age4                 -3.0e-01    1.7e-01  3.8e+04    -1.8     0.08 .  
     ## age5                 -6.8e-01    1.8e-01  3.7e+04    -3.8    1e-04 ***
     ## age6                 -1.1e+00    1.9e-01  3.7e+04    -5.8    6e-09 ***
-    ## age7                 -5.4e-01    4.5e-01  3.6e+04    -1.2     0.23    
-    ## age8                 -9.8e-01    1.4e+00  2.8e+04    -0.7     0.49    
-    ## StringencyIndex:age2 -2.7e-03    2.0e-03  3.8e+04    -1.3     0.19    
-    ## StringencyIndex:age3 -5.2e-03    2.1e-03  3.8e+04    -2.4     0.02 *  
-    ## StringencyIndex:age4 -7.5e-04    2.1e-03  3.9e+04    -0.4     0.72    
-    ## StringencyIndex:age5  1.4e-03    2.2e-03  3.8e+04     0.7     0.51    
-    ## StringencyIndex:age6  2.7e-03    2.3e-03  3.9e+04     1.2     0.24    
-    ## StringencyIndex:age7 -6.0e-03    5.7e-03  3.7e+04    -1.1     0.29    
-    ## StringencyIndex:age8 -1.6e-03    1.9e-02  3.0e+04    -0.1     0.93    
+    ## age7                 -5.5e-01    4.5e-01  3.6e+04    -1.2     0.22    
+    ## age8                 -9.9e-01    1.4e+00  2.8e+04    -0.7     0.49    
+    ## StringencyIndex:age2 -2.8e-03    2.0e-03  3.7e+04    -1.4     0.17    
+    ## StringencyIndex:age3 -5.0e-03    2.1e-03  3.8e+04    -2.3     0.02 *  
+    ## StringencyIndex:age4 -8.8e-04    2.1e-03  3.9e+04    -0.4     0.68    
+    ## StringencyIndex:age5  1.4e-03    2.2e-03  3.8e+04     0.6     0.52    
+    ## StringencyIndex:age6  2.7e-03    2.3e-03  3.8e+04     1.2     0.24    
+    ## StringencyIndex:age7 -6.0e-03    5.7e-03  3.7e+04    -1.0     0.29    
+    ## StringencyIndex:age8 -1.5e-03    1.9e-02  3.0e+04    -0.1     0.94    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -1928,13 +2102,13 @@ LOESS plot nervous and stringency for different age
 groups
 
 ``` r
-plot_nerv <- ggplot(data = data_long_min3_strc2, aes(x = StringencyIndex, y = Nerv, group = ID, color = age))
+plot_nerv <- ggplot(data = data_long_min3_strc, aes(x = StringencyIndex, y = Nerv, group = ID, color = age))
 
 plot_nerv + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Nervousness by Stringency for different age groups", y ="Nerv")
 ```
 
-![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-61-1.png)<!-- -->
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-79-1.png)<!-- -->
 GAM
 plot
 
@@ -1943,7 +2117,28 @@ plot_nerv + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Nervousness by Stringency for different age groups", y ="Nerv")
 ```
 
-![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-62-1.png)<!-- -->
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-80-1.png)<!-- -->
+
+LOESS plot nervous and date for different age
+groups
+
+``` r
+plot_nerv2 <- ggplot(data = data_long_min3_strc, aes(x = Date, y = Nerv, group = ID, color = age))
+
+plot_nerv2 + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Nervousness by Date for different age groups", y ="Nerv")
+```
+
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-81-1.png)<!-- -->
+GAM
+plot
+
+``` r
+plot_nerv2 + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Nervousness by Date for different age groups", y ="Nerv")
+```
+
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-82-1.png)<!-- -->
 
 # Relaxed
 
@@ -1951,31 +2146,31 @@ Multilevel random
 intercept
 
 ``` r
-model.rel0 <- lmer(Rel ~ 1 + (1 | Country/ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.rel0 <- lmer(Rel ~ 1 + (1 | Country/ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.rel0)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Rel ~ 1 + (1 | Country/ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 105169
+    ## REML criterion at convergence: 104811.1
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -4.4234 -0.5748  0.0586  0.6023  4.0430 
+    ## -4.4249 -0.5749  0.0587  0.6028  4.0443 
     ## 
     ## Random effects:
     ##  Groups     Name        Variance Std.Dev.
-    ##  ID:Country (Intercept) 0.58443  0.7645  
-    ##  Country    (Intercept) 0.04816  0.2195  
-    ##  Residual               0.54772  0.7401  
-    ## Number of obs: 40011, groups:  ID:Country, 9204; Country, 78
+    ##  ID:Country (Intercept) 0.58535  0.7651  
+    ##  Country    (Intercept) 0.04951  0.2225  
+    ##  Residual               0.54746  0.7399  
+    ## Number of obs: 39875, groups:  ID:Country, 9177; Country, 58
     ## 
     ## Fixed effects:
     ##             Estimate Std. Error       df t value Pr(>|t|)    
-    ## (Intercept)  2.85348    0.03613 53.67449   78.98   <2e-16 ***
+    ## (Intercept)  2.85320    0.03738 47.37938   76.33   <2e-16 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -1983,31 +2178,31 @@ Using two level models Predicted by
 stringency
 
 ``` r
-model.rel1 <- lmer(Rel ~ StringencyIndex + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.rel1 <- lmer(Rel ~ StringencyIndex + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.rel1)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Rel ~ StringencyIndex + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 105566.5
+    ## REML criterion at convergence: 105245.2
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -4.4038 -0.5978  0.0433  0.5921  4.1141 
+    ## -4.4046 -0.5974  0.0436  0.5924  4.1151 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.6318   0.7948  
-    ##  Residual             0.5473   0.7398  
-    ## Number of obs: 39977, groups:  ID, 9196
+    ##  ID       (Intercept) 0.6327   0.7954  
+    ##  Residual             0.5472   0.7397  
+    ## Number of obs: 39853, groups:  ID, 9171
     ## 
     ## Fixed effects:
     ##                  Estimate Std. Error        df t value Pr(>|t|)    
-    ## (Intercept)     2.758e+00  4.734e-02 3.704e+04  58.261   <2e-16 ***
-    ## StringencyIndex 1.138e-03  5.885e-04 3.812e+04   1.934   0.0531 .  
+    ## (Intercept)     2.760e+00  4.742e-02 3.697e+04  58.193   <2e-16 ***
+    ## StringencyIndex 1.115e-03  5.896e-04 3.804e+04   1.891   0.0587 .  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
@@ -2016,63 +2211,63 @@ summary(model.rel1)
     ## StrngncyInd -0.981
 
 ``` r
-model.rel2 <- lmer(Rel ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.rel2 <- lmer(Rel ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.rel2)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Rel ~ StringencyIndex + age + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 105417.6
+    ## REML criterion at convergence: 105095
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -4.4096 -0.5828  0.0504  0.5982  4.1282 
+    ## -4.4103 -0.5825  0.0506  0.5973  4.1293 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.6174   0.7858  
-    ##  Residual             0.5473   0.7398  
-    ## Number of obs: 39977, groups:  ID, 9196
+    ##  ID       (Intercept) 0.6182   0.7863  
+    ##  Residual             0.5472   0.7397  
+    ## Number of obs: 39853, groups:  ID, 9171
     ## 
     ## Fixed effects:
     ##                   Estimate Std. Error         df t value Pr(>|t|)    
-    ## (Intercept)      2.831e+00  5.393e-02  3.037e+04  52.491  < 2e-16 ***
-    ## StringencyIndex  1.172e-03  5.882e-04  3.808e+04   1.992 0.046369 *  
-    ## age2            -1.656e-01  3.210e-02  9.168e+03  -5.158 2.55e-07 ***
-    ## age3            -1.994e-01  3.261e-02  9.188e+03  -6.115 1.00e-09 ***
-    ## age4            -1.289e-01  3.285e-02  9.186e+03  -3.924 8.76e-05 ***
-    ## age5            -5.349e-02  3.331e-02  9.163e+03  -1.606 0.108340    
-    ## age6             1.658e-01  3.580e-02  9.201e+03   4.633 3.66e-06 ***
-    ## age7             2.407e-01  7.183e-02  9.057e+03   3.351 0.000808 ***
-    ## age8             2.823e-01  2.752e-01  9.103e+03   1.026 0.305087    
+    ## (Intercept)      2.832e+00  5.403e-02  3.032e+04  52.413  < 2e-16 ***
+    ## StringencyIndex  1.152e-03  5.893e-04  3.801e+04   1.955 0.050533 .  
+    ## age2            -1.658e-01  3.217e-02  9.143e+03  -5.153 2.62e-07 ***
+    ## age3            -1.997e-01  3.267e-02  9.162e+03  -6.112 1.02e-09 ***
+    ## age4            -1.275e-01  3.291e-02  9.162e+03  -3.874 0.000108 ***
+    ## age5            -5.232e-02  3.336e-02  9.138e+03  -1.569 0.116792    
+    ## age6             1.681e-01  3.585e-02  9.176e+03   4.689 2.79e-06 ***
+    ## age7             2.415e-01  7.187e-02  9.033e+03   3.360 0.000783 ***
+    ## age8             2.830e-01  2.753e-01  9.078e+03   1.028 0.304114    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
     ## Correlation of Fixed Effects:
     ##             (Intr) StrngI age2   age3   age4   age5   age6   age7  
     ## StrngncyInd -0.888                                                 
-    ## age2        -0.392  0.042                                          
+    ## age2        -0.391  0.042                                          
     ## age3        -0.397  0.055  0.588                                   
-    ## age4        -0.394  0.054  0.584  0.575                            
-    ## age5        -0.384  0.048  0.576  0.567  0.563                     
-    ## age6        -0.369  0.058  0.536  0.528  0.525  0.517              
-    ## age7        -0.194  0.040  0.268  0.264  0.262  0.258  0.241       
+    ## age4        -0.394  0.054  0.583  0.575                            
+    ## age5        -0.384  0.048  0.575  0.567  0.563                     
+    ## age6        -0.370  0.058  0.536  0.529  0.525  0.517              
+    ## age7        -0.194  0.040  0.268  0.264  0.262  0.259  0.241       
     ## age8        -0.057  0.018  0.070  0.069  0.069  0.068  0.063  0.032
 
 ``` r
-model.rel3 <- lmer(Rel ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.rel3 <- lmer(Rel ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 print(summary(model.rel3), digits=2)
 ```
 
     ## Linear mixed model fit by REML. t-tests use Satterthwaite's method [
     ## lmerModLmerTest]
     ## Formula: Rel ~ StringencyIndex + age + StringencyIndex * age + (1 | ID)
-    ##    Data: data_long_min3_strc2
+    ##    Data: data_long_min3_strc
     ## 
-    ## REML criterion at convergence: 105464.3
+    ## REML criterion at convergence: 105142.2
     ## 
     ## Scaled residuals: 
     ##    Min     1Q Median     3Q    Max 
@@ -2080,28 +2275,28 @@ print(summary(model.rel3), digits=2)
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev.
-    ##  ID       (Intercept) 0.62     0.78    
+    ##  ID       (Intercept) 0.62     0.79    
     ##  Residual             0.55     0.74    
-    ## Number of obs: 39977, groups:  ID, 9196
+    ## Number of obs: 39853, groups:  ID, 9171
     ## 
     ## Fixed effects:
     ##                      Estimate Std. Error       df t value Pr(>|t|)    
     ## (Intercept)           2.6e+00    1.2e-01  3.7e+04    21.9   <2e-16 ***
-    ## StringencyIndex       3.6e-03    1.4e-03  3.8e+04     2.5    0.012 *  
-    ## age2                 -2.8e-02    1.6e-01  3.6e+04    -0.2    0.862    
-    ## age3                 -3.0e-01    1.7e-01  3.7e+04    -1.8    0.073 .  
-    ## age4                  2.1e-01    1.7e-01  3.8e+04     1.3    0.196    
-    ## age5                  2.6e-01    1.7e-01  3.7e+04     1.5    0.125    
+    ## StringencyIndex       3.6e-03    1.4e-03  3.8e+04     2.5    0.011 *  
+    ## age2                 -2.1e-02    1.6e-01  3.6e+04    -0.1    0.897    
+    ## age3                 -2.9e-01    1.7e-01  3.7e+04    -1.7    0.081 .  
+    ## age4                  2.2e-01    1.7e-01  3.8e+04     1.3    0.188    
+    ## age5                  2.6e-01    1.7e-01  3.7e+04     1.6    0.119    
     ## age6                  7.3e-01    1.8e-01  3.7e+04     4.1    5e-05 ***
     ## age7                  1.0e+00    4.3e-01  3.6e+04     2.3    0.020 *  
-    ## age8                  2.1e-01    1.4e+00  2.8e+04     0.2    0.875    
-    ## StringencyIndex:age2 -1.7e-03    1.9e-03  3.7e+04    -0.9    0.386    
-    ## StringencyIndex:age3  1.4e-03    2.1e-03  3.8e+04     0.7    0.502    
-    ## StringencyIndex:age4 -4.3e-03    2.0e-03  3.9e+04    -2.1    0.035 *  
-    ## StringencyIndex:age5 -3.9e-03    2.1e-03  3.8e+04    -1.9    0.061 .  
+    ## age8                  2.2e-01    1.4e+00  2.8e+04     0.2    0.874    
+    ## StringencyIndex:age2 -1.8e-03    1.9e-03  3.7e+04    -0.9    0.361    
+    ## StringencyIndex:age3  1.3e-03    2.1e-03  3.8e+04     0.6    0.534    
+    ## StringencyIndex:age4 -4.3e-03    2.0e-03  3.9e+04    -2.1    0.034 *  
+    ## StringencyIndex:age5 -3.9e-03    2.1e-03  3.8e+04    -1.9    0.058 .  
     ## StringencyIndex:age6 -7.1e-03    2.2e-03  3.8e+04    -3.2    0.001 ** 
-    ## StringencyIndex:age7 -9.8e-03    5.5e-03  3.7e+04    -1.8    0.076 .  
-    ## StringencyIndex:age8  1.2e-03    1.8e-02  3.0e+04     0.1    0.947    
+    ## StringencyIndex:age7 -9.8e-03    5.5e-03  3.7e+04    -1.8    0.075 .  
+    ## StringencyIndex:age8  1.2e-03    1.8e-02  2.9e+04     0.1    0.948    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -2114,13 +2309,13 @@ LOESS plot relaxed and stringency for different age
 groups
 
 ``` r
-plot_rel <- ggplot(data = data_long_min3_strc2, aes(x = StringencyIndex, y = Rel, group = ID, color = age))
+plot_rel <- ggplot(data = data_long_min3_strc, aes(x = StringencyIndex, y = Rel, group = ID, color = age))
 
 plot_rel + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Relaxed by Stringency for different age groups", y ="Rel")
 ```
 
-![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-67-1.png)<!-- -->
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-87-1.png)<!-- -->
 GAM
 plot
 
@@ -2129,4 +2324,25 @@ plot_rel + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Relaxed by Stringency for different age groups", y ="Rel")
 ```
 
-![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-68-1.png)<!-- -->
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-88-1.png)<!-- -->
+
+LOESS plot relaxed and date for different age
+groups
+
+``` r
+plot_rel2 <- ggplot(data = data_long_min3_strc, aes(x = Date, y = Rel, group = ID, color = age))
+
+plot_rel2 + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Relaxed by Date for different age groups", y ="Rel")
+```
+
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-89-1.png)<!-- -->
+GAM
+plot
+
+``` r
+plot_rel2 + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Relaxed by Date for different age groups", y ="Rel")
+```
+
+![](200617-Multilevel-models-emotions-and-plots_files/figure-gfm/unnamed-chunk-90-1.png)<!-- -->

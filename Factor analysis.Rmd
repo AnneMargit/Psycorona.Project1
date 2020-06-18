@@ -20,22 +20,23 @@ library(ggplot2)
 library(corrplot)
 library(knitr)
 ```
+This dataset includes measurements from participants that (1) provided at least 3 measurements, (2) that are residents of the country they currently live in, (3) from countries with at least 20 participants, (4) provided data on age
 
 ```{r, results = "hide"}
-load("data_long_min3.Rdata")
+load("data_long_min3_20.Rdata")
 ```
 
+Content and Excited are only measured at baseline, so not using these
 ```{r, results = "hide"}
-data_long_min3 <- as_tibble(data_long_min3)
-data_factor <- data_long_min3 %>% select(X, Wave, Ang, Anxiety, Bored, Calm, Content, Depr, Energ, Exc, Exh, Insp, Lov, Nerv, Rel)
-  
+data_long_min3_20 <- as_tibble(data_long_min3_20)
+data_factor <- data_long_min3_20 %>% select(ID, Wave, Ang, Anxiety, Bored, Calm, Depr, Energ, Exh, Insp, Lov, Nerv, Rel)
 ```
 
 ```{r, results = "hide"}
 data_means <- data_factor %>%
-    dplyr::group_by(X) %>%
+    dplyr::group_by(ID) %>%
     dplyr::summarise_each(funs(mean(., na.rm=TRUE)), 
-                          Ang, Anxiety, Bored, Calm, Content, Depr, Energ, Exc, Exh, Insp, Lov, Nerv, Rel)
+                          Ang, Anxiety, Bored, Calm, Depr, Energ, Exh, Insp, Lov, Nerv, Rel)
 ```
 
 ```{r, results = "hide"}
@@ -43,17 +44,17 @@ save(data_means, file="data_means.Rdata")
 ```
 
 ```{r}
-round(cor(data_means[,c("Ang", "Anxiety", "Bored", "Depr","Exh","Nerv","Calm", "Content","Energ","Exc", "Insp", "Lov","Rel")],use= "complete.obs"),2)
+round(cor(data_means[,c("Ang", "Anxiety", "Bored", "Depr","Exh","Nerv","Calm","Energ", "Insp", "Lov","Rel")],use= "complete.obs"),2)
 ```
 
 ```{r}
-corrplot(cor(data_means[,c("Ang", "Anxiety", "Bored", "Depr","Exh","Nerv","Calm", "Content","Energ","Exc", "Insp", "Lov","Rel")], use="complete.obs"), order = "original", tl.col='black', tl.cex=.75)
+corrplot(cor(data_means[,c("Ang", "Anxiety", "Bored", "Depr","Exh","Nerv","Calm", "Energ", "Insp", "Lov","Rel")], use="complete.obs"), order = "original", tl.col='black', tl.cex=.75)
 ```
 
 ```{r, results = "hide"}
 model <- '
 f1 =~ Ang + Anxiety + Bored + Depr + Exh + Nerv 
-f2 =~ Calm + Content + Energ + Exc + Insp + Lov + Rel 
+f2 =~ Calm  + Energ  + Insp + Lov + Rel 
 
 # latent variable variances
 f1 ~~ 1*f1
@@ -70,9 +71,7 @@ f1 ~~ f2
   Exh ~~ Exh
   Nerv ~~ Nerv
   Calm ~~ Calm
-  Content ~~ Content
   Energ ~~ Energ
-  Exc ~~ Exc
   Insp ~~ Insp
   Lov ~~ Lov
   Rel ~~ Rel
@@ -85,9 +84,7 @@ f1 ~~ f2
   Exh ~ 1
   Nerv ~ 1
   Calm ~ 1
-  Content ~ 1
   Energ ~ 1
-  Exc ~ 1
   Insp ~ 1
   Lov ~ 1
   Rel ~ 1

@@ -22,26 +22,26 @@ library(knitr)
 ```
 
 ```{r, results = "hide"}
-load("data_long_min3.Rdata")
+load("data_long_min3_20.Rdata")
 load("data_means.Rdata")
 ```
 
 ```{r, results = "hide"}
-data_long_min3 <- as_tibble(data_long_min3)
-data_factor <- data_long_min3 %>% select(X, Wave, Ang, Anxiety, Bored, Calm, Content, Depr, Energ, Exc, Exh, Insp, Lov, Nerv, Rel)
+data_long_min3_20 <- as_tibble(data_long_min3_20)
+data_factor <- data_long_min3_20 %>% select(ID, Wave, Ang, Anxiety, Bored, Calm, Content, Depr, Energ, Exc, Exh, Insp, Lov, Nerv, Rel)
 ```
 
 
 ```{r}
 data_factor_pmeans <- data_factor %>%
-  group_by(X) %>%
+  group_by(ID) %>%
   mutate_at(
     c("Ang", "Anxiety", "Bored", "Calm", "Content", "Depr", "Energ", "Exc", "Exh", "Insp", "Lov", "Nerv", "Rel"),
     funs(mean), na.rm=TRUE)
 ```
 
 ```{r, results = "hide"}
-data_factor_new <- left_join(data_factor, data_means, by="X")
+data_factor_new <- left_join(data_factor, data_means, by="ID")
 ```
 
 This dataframe data_within contains the raw scores - person means
@@ -49,7 +49,7 @@ Excited and Content are only measured on baseline, so better to delete those
 
 ```{r, results = "hide"}
 data_within <- data_factor_new %>%
-group_by(X) %>%
+group_by(ID) %>%
   transmute(Wave = Wave,
     Ang = Ang.x - Ang.y,
          Bored = Bored.x - Bored.y,
@@ -69,7 +69,7 @@ group_by(X) %>%
 Without excited and content
 ```{r, results = "hide"}
 data_within2 <- data_factor_new %>%
-group_by(X) %>%
+group_by(ID) %>%
   transmute(Wave = Wave,
     Ang = Ang.x - Ang.y,
          Bored = Bored.x - Bored.y,
@@ -167,7 +167,7 @@ f2 =~ Calm + Energ + Insp + Lov + Rel
 ```
 
 ```{r, results = "hide",warning=FALSE}
-fit2 <- cfa(model2, data = data_long_min3, std.lv=TRUE, missing="fiml", cluster="X")
+fit2 <- cfa(model2, data = data_long_min3_20, std.lv=TRUE, missing="fiml", cluster="ID")
 ```
 
 ```{r}

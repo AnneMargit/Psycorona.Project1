@@ -20,45 +20,39 @@ library(anytime)
 library(rockchalk)
 ```
 
+This dataset includes measurements from participants that (1) provided at least 3 measurements, (2) that are residents of the country they currently live in, (3) from countries with at least 20 participants, (4) provided data on age, and (5) with imputed Stringency index values that are (6) centered around country means
+
 ```{r, results = "hide"}
-load("data_long_min3_strc2.Rdata")
+load("data_long_min3_strc.Rdata")
 ```
 
 ####################### Anxiety #######################
 Multilevel anxiety random intercept
 ```{r}
-model.anx0 <- lmer(Anxiety ~ 1 + (1 | Country/ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.anx0 <- lmer(Anxiety ~ 1 + (1 | Country/ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.anx0)
 ```
-
-Calculate variance accounted for by country
-
-total variance 0.76735 + 0.07755 + 0.58988 = 1.43478
-variance accounted for by country: 0.07755 / 1.43478 = 0.0540501
-between persons: 0.76735 / 1.43478 = 0.5348207
-within persons: 0.58988 / 1.43478 = 0.4111292
-
 Variance in anxiety explained by country is pretty low, equal variance explained between and within persons
 
 Two level models using uncentered Stringency:
 ```{r}
-model.anx1 <- lmer(Anxiety ~ StringencyIndex + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.anx1 <- lmer(Anxiety ~ StringencyIndex + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.anx1)
 ```
 
 ```{r}
-model.anx2 <- lmer(Anxiety ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.anx2 <- lmer(Anxiety ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.anx2)
 ```
 
 ```{r}
-model.anx3 <- lmer(Anxiety ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.anx3 <- lmer(Anxiety ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.anx3)
 ```
 
 plot anxiety and stringency for different age groups / LOESS plot (doesn't work well for large datasets? check this)
 ```{r}
-plot_anx <- ggplot(data = data_long_min3_strc2, aes(x = StringencyIndex, y = Anxiety, group = ID, color = age))
+plot_anx <- ggplot(data = data_long_min3_strc, aes(x = StringencyIndex, y = Anxiety, group = ID, color = age))
 
 plot_anx + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Anxiety by Stringency for different age groups")
@@ -69,42 +63,46 @@ plot_anx + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Anxiety by Stringency for different age groups")
 ```
 
+Plot Anxiety by Date
+```{r}
+plot_anx2 <- ggplot(data = data_long_min3_strc, aes(x = Date, y = Anxiety, group = ID, color = age))
+
+plot_anx2 + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Anxiety by Date for different age groups")
+```
+GAM plot
+```{r}
+plot_anx2 + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Anxiety by Date for different age groups")
+```
 ####################### Anger ####################### 
 Multilevel anger random intercept
 ```{r}
-model.ang0 <- lmer(Ang ~ 1 + (1 | Country/ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.ang0 <- lmer(Ang ~ 1 + (1 | Country/ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.ang0)
 ```
-
-Calculate variance accounted for by country
-
-total variance 0.68842 + 0.04261 +  0.54052 = 1.27155
-variance accounted for by country: 0.04261 / 1.27155 = 0.03351028
-between persons: 0.68842 / 1.27155 = 0.5414022
-within persons: 0.54052 / 1.27155 = 0.4250875
-
 Variance in anger explained by country is pretty low, equal variance explained between and within persons
 
 Using two level models
 Predicted by stringency
 ```{r}
-model.ang1 <- lmer(Ang ~ StringencyIndex + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.ang1 <- lmer(Ang ~ StringencyIndex + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.ang1)
 ```
 
 ```{r}
-model.ang2 <- lmer(Ang ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.ang2 <- lmer(Ang ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.ang2)
 ```
 
 ```{r}
-model.ang3 <- lmer(Ang ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.ang3 <- lmer(Ang ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.ang3)
 ```
 
 LOESS plot anger and stringency for different age groups
 ```{r}
-plot_ang <- ggplot(data = data_long_min3_strc2, aes(x = StringencyIndex, y = Ang, group = ID, color = age))
+plot_ang <- ggplot(data = data_long_min3_strc, aes(x = StringencyIndex, y = Ang, group = ID, color = age))
 
 plot_ang + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Anger by Stringency for different age groups", y ="Anger")
@@ -115,42 +113,47 @@ plot_ang + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Anger by Stringency for different age groups", y ="Anger")
 ```
 
+Plot Anger by Date for different age groups
+```{r}
+plot_ang2 <- ggplot(data = data_long_min3_strc, aes(x = Date, y = Ang, group = ID, color = age))
+
+plot_ang2 + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Anger by Date for different age groups", y ="Anger")
+```
+GAM plot
+```{r}
+plot_ang2 + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Anger by Date for different age groups", y ="Anger")
+```
+
 ####################### Bored ####################### 
 Multilevel random intercept
 ```{r}
-model.bor0 <- lmer(Bored ~ 1 + (1 | Country/ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.bor0 <- lmer(Bored ~ 1 + (1 | Country/ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.bor0)
 ```
-
-Calculate variance accounted for by country
-
-total variance 0.7841 + 0.1123 +  0.6517 = 1.5481
-variance accounted for by country: 0.1123 / 1.5481 = 0.07254053
-between persons: 0.7841 / 1.5481 = 0.5064918
-within persons: 0.6517 / 1.5481 = 0.4209676
-
 Variance in bored explained by country is pretty low, equal variance explained between and within persons
 
 Using two level models
 Predicted by stringency
 ```{r}
-model.bor1 <- lmer(Bored ~ StringencyIndex + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.bor1 <- lmer(Bored ~ StringencyIndex + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.bor1)
 ```
 
 ```{r}
-model.bor2 <- lmer(Bored ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.bor2 <- lmer(Bored ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.bor2)
 ```
 
 ```{r}
-model.bor3 <- lmer(Bored ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.bor3 <- lmer(Bored ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 print(summary(model.bor3), digits=2)
 ```
 
 LOESS plot boredom and stringency for different age groups / lot of missing data in Boredom
 ```{r}
-plot_bor <- ggplot(data = data_long_min3_strc2, aes(x = StringencyIndex, y = Bored, group = ID, color = age))
+plot_bor <- ggplot(data = data_long_min3_strc, aes(x = StringencyIndex, y = Bored, group = ID, color = age))
 
 plot_bor + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Boredom by Stringency for different age groups", y ="Boredom")
@@ -161,32 +164,45 @@ plot_bor + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Boredom by Stringency for different age groups", y ="Boredom")
 ```
 
+Plot Boredom by Date for different age groups / lot of missing data in Boredom
+```{r}
+plot_bor2 <- ggplot(data = data_long_min3_strc, aes(x = Date, y = Bored, group = ID, color = age))
+
+plot_bor2 + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Boredom by Date for different age groups", y ="Boredom")
+```
+GAM plot
+```{r}
+plot_bor2 + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Boredom by Date for different age groups", y ="Boredom")
+```
+
 ####################### Calm ####################### 
 Multilevel random intercept
 ```{r}
-model.calm0 <- lmer(Calm ~ 1 + (1 | Country/ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.calm0 <- lmer(Calm ~ 1 + (1 | Country/ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.calm0)
 ```
 Using two level models
 Predicted by stringency
 ```{r}
-model.calm1 <- lmer(Calm ~ StringencyIndex + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.calm1 <- lmer(Calm ~ StringencyIndex + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.calm1)
 ```
 
 ```{r}
-model.calm2 <- lmer(Calm ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.calm2 <- lmer(Calm ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.calm2)
 ```
 
 ```{r}
-model.calm3 <- lmer(Calm ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.calm3 <- lmer(Calm ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 print(summary(model.calm3), digits=2)
 ```
 
-LOESS plot calm and stringency for different age groups / lot of missing data in Boredom
+LOESS plot calm and stringency for different age groups 
 ```{r}
-plot_calm <- ggplot(data = data_long_min3_strc2, aes(x = StringencyIndex, y = Calm, group = ID, color = age))
+plot_calm <- ggplot(data = data_long_min3_strc, aes(x = StringencyIndex, y = Calm, group = ID, color = age))
 
 plot_calm + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Calm by Stringency for different age groups", y ="Calm")
@@ -198,32 +214,45 @@ plot_calm + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Calm by Stringency for different age groups", y ="Calm")
 ```
 
+LOESS plot calm and date for different age groups 
+```{r}
+plot_calm2 <- ggplot(data = data_long_min3_strc, aes(x = Date, y = Calm, group = ID, color = age))
+
+plot_calm2 + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Calm by Date for different age groups", y ="Calm")
+```
+
+GAM plot
+```{r}
+plot_calm2 + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Calm by Date for different age groups", y ="Calm")
+```
 ####################### Depressed ####################### 
 Multilevel depressed random intercept
 ```{r}
-model.depr0 <- lmer(Depr ~ 1 + (1 | Country/ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.depr0 <- lmer(Depr ~ 1 + (1 | Country/ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.depr0)
 ```
 Using two level models
 Predicted by stringency
 ```{r}
-model.depr1 <- lmer(Depr ~ StringencyIndex + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.depr1 <- lmer(Depr ~ StringencyIndex + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.depr1)
 ```
 
 ```{r}
-model.depr2 <- lmer(Depr ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.depr2 <- lmer(Depr ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.depr2)
 ```
 
 ```{r}
-model.depr3 <- lmer(Depr ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.depr3 <- lmer(Depr ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 print(summary(model.depr3), digits=2)
 ```
 
 LOESS plot depressed and stringency for different age groups 
 ```{r}
-plot_depr <- ggplot(data = data_long_min3_strc2, aes(x = StringencyIndex, y = Depr, group = ID, color = age))
+plot_depr <- ggplot(data = data_long_min3_strc, aes(x = StringencyIndex, y = Depr, group = ID, color = age))
 
 plot_depr + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Depressed by Stringency for different age groups", y ="Depr")
@@ -234,32 +263,44 @@ plot_depr + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Depressed by Stringency for different age groups", y ="Depr")
 ```
 
+LOESS plot depressed and stringency for different age groups 
+```{r}
+plot_depr2 <- ggplot(data = data_long_min3_strc, aes(x = Date, y = Depr, group = ID, color = age))
+
+plot_depr2 + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Depressed by Date for different age groups", y ="Depr")
+```
+GAM plot
+```{r}
+plot_depr2 + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Depressed by Date for different age groups", y ="Depr")
+```
 ####################### Energetic ####################### 
 Multilevel random intercept
 ```{r}
-model.energ0 <- lmer(Energ ~ 1 + (1 | Country/ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.energ0 <- lmer(Energ ~ 1 + (1 | Country/ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.energ0)
 ```
 Using two level models
 Predicted by stringency
 ```{r}
-model.energ1 <- lmer(Energ ~ StringencyIndex + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.energ1 <- lmer(Energ ~ StringencyIndex + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.energ1)
 ```
 
 ```{r}
-model.energ2 <- lmer(Energ ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.energ2 <- lmer(Energ ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.energ2)
 ```
 
 ```{r}
-model.energ3 <- lmer(Energ ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.energ3 <- lmer(Energ ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 print(summary(model.energ3), digits=2)
 ```
 
 LOESS plot energetic and stringency for different age groups 
 ```{r}
-plot_energ <- ggplot(data = data_long_min3_strc2, aes(x = StringencyIndex, y = Energ, group = ID, color = age))
+plot_energ <- ggplot(data = data_long_min3_strc, aes(x = StringencyIndex, y = Energ, group = ID, color = age))
 
 plot_energ + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Energetic by Stringency for different age groups", y ="Energ")
@@ -270,32 +311,45 @@ plot_energ + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Energetic by Stringency for different age groups", y ="Energ")
 ```
 
+LOESS plot energetic and date for different age groups 
+```{r}
+plot_energ2 <- ggplot(data = data_long_min3_strc, aes(x = Date, y = Energ, group = ID, color = age))
+
+plot_energ2 + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Energetic by Date for different age groups", y ="Energ")
+```
+GAM plot
+```{r}
+plot_energ2 + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Energetic by Date for different age groups", y ="Energ")
+```
+
 ####################### Exhausted ####################### 
 Multilevel random intercept
 ```{r}
-model.exh0 <- lmer(Exh ~ 1 + (1 | Country/ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.exh0 <- lmer(Exh ~ 1 + (1 | Country/ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.exh0)
 ```
 Using two level models
 Predicted by stringency
 ```{r}
-model.exh1 <- lmer(Exh ~ StringencyIndex + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.exh1 <- lmer(Exh ~ StringencyIndex + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.exh1)
 ```
 
 ```{r}
-model.exh2 <- lmer(Exh ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.exh2 <- lmer(Exh ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.exh2)
 ```
 
 ```{r}
-model.exh3 <- lmer(Exh ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.exh3 <- lmer(Exh ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 print(summary(model.exh3), digits=2)
 ```
 
 LOESS plot exhausted and stringency for different age groups 
 ```{r}
-plot_exh <- ggplot(data = data_long_min3_strc2, aes(x = StringencyIndex, y = Exh, group = ID, color = age))
+plot_exh <- ggplot(data = data_long_min3_strc, aes(x = StringencyIndex, y = Exh, group = ID, color = age))
 
 plot_exh + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Exhausted by Stringency for different age groups", y ="Exh")
@@ -306,32 +360,45 @@ plot_exh + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Exhausted by Stringency for different age groups", y ="Exh")
 ```
 
+LOESS plot exhausted and date for different age groups 
+```{r}
+plot_exh2 <- ggplot(data = data_long_min3_strc, aes(x = Date, y = Exh, group = ID, color = age))
+
+plot_exh2 + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Exhausted by Date for different age groups", y ="Exh")
+```
+GAM plot
+```{r}
+plot_exh2 + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Exhausted by Date for different age groups", y ="Exh")
+```
+
 ####################### Inspired ####################### 
 Multilevel random intercept
 ```{r}
-model.insp0 <- lmer(Insp ~ 1 + (1 | Country/ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.insp0 <- lmer(Insp ~ 1 + (1 | Country/ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.insp0)
 ```
 Using two level models
 Predicted by stringency
 ```{r}
-model.insp1 <- lmer(Insp ~ StringencyIndex + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.insp1 <- lmer(Insp ~ StringencyIndex + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.insp1)
 ```
 
 ```{r}
-model.insp2 <- lmer(Insp ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.insp2 <- lmer(Insp ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.insp2)
 ```
 
 ```{r}
-model.insp3 <- lmer(Insp ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.insp3 <- lmer(Insp ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 print(summary(model.insp3), digits=2)
 ```
 
 LOESS plot inspired and stringency for different age groups 
 ```{r}
-plot_insp <- ggplot(data = data_long_min3_strc2, aes(x = StringencyIndex, y = Insp, group = ID, color = age))
+plot_insp <- ggplot(data = data_long_min3_strc, aes(x = StringencyIndex, y = Insp, group = ID, color = age))
 
 plot_insp + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Inspired by Stringency for different age groups", y ="Insp")
@@ -342,32 +409,46 @@ plot_insp + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Inspired by Stringency for different age groups", y ="Insp")
 ```
 
+LOESS plot inspired and date for different age groups 
+```{r}
+plot_insp2 <- ggplot(data = data_long_min3_strc, aes(x = Date, y = Insp, group = ID, color = age))
+
+plot_insp2 + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Inspired by Date for different age groups", y ="Insp")
+```
+GAM plot
+```{r}
+plot_insp2 + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Inspired by Date for different age groups", y ="Insp")
+```
+
+
 ####################### Loved ####################### 
 Multilevel random intercept
 ```{r}
-model.lov0 <- lmer(Lov ~ 1 + (1 | Country/ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.lov0 <- lmer(Lov ~ 1 + (1 | Country/ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.lov0)
 ```
 Using two level models
 Predicted by stringency
 ```{r}
-model.lov1 <- lmer(Lov ~ StringencyIndex + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.lov1 <- lmer(Lov ~ StringencyIndex + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.lov1)
 ```
 
 ```{r}
-model.lov2 <- lmer(Lov ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.lov2 <- lmer(Lov ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.lov2)
 ```
 
 ```{r}
-model.lov3 <- lmer(Lov ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.lov3 <- lmer(Lov ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 print(summary(model.lov3), digits=2)
 ```
 
 LOESS plot loved and stringency for different age groups 
 ```{r}
-plot_lov <- ggplot(data = data_long_min3_strc2, aes(x = StringencyIndex, y = Lov, group = ID, color = age))
+plot_lov <- ggplot(data = data_long_min3_strc, aes(x = StringencyIndex, y = Lov, group = ID, color = age))
 
 plot_lov + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Loved by Stringency for different age groups", y ="Lov")
@@ -378,32 +459,46 @@ plot_lov + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Inspired by Stringency for different age groups", y ="Lov")
 ```
 
+LOESS plot loved and date for different age groups 
+```{r}
+plot_lov2 <- ggplot(data = data_long_min3_strc, aes(x = Date, y = Lov, group = ID, color = age))
+
+plot_lov2 + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Loved by Date for different age groups", y ="Lov")
+```
+GAM plot
+```{r}
+plot_lov2 + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Inspired by Date for different age groups", y ="Lov")
+```
+
+
 ####################### Nervous ####################### 
 Multilevel random intercept
 ```{r}
-model.nerv0 <- lmer(Nerv ~ 1 + (1 | Country/ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.nerv0 <- lmer(Nerv ~ 1 + (1 | Country/ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.nerv0)
 ```
 Using two level models
 Predicted by stringency
 ```{r}
-model.nerv1 <- lmer(Nerv ~ StringencyIndex + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.nerv1 <- lmer(Nerv ~ StringencyIndex + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.nerv1)
 ```
 
 ```{r}
-model.nerv2 <- lmer(Nerv ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.nerv2 <- lmer(Nerv ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.nerv2)
 ```
 
 ```{r}
-model.nerv3 <- lmer(Nerv ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.nerv3 <- lmer(Nerv ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 print(summary(model.nerv3), digits=2)
 ```
 
 LOESS plot nervous and stringency for different age groups 
 ```{r}
-plot_nerv <- ggplot(data = data_long_min3_strc2, aes(x = StringencyIndex, y = Nerv, group = ID, color = age))
+plot_nerv <- ggplot(data = data_long_min3_strc, aes(x = StringencyIndex, y = Nerv, group = ID, color = age))
 
 plot_nerv + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Nervousness by Stringency for different age groups", y ="Nerv")
@@ -414,32 +509,45 @@ plot_nerv + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Nervousness by Stringency for different age groups", y ="Nerv")
 ```
 
+LOESS plot nervous and date for different age groups 
+```{r}
+plot_nerv2 <- ggplot(data = data_long_min3_strc, aes(x = Date, y = Nerv, group = ID, color = age))
+
+plot_nerv2 + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Nervousness by Date for different age groups", y ="Nerv")
+```
+GAM plot
+```{r}
+plot_nerv2 + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Nervousness by Date for different age groups", y ="Nerv")
+```
+
 ####################### Relaxed ####################### 
 Multilevel random intercept
 ```{r}
-model.rel0 <- lmer(Rel ~ 1 + (1 | Country/ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.rel0 <- lmer(Rel ~ 1 + (1 | Country/ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.rel0)
 ```
 Using two level models
 Predicted by stringency
 ```{r}
-model.rel1 <- lmer(Rel ~ StringencyIndex + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.rel1 <- lmer(Rel ~ StringencyIndex + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.rel1)
 ```
 
 ```{r}
-model.rel2 <- lmer(Rel ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.rel2 <- lmer(Rel ~ StringencyIndex + age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 summary(model.rel2)
 ```
 
 ```{r}
-model.rel3 <- lmer(Rel ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc2, na.action=na.exclude)
+model.rel3 <- lmer(Rel ~ StringencyIndex + age + StringencyIndex*age + (1 | ID), data=data_long_min3_strc, na.action=na.exclude)
 print(summary(model.rel3), digits=2)
 ```
 
 LOESS plot relaxed and stringency for different age groups 
 ```{r}
-plot_rel <- ggplot(data = data_long_min3_strc2, aes(x = StringencyIndex, y = Rel, group = ID, color = age))
+plot_rel <- ggplot(data = data_long_min3_strc, aes(x = StringencyIndex, y = Rel, group = ID, color = age))
 
 plot_rel + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Relaxed by Stringency for different age groups", y ="Rel")
@@ -448,6 +556,19 @@ GAM plot
 ```{r}
 plot_rel + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Relaxed by Stringency for different age groups", y ="Rel")
+```
+
+LOESS plot relaxed and date for different age groups 
+```{r}
+plot_rel2 <- ggplot(data = data_long_min3_strc, aes(x = Date, y = Rel, group = ID, color = age))
+
+plot_rel2 + stat_smooth(aes(group=age), se = FALSE, method = "loess", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="LOESS plot of Relaxed by Date for different age groups", y ="Rel")
+```
+GAM plot
+```{r}
+plot_rel2 + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y ~ x, size = 1, na.rm=TRUE) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Relaxed by Date for different age groups", y ="Rel")
 ```
 
 
