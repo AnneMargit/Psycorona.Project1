@@ -1,0 +1,56 @@
+---
+title: "Within person exploratory factor analysis"
+author: "Anne Margit"
+date: "6/23/2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This is the principal component analysis of within-person emotion scores, using person-mean centered scores.
+
+```{r}
+load("data_within2.Rdata")
+```
+
+install.packages("GPArotation")
+
+```{r}
+library(psych)
+library(dplyr)
+library(GPArotation)
+```
+
+```{r}
+data_within3 <- data_within2 %>%
+  select(-c("ID", "Wave"))
+```
+
+Parallel analysis. Choose the number of factors by simulating a random data set,
+and choosing the point where the eigenvalues of the real data fall below the
+simulated data. 
+
+```{r}
+within_cor <- cor(data_within3[,-1], use="complete.obs")
+```
+
+```{r}
+parallel <- fa.parallel(data_within3[,-1], fm="ml", main="Scree plot", fa= "pc", n.iter=50, SMC=TRUE, quant = .95 )
+parallel
+```
+
+This suggests 3 within-person components
+
+```{r}
+threepca <- principal(data_within3[,-1], nfactors = 3, rotate = "varimax")
+threepca
+```
+Component A: Anger, Boredom, Anxiety, Depressed, Exhausted, Nervous
+
+Component B: Calm, Relaxed
+
+Component C: Energetic, Inspired, Loved
+
+Fit of .77, is this high enough? 

@@ -141,3 +141,13 @@ This dataset also adds the country mean centered stringency index
 ```{r}
 save(data_long_min3_strc, file="data_long_min3_strc.Rdata")
 ```
+
+Number of participants per age group
+
+```{r}
+Age_N <- data_long_min3_strc %>%
+dplyr::group_by(age) %>%
+  dplyr::summarise(N = n(age))
+```
+
+

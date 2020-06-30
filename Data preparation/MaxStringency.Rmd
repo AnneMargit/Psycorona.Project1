@@ -1,0 +1,83 @@
+---
+title: "Peaks"
+author: "Anne Margit"
+date: "6/18/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+load("data_long_min3_strc.Rdata")
+```
+
+```{r}
+library(pracma)
+library(dplyr)
+library(tidyverse)
+```
+Order by Stringency and Date and select rows with first day of maximum Stringency for each country
+```{r}
+data_long_min3_strc <- as_tibble(data_long_min3_strc)
+
+data_long_min3_strc$Date <- as.Date(data_long_min3_strc$Date)
+
+data_long_min3_strc <- data_long_min3_strc[with(data_long_min3_strc, order(StringencyIndex, Date)),]
+
+MaxStr <- data_long_min3_strc %>% 
+dplyr::group_by(Country) %>%
+arrange(desc(c(StringencyIndex)), .by_group=TRUE) %>%
+slice(1) %>%
+ungroup()
+```
+
+Rename, select columns and merge with original data
+```{r}
+MaxStr$MaxStr <- MaxStr$StringencyIndex
+
+MaxStr2 <- MaxStr %>%
+mutate(NewDate = date(Date))
+
+MaxStr2 <- MaxStr2 %>%
+dplyr::select(c("ID", "MaxStr", "Date", "NewDate"))
+
+data2 <- full_join(data_long_min3_strc, MaxStr2, by=c("ID", "Date"))
+```
+
+Fill other rows of NewDate with date on which max Stringency was reached for respective country
+```{r}
+data3 <- data2 %>%
+group_by(Country) %>%
+fill(NewDate, .direction = "downup")
+```
+
+Calculate difference in days between date of maximum Stringency and current date
+```{r}
+data4$Date <- as.Date(data4$Date)
+data4$NewDate <- as.Date(data4$NewDate)
+
+data4 <- data3 %>%
+group_by(Country) %>%
+arrange(Date) %>%
+mutate(Newest = difftime(Date, NewDate, units = "days"))
+```
+
+Drop not used columns
+```{r}
+data_long_min3_strc_newx <- data4 %>%
+  select(-c("MaxStr", "NewDate"))
+```
+
+Rename
+```{r}
+data_long_min3_strc_newx <- data_long_min3_strc_newx %>%
+  rename("DaysMax" = "Newest")
+```
+
+```{r}
+data_long_min3_strc_newx$DaysMax <- as.numeric(data_long_min3_strc_newx$DaysMax)
+
+save(data_long_min3_strc_newx, file = "data_long_min3_strc_newx.Rdata")
+```
