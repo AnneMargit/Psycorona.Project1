@@ -1,0 +1,138 @@
+---
+title: "200629 Within person CFA 2"
+author: "Anne Margit"
+date: "6/29/2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r packagages, include=FALSE, warning=FALSE}
+library(psych)
+library(dplyr)
+library(tidyverse)
+library(lavaan)  
+library(ggplot2)
+library(corrplot)
+library(knitr)
+library(papaja)
+```
+
+```{r, results = "hide"}
+load("data_long_min3_20.Rdata")
+```
+
+Without Content, Excited, Loved
+```{r, results = "hide"}
+data_long_min3_20 <- as_tibble(data_long_min3_20)
+data_cfa_red <- data_long_min3_20 %>% select(ID, Wave, Country, Ang, Anxiety, Bored, Calm, Depr, Energ, Exh, Insp, Nerv, Rel)
+```
+
+```{r, results = "hide"}
+data_country_means <- data_cfa_red %>%
+    dplyr::group_by(Country) %>%
+    dplyr::summarise_each(funs(mean(., na.rm=TRUE)), 
+                          Ang, Anxiety, Bored, Calm, Depr, Energ, Exh, Insp, Nerv, Rel)
+```
+
+```{r}
+apa_table(data_country_means)
+```
+
+```{r, results = "hide"}
+data_cfa_comb <- left_join(data_cfa_red, data_country_means, by="Country")
+```
+
+This dataframe data_within contains the raw scores - country means
+
+```{r, results = "hide"}
+data_cfa_new <- data_cfa_comb %>%
+group_by(ID) %>%
+  transmute(Wave = Wave,
+            Country = Country,
+    Ang = Ang.x - Ang.y,
+         Bored = Bored.x - Bored.y,
+         Anxiety = Anxiety.x - Anxiety.y,
+         Calm = Calm.x - Calm.y,
+         Depr = Depr.x - Depr.y,
+         Energ = Energ.x - Energ.y,
+         Exh = Exh.x - Exh.y,
+         Insp = Insp.x - Insp.y,
+         Nerv = Nerv.x - Nerv.y,
+         Rel = Rel.x - Rel.y)
+```
+
+```{r}
+save(data_cfa_new,file ="data_cfa_new.Rdata")
+```
+
+```{r}
+round(cor(data_cfa_new[,c("Ang", "Anxiety", "Bored", "Depr","Exh","Nerv","Calm","Energ", "Insp","Rel")],use= "pairwise.complete.obs"),2)
+```
+
+```{r}
+corrplot(cor(data_cfa_new[,c("Ang", "Anxiety", "Bored", "Depr","Exh","Nerv","Calm","Energ", "Insp","Rel")], use="pairwise.complete.obs"), order = "original", tl.col='black', tl.cex=.75)
+```
+
+Two-factor CFA without loved centered around country means
+
+```{r, results = "hide"}
+model1 <- '
+level: 1
+f1 =~ Ang + Anxiety + Bored + Depr + Exh + Nerv 
+f2 =~ Calm + Energ + Insp + Rel 
+
+level: 2
+f1 =~ Ang + Anxiety + Bored + Depr + Exh + Nerv 
+f2 =~ Calm + Energ + Insp + Rel 
+'
+```
+
+```{r, results = "hide", warning = FALSE}
+fit1 <- cfa(model1, data = data_cfa_new, std.lv=TRUE, missing="fiml", cluster = "ID")
+```
+
+```{r}
+summary(fit1, standardized=TRUE, fit.measures=TRUE)
+```
+```{r}
+parameterEstimates(fit1, standardized=TRUE) %>% 
+  filter(op == "=~") %>% 
+  select('Latent Factor'=lhs, Indicator=rhs, B=est, SE=se, Z=z, 'p-value'=pvalue, Beta=std.all) %>% 
+  kable(digits = 3, format="pandoc", caption="Factor Loadings")
+```
+
+Four-factor CFA without loved centered around country means
+
+```{r, results = "hide"}
+model2 <- '
+level: 1
+f1 =~ Ang + Anxiety + Nerv 
+f2 =~ Bored + Depr + Exh
+f3 =~ Energ + Insp
+f4 =~ Calm + Rel
+
+level: 2
+f1 =~ Ang + Anxiety + Nerv 
+f2 =~ Bored + Depr + Exh
+f3 =~ Energ + Insp
+f4 =~ Calm + Rel
+'
+```
+
+```{r, results = "hide", warning = FALSE}
+fit2 <- cfa(model2, data = data_cfa_new, std.lv=TRUE, missing="fiml", cluster = "ID")
+```
+
+```{r}
+summary(fit2, standardized=TRUE, fit.measures=TRUE)
+```
+
+```{r}
+parameterEstimates(fit2, standardized=TRUE) %>% 
+  filter(op == "=~") %>% 
+  select('Latent Factor'=lhs, Indicator=rhs, B=est, SE=se, Z=z, 'p-value'=pvalue, Beta=std.all) %>% 
+  kable(digits = 3, format="pandoc", caption="Factor Loadings")
+```
