@@ -47,10 +47,10 @@ This suggests 3 within-person components
 threepca <- principal(data_within3[,-1], nfactors = 3, rotate = "varimax")
 threepca
 ```
-Component A: Anger, Boredom, Anxiety, Depressed, Exhausted, Nervous
 
-Component B: Calm, Relaxed
+```{r}
+threepca2 <- principal(data_within3[,-1], nfactors = 3, rotate = "oblimin")
+threepca2
+```
 
-Component C: Energetic, Inspired, Loved
 
-Fit of .77, is this high enough? 

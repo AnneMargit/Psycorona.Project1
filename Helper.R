@@ -21,3 +21,11 @@ emotion.descriptives <- function(coronadataBSfill) {
   ordered[,-1] <- round(ordered[,-1], digits=2)
   return(ordered)
 }
+
+#extract legend
+#https://github.com/hadley/ggplot2/wiki/Share-a-legend-between-two-ggplot2-graphs
+g_legend<-function(a.gplot){
+  tmp <- ggplot_gtable(ggplot_build(a.gplot))
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)}

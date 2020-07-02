@@ -73,11 +73,22 @@ Calculate number of participants per country & select countries with >20 partici
 data_long_min3$Country <- as_factor(data_long_min3$Country)
 data_long_min3 <- as_tibble(data_long_min3)
 
-data_long_min3_20 <- data_long_min3 %>%
-  dplyr::group_by(Country) %>%
-  dplyr::mutate(N=n()) %>%
-  filter(N>20)
+Country_N <- data_long_min3 %>%
+  filter(Wave == "w0") %>%
+  group_by(Country) %>%
+  summarise(N = n())
+```
 
+```{r}
+data_long_min3n <- left_join(data_long_min3, Country_N, by="Country")
+```
+
+```{r}
+data_long_min3_20 <- data_long_min3n %>%
+  filter(N>20)
+```
+
+```{r}
 data_long_min3_20 <- data_long_min3_20 %>%
   select(-Citizen)
 
@@ -117,7 +128,7 @@ Stringency_data$StringencyIndex_imp <- Stringency_data$StringencyIndex
 ```{r}
 Stringency_data<-Stringency_data[with(Stringency_data, order(Country, Date)),]
 
-Stringency_data <- Stringency_data %>%
+Stringency_data2 <- Stringency_data %>%
   group_by(Country) %>%
   fill(StringencyIndex_imp, .direction = "down")
 ```
@@ -126,14 +137,17 @@ Join with psycorona data by country and date, rename, and save:
 This dataset includes measurements from participants that (1) provided at least 3 measurements, (2) that are residents of the country they currently live in, (3) from countries with at least 20 participants, (4) provided data on age, and (5) with imputed Stringency index values
 
 ```{r, echo= T, results='hide'}
-data_long_min3_str <- left_join(data_long_min3_20, Stringency_data, by=c("Country", "Date"))
+data_long_min3_20$Date <- as.Date(data_long_min3_20$Date)
+Stringency_data2$Date <- as.Date(Stringency_data2$Date)
+
+data_long_min3_str <- left_join(data_long_min3_20, Stringency_data2, by=c("Country", "Date"))
 
 save(data_long_min3_str, file ="data_long_min3_str.Rdata")
 ```
 
 Centering Stringency Index
 ```{r}
-data_long_min3_strc <- gmc(data_long_min3_str, "StringencyIndex", "Country", FUN = mean, suffix = c("_mn", "_dev"),
+data_long_min3_strc <- gmc(data_long_min3_str, "StringencyIndex_imp", "Country", FUN = mean, suffix = c("_mn", "_dev"),
     fulldataframe = TRUE)
 ```
 

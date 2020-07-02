@@ -23,13 +23,13 @@ library(knitr)
 This dataset includes measurements from participants that (1) provided at least 3 measurements, (2) that are residents of the country they currently live in, (3) from countries with at least 20 participants, (4) provided data on age
 
 ```{r, results = "hide"}
-load("data_long_min3_20.Rdata")
+load("data_long_min3_str.Rdata")
 ```
 
 Content and Excited are only measured at baseline, so not using these
 ```{r, results = "hide"}
-data_long_min3_20 <- as_tibble(data_long_min3_20)
-data_factor <- data_long_min3_20 %>% select(ID, Wave, Ang, Anxiety, Bored, Calm, Depr, Energ, Exh, Insp, Lov, Nerv, Rel)
+data_long_min3_str <- as_tibble(data_long_min3_str)
+data_factor <- data_long_min3_str %>% select(ID, Wave, Ang, Anxiety, Bored, Calm, Depr, Energ, Exh, Insp, Lov, Nerv, Rel)
 ```
 
 ```{r, results = "hide"}
