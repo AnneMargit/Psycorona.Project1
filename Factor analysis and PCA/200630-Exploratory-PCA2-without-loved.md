@@ -72,7 +72,7 @@ parallel
     ##  [1] 2.89 1.25 1.08 0.86 0.79 0.76 0.66 0.65 0.54 0.52
     ## 
     ##  eigen values of simulated components
-    ##  [1] 1.02 1.01 1.01 1.00 1.00 1.00 0.99 0.99 0.99 0.98
+    ##  [1] 1.02 1.01 1.01 1.01 1.00 1.00 0.99 0.99 0.99 0.98
 
 This suggests 3 within-person
 components

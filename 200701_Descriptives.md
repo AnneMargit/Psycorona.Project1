@@ -3,8 +3,6 @@
 Anne Margit
 6/30/2020
 
-install.packages(“ggpubr”) install.packages(“stringr”)
-
 ``` r
 library(dplyr)
 ```
@@ -24,14 +22,14 @@ library(dplyr)
 library(tidyverse)
 ```
 
-    ## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
+    ## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
 
     ## ✓ ggplot2 3.3.1     ✓ purrr   0.3.4
     ## ✓ tibble  3.0.1     ✓ stringr 1.4.0
     ## ✓ tidyr   1.1.0     ✓ forcats 0.5.0
     ## ✓ readr   1.3.1
 
-    ## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
@@ -88,27 +86,26 @@ apa_table(missing.values)
 
 </div>
 
-| key                  | num.missing |
-| :------------------- | :---------- |
-| Exc                  | 62786       |
-| Content              | 62773       |
-| Bored                | 47960       |
-| Ang                  | 41602       |
-| Lov                  | 41591       |
-| Insp                 | 32724       |
-| Energ                | 32712       |
-| Exh                  | 32707       |
-| Rel                  | 32696       |
-| Depr                 | 32693       |
-| Nerv                 | 32692       |
-| Anxiety              | 32667       |
-| Calm                 | 32666       |
-| ConfirmedCases       | 32533       |
-| ConfirmedDeaths      | 32533       |
-| Date                 | 32533       |
-| StringencyIndex      | 32533       |
-| StringencyIndex\_imp | 32533       |
-| gender               | 8           |
+| key             | num.missing |
+| :-------------- | :---------- |
+| Exc             | 62786       |
+| Content         | 62773       |
+| Bored           | 47960       |
+| Ang             | 41602       |
+| Lov             | 41591       |
+| Insp            | 32724       |
+| Energ           | 32712       |
+| Exh             | 32707       |
+| Rel             | 32696       |
+| Depr            | 32693       |
+| Nerv            | 32692       |
+| Anxiety         | 32667       |
+| Calm            | 32666       |
+| ConfirmedCases  | 32533       |
+| ConfirmedDeaths | 32533       |
+| Date            | 32533       |
+| StringencyIndex | 32533       |
+| gender          | 8           |
 
 Number of participants per country
 
@@ -171,6 +168,47 @@ apa_table(Country_N)
 | United Kingdom | 421      |
 | United States  | 2103     |
 
+Number of measurements per wave, emotion measurements per wave, and
+Stringency Index measurements per wave
+
+``` r
+data_long_min3_str$Wave <- as.factor(data_long_min3_str$Wave)
+
+Wave_N <- data_long_min3_str %>% 
+group_by(Wave)%>%
+summarise(NWave = sum (!is.na(Date)), NAng= sum(!is.na(Ang)), NAnx= sum(!is.na(Anxiety)), NBored= sum(!is.na(Bored)), NCalm= sum(!is.na(Calm)),
+NDepr= sum(!is.na(Depr)), NEnerg= sum(!is.na(Energ)), NExh= sum(!is.na(Exh)), NInsp= sum(!is.na(Insp)), NLov= sum(!is.na(Lov)), NNerv= sum(!is.na(Nerv)), NRel= sum(!is.na(Rel)), NStr = sum(!is.na(StringencyIndex)))
+```
+
+    ## `summarise()` ungrouping output (override with `.groups` argument)
+
+``` r
+apa_table(Wave_N)
+```
+
+<caption>
+
+(\#tab:unnamed-chunk-8)
+
+</caption>
+
+<div data-custom-style="Table Caption">
+
+\*\*
+
+</div>
+
+| Wave | NWave | NAng | NAnx | NBored | NCalm | NDepr | NEnerg | NExh | NInsp | NLov | NNerv | NRel | NStr |
+| :--- | :---- | :--- | :--- | :----- | :---- | :---- | :----- | :--- | :---- | :--- | :---- | :--- | :--- |
+| w0   | 8959  | 0    | 8915 | 8900   | 8903  | 8906  | 8889   | 8891 | 8889  | 0    | 8900  | 8894 | 8959 |
+| w1   | 1077  | 1076 | 1076 | 0      | 1076  | 1077  | 1076   | 1076 | 1075  | 1075 | 1076  | 1076 | 1077 |
+| w2   | 4050  | 4042 | 4043 | 0      | 4044  | 4041  | 4041   | 4039 | 4039  | 4041 | 4043  | 4042 | 4050 |
+| w3   | 4332  | 4319 | 4319 | 0      | 4318  | 4317  | 4319   | 4318 | 4315  | 4316 | 4320  | 4318 | 4332 |
+| w4   | 5869  | 5841 | 5846 | 0      | 5849  | 5843  | 5842   | 5841 | 5841  | 5844 | 5846  | 5843 | 5869 |
+| w5   | 5565  | 5547 | 5551 | 5554   | 5556  | 5548  | 5549   | 5553 | 5549  | 5553 | 5548  | 5554 | 5565 |
+| w6   | 4960  | 4938 | 4946 | 4943   | 4946  | 4941  | 4937   | 4941 | 4936  | 4945 | 4939  | 4941 | 4960 |
+| w7   | 4327  | 4307 | 4309 | 4315   | 4314  | 4306  | 4307   | 4306 | 4304  | 4307 | 4308  | 4308 | 4327 |
+
 Number of participants per age group
 
 ``` r
@@ -188,7 +226,7 @@ apa_table(Age_N)
 
 <caption>
 
-(\#tab:unnamed-chunk-8)
+(\#tab:unnamed-chunk-10)
 
 </caption>
 
@@ -228,7 +266,7 @@ apa_table(Age_Gender)
 
 <caption>
 
-(\#tab:unnamed-chunk-10)
+(\#tab:unnamed-chunk-12)
 
 </caption>
 
@@ -280,7 +318,7 @@ apa_table(StringencySummary)
 
 <caption>
 
-(\#tab:unnamed-chunk-12)
+(\#tab:unnamed-chunk-14)
 
 </caption>
 
@@ -403,13 +441,13 @@ gb_PA <- ggarrange(gb_calm, gb_energ, gb_insp, gb_lov, gb_rel, ncol = 3, nrow = 
 gb_NA
 ```
 
-![](200701_Descriptives_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](200701_Descriptives_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 ``` r
 gb_PA
 ```
 
-![](200701_Descriptives_files/figure-gfm/unnamed-chunk-15-2.png)<!-- -->
+![](200701_Descriptives_files/figure-gfm/unnamed-chunk-17-2.png)<!-- -->
 
 Histograms
 NA
@@ -474,13 +512,13 @@ g_PA <- ggarrange(g_calm, g_energ, g_insp, g_lov, g_rel, ncol = 3, nrow = 2, com
 g_NA
 ```
 
-![](200701_Descriptives_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](200701_Descriptives_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 ``` r
 g_PA
 ```
 
-![](200701_Descriptives_files/figure-gfm/unnamed-chunk-17-2.png)<!-- -->
+![](200701_Descriptives_files/figure-gfm/unnamed-chunk-19-2.png)<!-- -->
 
 Stringency plots
 
@@ -512,7 +550,7 @@ g_s1
 
     ## Warning: Removed 8938 rows containing non-finite values (stat_ydensity).
 
-![](200701_Descriptives_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+![](200701_Descriptives_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
 
 ``` r
 g_s2
@@ -520,7 +558,7 @@ g_s2
 
     ## Warning: Removed 8530 rows containing non-finite values (stat_ydensity).
 
-![](200701_Descriptives_files/figure-gfm/unnamed-chunk-19-2.png)<!-- -->
+![](200701_Descriptives_files/figure-gfm/unnamed-chunk-21-2.png)<!-- -->
 
 ``` r
 g_s3
@@ -528,4 +566,4 @@ g_s3
 
     ## Warning: Removed 15065 rows containing non-finite values (stat_ydensity).
 
-![](200701_Descriptives_files/figure-gfm/unnamed-chunk-19-3.png)<!-- -->
+![](200701_Descriptives_files/figure-gfm/unnamed-chunk-21-3.png)<!-- -->

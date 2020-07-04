@@ -125,23 +125,35 @@ Create new Stringency Index variable first
 Stringency_data$StringencyIndex_imp <- Stringency_data$StringencyIndex
 ```
 
-```{r}
-Stringency_data<-Stringency_data[with(Stringency_data, order(Country, Date)),]
-
-Stringency_data2 <- Stringency_data %>%
-  group_by(Country) %>%
-  fill(StringencyIndex_imp, .direction = "down")
-```
-
-Join with psycorona data by country and date, rename, and save:
-This dataset includes measurements from participants that (1) provided at least 3 measurements, (2) that are residents of the country they currently live in, (3) from countries with at least 20 participants, (4) provided data on age, and (5) with imputed Stringency index values
-
+First join, then impute
 ```{r, echo= T, results='hide'}
 data_long_min3_20$Date <- as.Date(data_long_min3_20$Date)
-Stringency_data2$Date <- as.Date(Stringency_data2$Date)
+Stringency_data$Date <- as.Date(Stringency_data$Date)
 
-data_long_min3_str <- left_join(data_long_min3_20, Stringency_data2, by=c("Country", "Date"))
+data_long_min3_str <- left_join(data_long_min3_20, Stringency_data, by=c("Country", "Date"))
 
+```
+
+
+Impute
+```{r}
+data_long_min3_str<-data_long_min3_str[with(data_long_min3_str, order(Country, Date)),]
+
+data_long_min3_str2 <- data_long_min3_str %>%
+  group_by(Country) %>%
+  fill(StringencyIndex_imp, .direction = "down")
+
+data_long_min3_str <- data_long_min3_str2
+```
+
+Check if StringencyIndex and StringencyIndex_imp are identical (they shouldnt be)
+```{r}
+identical(data_long_min3_str[["StringencyIndex"]],data_long_min3_str[["StringencyIndex_imp"]])
+```
+
+Save:
+This dataset includes measurements from participants that (1) provided at least 3 measurements, (2) that are residents of the country they currently live in, (3) from countries with at least 20 participants, (4) provided data on age, and (5) with imputed Stringency index values
+```{r}
 save(data_long_min3_str, file ="data_long_min3_str.Rdata")
 ```
 
@@ -154,14 +166,6 @@ data_long_min3_strc <- gmc(data_long_min3_str, "StringencyIndex_imp", "Country",
 This dataset also adds the country mean centered stringency index 
 ```{r}
 save(data_long_min3_strc, file="data_long_min3_strc.Rdata")
-```
-
-Number of participants per age group
-
-```{r}
-Age_N <- data_long_min3_strc %>%
-dplyr::group_by(age) %>%
-  dplyr::summarise(N = n(age))
 ```
 
 
