@@ -27,13 +27,13 @@ Anne Margit
     ## 
     ##     step
 
-    ## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
+    ## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
 
     ## ✓ tibble  3.0.1     ✓ purrr   0.3.4
     ## ✓ tidyr   1.1.0     ✓ stringr 1.4.0
     ## ✓ readr   1.3.1     ✓ forcats 0.5.0
 
-    ## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
     ## x tidyr::expand() masks Matrix::expand()
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
@@ -53,10 +53,12 @@ currently live in, (3) from countries with at least 20 participants, (4)
 provided data on age, and (5) with imputed Stringency index values that
 are (6) centered around country means and (7) a variable called DaysMax
 that indicates the days preceding or leading up to the day on which
-maximum stringency was reached for the respective country
+maximum stringency was reached for the respective country, and (8) from
+all waves (baseline through wave 11)
 
 \!\!\! DaysMax = 0: Day on which maximum stringency was reached for
-country in which participant lives \!\!\!
+country in which participant lives. This is based on available
+Stringency Index data, not imputed scores \!\!\!
 
 ``` r
 load("data_long_min3_strc_newx.Rdata")
@@ -152,7 +154,7 @@ plot_calm + stat_smooth(aes(group=age), se = FALSE, method = "gam", formula = y 
 labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+")) + labs(title="GAM plot of Calm by DaysMax for different age groups", y ="Calm")
 ```
 
-    ## Warning: Removed 33512 rows containing non-finite values (stat_smooth).
+    ## Warning: Removed 66033 rows containing non-finite values (stat_smooth).
 
 ![](Graphs-DaysMax_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 

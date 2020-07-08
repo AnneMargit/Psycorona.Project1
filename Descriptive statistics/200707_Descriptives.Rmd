@@ -1,0 +1,233 @@
+---
+title: "200707 Descriptives"
+author: "Anne Margit"
+date: "07/07/2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(dplyr)
+library(tidyverse)
+library(stringr)
+library(papaja)
+library(ggpubr)
+library(ggplot2)
+```
+
+Descriptive statistics
+This dataset includes measurements from participants that (1) provided at least 3 measurements, (2) that are residents of the country they currently live in, (3) from countries with at least 20 participants, (4) provided data on age, combined with imputed Stringency Index 
+
+```{r}
+load("data_long_min3_str.Rdata")
+load("data_means.Rdata")
+```
+
+How much missing data is left?
+```{r, results = "hide"}
+#Missing data
+missing.values <- data_long_min3_str %>%
+  gather(key = "key", value = "val") %>%
+  dplyr::mutate(is.missing = is.na(val)) %>%
+  dplyr::group_by(key, is.missing) %>%
+  dplyr::summarise(num.missing = n()) %>%
+  dplyr::filter(is.missing==T) %>%
+  dplyr::select(-is.missing) %>%
+  dplyr::arrange(desc(num.missing))
+
+```
+
+```{r}
+apa_table(missing.values)
+```
+
+Number of participants per country
+```{r, results = "hide"}
+data_long_min3_str$Country <- as.factor(data_long_min3_str$Country)
+
+Country_N <- data_long_min3_str %>%
+  filter(Wave == "w0") %>%
+  group_by(Country) %>%
+  summarise(NCountry = n())
+```
+
+```{r}
+apa_table(Country_N)
+```
+
+Number of measurements per wave, emotion measurements per wave, and Stringency Index measurements per wave
+
+```{r, results = "hide"}
+data_long_min3_str$Wave <- as.factor(data_long_min3_str$Wave)
+
+Wave_N <- data_long_min3_str %>% 
+group_by(Wave)%>%
+summarise(NWave = sum (!is.na(Date)), NAng= sum(!is.na(Ang)), NAnx= sum(!is.na(Anxiety)), NBored= sum(!is.na(Bored)), NCalm= sum(!is.na(Calm)),
+NDepr= sum(!is.na(Depr)), NEnerg= sum(!is.na(Energ)), NExh= sum(!is.na(Exh)), NInsp= sum(!is.na(Insp)), NLov= sum(!is.na(Lov)), NNerv= sum(!is.na(Nerv)), NRel= sum(!is.na(Rel)), NStr = sum(!is.na(StringencyIndex)))
+```
+
+```{r}
+apa_table(Wave_N)
+```
+
+Number of participants per age group
+
+```{r, results = "hide"}
+data_long_min3_str$age <- as.factor(data_long_min3_str$age)
+
+Age_N <- data_long_min3_str %>%
+  filter(Wave=="w0") %>%
+  group_by(age) %>%
+  summarise(NAge = n())
+```
+```{r}
+apa_table(Age_N)
+```
+
+Number of males and females per age group     
+```{r, results = "hide"}
+Age_Gender <- data_long_min3_str %>%
+  filter(Wave == "w0") %>%
+  select(age, gender) %>%
+  group_by(age, gender) %>%
+  count(gender)
+```
+Note: Age 1 = 18-24, 2 = 25-34, 3 = 35-44, 4 = 45-54, 5 = 55-64, 6 = 65-74, 7 = 75-85, 8 = 85+     
+Gender: 1 = Female, 2 = Male, 3 = Other
+```{r}
+apa_table(Age_Gender)
+```
+
+Mean and SD, minimum and maximum of Stringency Index per country
+```{r, results = "hide"}
+StringencySummary <- data_long_min3_str %>%
+  group_by(Country)%>%
+  summarize(mean = mean(StringencyIndex, na.rm=TRUE), sd = sd(StringencyIndex, na.rm=TRUE), 
+            max = max(StringencyIndex, na.rm=TRUE), min = min(StringencyIndex, na.rm=TRUE))
+```
+
+```{r}
+apa_table(StringencySummary)
+```
+
+```{r, results = "hide"}
+data_means2 <- data_means %>%
+dplyr::rename(Ang_mean = Ang,
+Axiety_mean = Anxiety,
+Bored_mean = Bored,
+Calm_mean = Calm,
+Depr_mean = Depr,
+Energ_mean = Energ,
+Exh_mean = Exh,
+Insp_mean = Insp,
+Lov_mean = Lov,
+Nerv_mean = Nerv,
+Rel_mean = Rel)
+
+data_graphs<- left_join(data_long_min3_str, data_means2, by="ID")
+```
+The dataframe data_graphs contains both raw scores and participant mean scores, mean scores have the addition "_mean"
+
+Boxplots
+```{r, results = "hide"}
+theme_set(theme_classic())
+
+gb_anx <- ggplot(data_graphs, aes(age, Anxiety)) + geom_boxplot(varwidth=T, aes(fill= age)) + scale_fill_discrete(name="Age", labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+"))
+
+gb_ang <- ggplot(data_graphs, aes(age, Ang)) + geom_boxplot(varwidth=T, aes(fill= age)) + scale_fill_discrete(name="Age", labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+"))
+
+gb_bor <- ggplot(data_graphs, aes(age, Bored)) + geom_boxplot(varwidth=T, aes(fill= age)) + scale_fill_discrete(name="Age", labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+"))
+
+gb_depr <- ggplot(data_graphs, aes(age, Depr)) + geom_boxplot(varwidth=T, aes(fill= age)) + scale_fill_discrete(name="Age", labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+"))
+
+gb_exh <- ggplot(data_graphs, aes(age, Exh)) + geom_boxplot(varwidth=T, aes(fill= age)) + scale_fill_discrete(name="Age", labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+"))
+
+gb_nerv <- ggplot(data_graphs, aes(age, Nerv)) + geom_boxplot(varwidth=T, aes(fill= age)) + scale_fill_discrete(name="Age", labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+"))
+
+gb_calm <- ggplot(data_graphs, aes(age, Calm)) + geom_boxplot(varwidth=T, aes(fill= age)) + scale_fill_discrete(name="Age", labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+"))
+
+gb_energ <- ggplot(data_graphs, aes(age, Energ)) + geom_boxplot(varwidth=T, aes(fill= age)) + scale_fill_discrete(name="Age", labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+"))
+
+gb_insp <- ggplot(data_graphs, aes(age, Insp)) + geom_boxplot(varwidth=T, aes(fill= age)) + scale_fill_discrete(name="Age", labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+"))
+
+gb_lov <- ggplot(data_graphs, aes(age, Lov)) + geom_boxplot(varwidth=T, aes(fill= age)) + scale_fill_discrete(name="Age", labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+"))
+
+gb_rel <- ggplot(data_graphs, aes(age, Rel)) + geom_boxplot(varwidth=T, aes(fill= age)) + scale_fill_discrete(name="Age", labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+"))
+
+gb_NA <- ggarrange(gb_anx, gb_ang, gb_bor, gb_depr, gb_exh, gb_nerv, ncol = 3, nrow = 2, common.legend= TRUE, legend = "bottom")
+
+gb_PA <- ggarrange(gb_calm, gb_energ, gb_insp, gb_lov, gb_rel, ncol = 3, nrow = 2, common.legend= TRUE, legend = "bottom")
+```
+```{r}
+gb_NA
+gb_PA
+```
+
+Histograms NA
+```{r, results = "hide"}
+g_anx <- ggplot(data_graphs, aes(x=Anxiety, fill=age)) + geom_histogram(binwidth=1) + scale_fill_discrete(name="Age", labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+"))
+
+g_ang <- ggplot(data_graphs, aes(x=Ang, fill=age)) + geom_histogram(binwidth=1) + scale_fill_discrete(name="Age", labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+"))
+
+g_bor <- ggplot(data_graphs, aes(x=Bored, fill=age)) + geom_histogram(binwidth=1) + scale_fill_discrete(name="Age", labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+"))
+
+g_dep <- ggplot(data_graphs, aes(x=Depr, fill=age)) + geom_histogram(binwidth=1) + scale_fill_discrete(name="Age", labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+"))
+
+g_exh <- ggplot(data_graphs, aes(x=Exh, fill=age)) + geom_histogram(binwidth=1) + scale_fill_discrete(name="Age", labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+"))
+
+g_nerv <- ggplot(data_graphs, aes(x=Nerv, fill=age)) + geom_histogram(binwidth=1) + scale_fill_discrete(name="Age", labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+"))
+
+g_calm <- ggplot(data_graphs, aes(x=Calm, fill=age)) + geom_histogram(binwidth=1) + scale_fill_discrete(name="Age", labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+"))
+
+g_energ <- ggplot(data_graphs, aes(x=Energ, fill=age))  + geom_histogram(binwidth=1) + scale_fill_discrete(name="Age", labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+"))
+
+g_insp <- ggplot(data_graphs, aes(x=Insp, fill=age))  + geom_histogram(binwidth=1) + scale_fill_discrete(name="Age", labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+"))
+
+g_lov <- ggplot(data_graphs, aes(x=Lov, fill=age))  + geom_histogram(binwidth=1) + scale_fill_discrete(name="Age", labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+"))
+
+g_rel <- ggplot(data_graphs, aes(x=Rel, fill=age))  + geom_histogram(binwidth=1) + scale_fill_discrete(name="Age", labels = c("18-24", "25-34", "35-44", "45-54", "55-64", "65-74", "75-85", "85+"))
+
+g_NA <- ggarrange(g_anx, g_ang, g_bor, g_dep, g_exh, g_nerv, ncol = 3, nrow = 2, common.legend= TRUE, legend = "bottom")
+
+g_PA <- ggarrange(g_calm, g_energ, g_insp, g_lov, g_rel, ncol = 3, nrow = 2, common.legend= TRUE, legend = "bottom")
+```
+
+```{r}
+g_NA
+g_PA
+```
+
+Stringency plots
+```{r, results = "hide"}
+data_graphs$Country <- as.character(data_graphs$Country)
+
+data_graphs1 <- data_graphs %>%
+filter(Country == "Argentina" |  Country == "Australia" | Country == "Brazil" | Country == "Canada" | Country == "Chile" 
+       | Country == "Croatia" | Country == "France" | Country == "Germany" | Country == "Greece" | Country == "Hungary")
+
+data_graphs2 <- data_graphs %>%
+filter(Country == "Indonesia" | Country == "Italy" | Country == "Japan" | Country == "Kazakhstan" | Country == "Malaysia" 
+       | Country == "Netherlands" | Country == "Philippines" | Country == "Poland" | Country == "Serbia" | Country == "Romania")
+
+data_graphs3 <- data_graphs %>%
+filter(Country == "Russia" | Country == "Saudi Arabia" | Country == "Singapore" | Country == "South Africa" | Country == "Spain" 
+       | Country == "Turkey" | Country == "Ukraine" | Country == "United Kingdom" | Country == "United States")
+
+g_s1 <- ggplot(data_graphs1, aes(StringencyIndex, Country)) + geom_violin(aes(fill=factor(Country)))
+
+g_s2 <- ggplot(data_graphs2, aes(StringencyIndex, Country)) + geom_violin(aes(fill=factor(Country)))
+
+g_s3 <- ggplot(data_graphs3, aes(StringencyIndex, Country)) + geom_violin(aes(fill=factor(Country)))
+
+```
+
+```{r}
+g_s1
+g_s2
+g_s3
+```
+
+

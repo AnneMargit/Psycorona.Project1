@@ -1,7 +1,7 @@
-200630 Descriptives
+200707 Descriptives
 ================
 Anne Margit
-6/30/2020
+07/07/2020
 
 ``` r
 library(dplyr)
@@ -88,29 +88,28 @@ apa_table(missing.values)
 
 | key             | num.missing |
 | :-------------- | :---------- |
-| Exc             | 62786       |
-| Content         | 62773       |
-| Bored           | 47960       |
-| Ang             | 41602       |
-| Lov             | 41591       |
-| Insp            | 32724       |
-| Energ           | 32712       |
-| Exh             | 32707       |
-| Rel             | 32696       |
-| Depr            | 32693       |
-| Nerv            | 32692       |
-| Anxiety         | 32667       |
-| Calm            | 32666       |
-| ConfirmedCases  | 32533       |
-| ConfirmedDeaths | 32533       |
-| Date            | 32533       |
-| StringencyIndex | 32533       |
-| gender          | 8           |
+| Exc             | 113857      |
+| Content         | 113845      |
+| Bored           | 81635       |
+| Ang             | 76349       |
+| Lov             | 76336       |
+| Insp            | 66123       |
+| Energ           | 66098       |
+| Exh             | 66097       |
+| Rel             | 66078       |
+| Nerv            | 66073       |
+| Depr            | 66072       |
+| Anxiety         | 66045       |
+| Calm            | 66033       |
+| StringencyIndex | 65844       |
+| ConfirmedCases  | 65836       |
+| ConfirmedDeaths | 65836       |
+| Date            | 65836       |
 
 Number of participants per country
 
 ``` r
-data_long_min3_str <- as_tibble(data_long_min3_str)
+data_long_min3_str$Country <- as.factor(data_long_min3_str$Country)
 
 Country_N <- data_long_min3_str %>%
   filter(Wave == "w0") %>%
@@ -138,35 +137,39 @@ apa_table(Country_N)
 
 | Country        | NCountry |
 | :------------- | :------- |
-| Argentina      | 178      |
-| Australia      | 160      |
-| Brazil         | 162      |
-| Canada         | 269      |
-| Chile          | 53       |
-| Croatia        | 133      |
-| France         | 323      |
-| Germany        | 343      |
-| Greece         | 586      |
-| Hungary        | 192      |
-| Indonesia      | 149      |
-| Italy          | 438      |
-| Japan          | 64       |
-| Kazakhstan     | 71       |
-| Malaysia       | 76       |
-| Netherlands    | 584      |
-| Philippines    | 102      |
-| Poland         | 84       |
-| Serbia         | 458      |
-| Romania        | 246      |
-| Russia         | 163      |
-| Saudi Arabia   | 57       |
-| Singapore      | 41       |
-| South Africa   | 178      |
-| Spain          | 963      |
-| Turkey         | 160      |
-| Ukraine        | 202      |
-| United Kingdom | 421      |
-| United States  | 2103     |
+| Argentina      | 209      |
+| Australia      | 203      |
+| Brazil         | 217      |
+| Canada         | 304      |
+| Chile          | 84       |
+| Croatia        | 141      |
+| France         | 357      |
+| Germany        | 397      |
+| Greece         | 674      |
+| Hungary        | 195      |
+| Indonesia      | 185      |
+| Italy          | 476      |
+| Japan          | 76       |
+| Kazakhstan     | 82       |
+| Kosovo         | 29       |
+| Malaysia       | 103      |
+| Netherlands    | 674      |
+| Peru           | 35       |
+| Philippines    | 125      |
+| Poland         | 126      |
+| Serbia         | 506      |
+| Romania        | 307      |
+| Russia         | 201      |
+| Saudi Arabia   | 71       |
+| Singapore      | 42       |
+| South Africa   | 218      |
+| South Korea    | 21       |
+| Spain          | 1021     |
+| Turkey         | 179      |
+| Ukraine        | 251      |
+| United Kingdom | 466      |
+| United States  | 2340     |
+| Vietnam        | 28       |
 
 Number of measurements per wave, emotion measurements per wave, and
 Stringency Index measurements per wave
@@ -198,20 +201,26 @@ apa_table(Wave_N)
 
 </div>
 
-| Wave | NWave | NAng | NAnx | NBored | NCalm | NDepr | NEnerg | NExh | NInsp | NLov | NNerv | NRel | NStr |
-| :--- | :---- | :--- | :--- | :----- | :---- | :---- | :----- | :--- | :---- | :--- | :---- | :--- | :--- |
-| w0   | 8959  | 0    | 8915 | 8900   | 8903  | 8906  | 8889   | 8891 | 8889  | 0    | 8900  | 8894 | 8959 |
-| w1   | 1077  | 1076 | 1076 | 0      | 1076  | 1077  | 1076   | 1076 | 1075  | 1075 | 1076  | 1076 | 1077 |
-| w2   | 4050  | 4042 | 4043 | 0      | 4044  | 4041  | 4041   | 4039 | 4039  | 4041 | 4043  | 4042 | 4050 |
-| w3   | 4332  | 4319 | 4319 | 0      | 4318  | 4317  | 4319   | 4318 | 4315  | 4316 | 4320  | 4318 | 4332 |
-| w4   | 5869  | 5841 | 5846 | 0      | 5849  | 5843  | 5842   | 5841 | 5841  | 5844 | 5846  | 5843 | 5869 |
-| w5   | 5565  | 5547 | 5551 | 5554   | 5556  | 5548  | 5549   | 5553 | 5549  | 5553 | 5548  | 5554 | 5565 |
-| w6   | 4960  | 4938 | 4946 | 4943   | 4946  | 4941  | 4937   | 4941 | 4936  | 4945 | 4939  | 4941 | 4960 |
-| w7   | 4327  | 4307 | 4309 | 4315   | 4314  | 4306  | 4307   | 4306 | 4304  | 4307 | 4308  | 4308 | 4327 |
+| Wave | NWave | NAng | NAnx  | NBored | NCalm | NDepr | NEnerg | NExh  | NInsp | NLov | NNerv | NRel  | NStr  |
+| :--- | :---- | :--- | :---- | :----- | :---- | :---- | :----- | :---- | :---- | :--- | :---- | :---- | :---- |
+| w0   | 10343 | 0    | 10290 | 10271  | 10277 | 10277 | 10258  | 10260 | 10257 | 0    | 10271 | 10261 | 10343 |
+| w1   | 1082  | 1081 | 1081  | 0      | 1081  | 1082  | 1081   | 1081  | 1080  | 1080 | 1081  | 1081  | 1082  |
+| w2   | 4109  | 4101 | 4102  | 0      | 4103  | 4100  | 4100   | 4098  | 4098  | 4100 | 4102  | 4101  | 4109  |
+| w3   | 4378  | 4364 | 4364  | 0      | 4363  | 4362  | 4363   | 4363  | 4360  | 4361 | 4365  | 4363  | 4378  |
+| w4   | 6058  | 6027 | 6033  | 0      | 6037  | 6030  | 6030   | 6028  | 6028  | 6030 | 6033  | 6030  | 6058  |
+| w5   | 5758  | 5739 | 5743  | 5746   | 5748  | 5740  | 5741   | 5745  | 5741  | 5745 | 5740  | 5746  | 5758  |
+| w6   | 5143  | 5118 | 5126  | 5124   | 5128  | 5120  | 5117   | 5121  | 5116  | 5127 | 5119  | 5123  | 5143  |
+| w7   | 4631  | 4607 | 4610  | 4614   | 4615  | 4607  | 4606   | 4605  | 4603  | 4608 | 4608  | 4606  | 4631  |
+| w8   | 4705  | 4686 | 4683  | 4686   | 4689  | 4688  | 4690   | 4684  | 4684  | 4692 | 4687  | 4690  | 4705  |
+| w9   | 4244  | 4229 | 4229  | 4235   | 4235  | 4230  | 4230   | 4229  | 4227  | 4232 | 4231  | 4233  | 4244  |
+| w10  | 3566  | 3563 | 3561  | 3559   | 3558  | 3560  | 3557   | 3560  | 3557  | 3558 | 3561  | 3558  | 3566  |
+| w11  | 4263  | 4252 | 4249  | 4246   | 4249  | 4248  | 4245   | 4245  | 4242  | 4247 | 4245  | 4246  | 4255  |
 
 Number of participants per age group
 
 ``` r
+data_long_min3_str$age <- as.factor(data_long_min3_str$age)
+
 Age_N <- data_long_min3_str %>%
   filter(Wave=="w0") %>%
   group_by(age) %>%
@@ -238,14 +247,14 @@ apa_table(Age_N)
 
 | age | NAge |
 | :-- | :--- |
-| 1   | 1180 |
-| 2   | 1739 |
-| 3   | 1636 |
-| 4   | 1593 |
-| 5   | 1510 |
-| 6   | 1128 |
-| 7   | 163  |
-| 8   | 10   |
+| 1   | 1331 |
+| 2   | 1934 |
+| 3   | 1876 |
+| 4   | 1840 |
+| 5   | 1790 |
+| 6   | 1376 |
+| 7   | 184  |
+| 8   | 12   |
 
 Number of males and females per age group
 
@@ -253,8 +262,11 @@ Number of males and females per age group
 Age_Gender <- data_long_min3_str %>%
   filter(Wave == "w0") %>%
   select(age, gender) %>%
-  count(age, gender)
+  group_by(age, gender) %>%
+  count(gender)
 ```
+
+    ## Adding missing grouping variables: `Country`
 
 Note: Age 1 = 18-24, 2 = 25-34, 3 = 35-44, 4 = 45-54, 5 = 55-64, 6 =
 65-74, 7 = 75-85, 8 = 85+  
@@ -278,27 +290,21 @@ apa_table(Age_Gender)
 
 | age | gender | n    |
 | :-- | :----- | :--- |
-| 1   | 1      | 952  |
-| 1   | 2      | 212  |
-| 1   | 3      | 16   |
-| 2   | 1      | 1296 |
-| 2   | 2      | 425  |
-| 2   | 3      | 18   |
-| 3   | 1      | 1116 |
-| 3   | 2      | 510  |
-| 3   | 3      | 10   |
-| 4   | 1      | 1089 |
-| 4   | 2      | 500  |
-| 4   | 3      | 3    |
-| 4   | NA     | 1    |
-| 5   | 1      | 889  |
-| 5   | 2      | 621  |
-| 6   | 1      | 541  |
-| 6   | 2      | 586  |
-| 6   | 3      | 1    |
-| 7   | 1      | 75   |
-| 7   | 2      | 88   |
-| 8   | 1      | 5    |
+| 1   | 1      | 1086 |
+| 1   | 2      | 245  |
+| 2   | 1      | 1456 |
+| 2   | 2      | 478  |
+| 3   | 1      | 1300 |
+| 3   | 2      | 576  |
+| 4   | 1      | 1253 |
+| 4   | 2      | 587  |
+| 5   | 1      | 1082 |
+| 5   | 2      | 708  |
+| 6   | 1      | 648  |
+| 6   | 2      | 728  |
+| 7   | 1      | 86   |
+| 7   | 2      | 98   |
+| 8   | 1      | 7    |
 | 8   | 2      | 5    |
 
 Mean and SD, minimum and maximum of Stringency Index per country
@@ -330,39 +336,43 @@ apa_table(StringencySummary)
 
 | Country        | mean  | sd    | max    | min   |
 | :------------- | :---- | :---- | :----- | :---- |
-| Argentina      | 93.29 | 6.75  | 100.00 | 85.19 |
-| Australia      | 68.61 | 2.08  | 73.15  | 64.35 |
-| Brazil         | 77.63 | 2.64  | 81.02  | 74.54 |
-| Canada         | 72.40 | 0.70  | 74.54  | 70.83 |
-| Chile          | 72.87 | 6.19  | 78.24  | 51.85 |
-| Croatia        | 91.49 | 8.43  | 96.30  | 70.37 |
-| France         | 88.64 | 4.98  | 90.74  | 76.85 |
-| Germany        | 69.56 | 5.10  | 73.15  | 52.78 |
-| Greece         | 79.95 | 6.41  | 84.26  | 68.52 |
-| Hungary        | 73.72 | 5.80  | 76.85  | 62.96 |
-| Indonesia      | 70.52 | 10.02 | 80.09  | 43.52 |
-| Italy          | 83.35 | 13.37 | 93.52  | 62.96 |
-| Japan          | 45.64 | 2.43  | 47.22  | 40.74 |
-| Kazakhstan     | 88.51 | 2.24  | 89.35  | 81.94 |
-| Malaysia       | 71.71 | 1.82  | 75.00  | 69.44 |
-| Netherlands    | 77.11 | 4.41  | 79.63  | 68.52 |
-| Philippines    | 98.76 | 1.75  | 100.00 | 96.30 |
-| Poland         | 83.24 | 1.48  | 83.33  | 57.41 |
-| Serbia         | 95.26 | 9.27  | 100.00 | 49.07 |
-| Romania        | 84.72 | 5.27  | 87.04  | 72.22 |
-| Russia         | 84.09 | 2.50  | 87.04  | 71.76 |
-| Saudi Arabia   | 91.21 | 1.52  | 94.44  | 87.04 |
-| Singapore      | 76.90 | 16.42 | 85.19  | 36.11 |
-| South Africa   | 85.51 | 4.74  | 87.96  | 55.56 |
-| Spain          | 81.42 | 5.24  | 85.19  | 71.76 |
-| Turkey         | 77.57 | 4.29  | 80.56  | 62.04 |
-| Ukraine        | 92.31 | 0.99  | 92.59  | 87.04 |
-| United Kingdom | 74.34 | 4.07  | 75.93  | 20.37 |
-| United States  | 72.46 | 1.12  | 72.69  | 67.13 |
+| Argentina      | 93.10 | 4.82  | 100.00 | 88.89 |
+| Australia      | 64.31 | 7.39  | 73.15  | 43.98 |
+| Brazil         | 78.09 | 2.52  | 81.02  | 74.54 |
+| Canada         | 71.48 | 2.00  | 74.54  | 65.28 |
+| Chile          | 75.28 | 5.13  | 78.24  | 51.85 |
+| Croatia        | 81.73 | 20.63 | 96.30  | 36.11 |
+| France         | 83.19 | 9.68  | 90.74  | 55.56 |
+| Germany        | 62.90 | 10.07 | 73.15  | 44.44 |
+| Greece         | 73.52 | 12.66 | 84.26  | 35.19 |
+| Hungary        | 71.54 | 6.77  | 76.85  | 52.78 |
+| Indonesia      | 70.30 | 8.96  | 80.09  | 43.52 |
+| Italy          | 74.76 | 17.99 | 93.52  | 44.44 |
+| Japan          | 40.45 | 7.65  | 47.22  | 27.78 |
+| Kazakhstan     | 86.87 | 4.03  | 89.35  | 77.31 |
+| Kosovo         | 79.46 | 14.94 | 92.59  | 42.59 |
+| Malaysia       | 70.27 | 7.70  | 75.00  | 43.52 |
+| Netherlands    | 72.83 | 6.99  | 79.63  | 59.26 |
+| Peru           | 91.12 | 1.96  | 96.30  | 89.81 |
+| Philippines    | 95.28 | 7.60  | 100.00 | 77.78 |
+| Poland         | 74.71 | 12.76 | 83.33  | 50.93 |
+| Serbia         | 81.09 | 26.86 | 100.00 | 24.07 |
+| Romania        | 78.39 | 11.33 | 87.04  | 50.93 |
+| Russia         | 81.74 | 4.33  | 87.04  | 71.76 |
+| Saudi Arabia   | 88.44 | 7.05  | 94.44  | 69.91 |
+| Singapore      | 77.25 | 14.61 | 85.19  | 36.11 |
+| South Africa   | 84.26 | 4.65  | 87.96  | 55.56 |
+| South Korea    | 47.80 | 9.73  | 82.41  | 39.81 |
+| Spain          | 77.24 | 8.95  | 85.19  | 33.80 |
+| Turkey         | 74.34 | 4.14  | 77.78  | 62.04 |
+| Ukraine        | 87.67 | 8.63  | 92.59  | 64.35 |
+| United Kingdom | 73.04 | 3.74  | 75.93  | 20.37 |
+| United States  | 72.45 | 1.08  | 72.69  | 67.13 |
+| Vietnam        | 68.97 | 7.17  | 96.30  | 54.63 |
 
 ``` r
 data_means2 <- data_means %>%
-rename(Ang_mean = Ang,
+dplyr::rename(Ang_mean = Ang,
 Axiety_mean = Anxiety,
 Bored_mean = Bored,
 Calm_mean = Calm,
@@ -376,6 +386,9 @@ Rel_mean = Rel)
 
 data_graphs<- left_join(data_long_min3_str, data_means2, by="ID")
 ```
+
+The dataframe data\_graphs contains both raw scores and participant mean
+scores, mean scores have the addition "\_mean"
 
 Boxplots
 
@@ -407,47 +420,47 @@ gb_rel <- ggplot(data_graphs, aes(age, Rel)) + geom_boxplot(varwidth=T, aes(fill
 gb_NA <- ggarrange(gb_anx, gb_ang, gb_bor, gb_depr, gb_exh, gb_nerv, ncol = 3, nrow = 2, common.legend= TRUE, legend = "bottom")
 ```
 
-    ## Warning: Removed 32667 rows containing non-finite values (stat_boxplot).
+    ## Warning: Removed 66045 rows containing non-finite values (stat_boxplot).
     
-    ## Warning: Removed 32667 rows containing non-finite values (stat_boxplot).
+    ## Warning: Removed 66045 rows containing non-finite values (stat_boxplot).
 
-    ## Warning: Removed 41602 rows containing non-finite values (stat_boxplot).
+    ## Warning: Removed 76349 rows containing non-finite values (stat_boxplot).
 
-    ## Warning: Removed 47960 rows containing non-finite values (stat_boxplot).
+    ## Warning: Removed 81635 rows containing non-finite values (stat_boxplot).
 
-    ## Warning: Removed 32693 rows containing non-finite values (stat_boxplot).
+    ## Warning: Removed 66072 rows containing non-finite values (stat_boxplot).
 
-    ## Warning: Removed 32707 rows containing non-finite values (stat_boxplot).
+    ## Warning: Removed 66097 rows containing non-finite values (stat_boxplot).
 
-    ## Warning: Removed 32692 rows containing non-finite values (stat_boxplot).
+    ## Warning: Removed 66073 rows containing non-finite values (stat_boxplot).
 
 ``` r
 gb_PA <- ggarrange(gb_calm, gb_energ, gb_insp, gb_lov, gb_rel, ncol = 3, nrow = 2, common.legend= TRUE, legend = "bottom")
 ```
 
-    ## Warning: Removed 32666 rows containing non-finite values (stat_boxplot).
+    ## Warning: Removed 66033 rows containing non-finite values (stat_boxplot).
 
-    ## Warning: Removed 32666 rows containing non-finite values (stat_boxplot).
+    ## Warning: Removed 66033 rows containing non-finite values (stat_boxplot).
 
-    ## Warning: Removed 32712 rows containing non-finite values (stat_boxplot).
+    ## Warning: Removed 66098 rows containing non-finite values (stat_boxplot).
 
-    ## Warning: Removed 32724 rows containing non-finite values (stat_boxplot).
+    ## Warning: Removed 66123 rows containing non-finite values (stat_boxplot).
 
-    ## Warning: Removed 41591 rows containing non-finite values (stat_boxplot).
+    ## Warning: Removed 76336 rows containing non-finite values (stat_boxplot).
 
-    ## Warning: Removed 32696 rows containing non-finite values (stat_boxplot).
+    ## Warning: Removed 66078 rows containing non-finite values (stat_boxplot).
 
 ``` r
 gb_NA
 ```
 
-![](200701_Descriptives_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](200707_Descriptives_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 ``` r
 gb_PA
 ```
 
-![](200701_Descriptives_files/figure-gfm/unnamed-chunk-17-2.png)<!-- -->
+![](200707_Descriptives_files/figure-gfm/unnamed-chunk-17-2.png)<!-- -->
 
 Histograms
 NA
@@ -478,47 +491,47 @@ g_rel <- ggplot(data_graphs, aes(x=Rel, fill=age))  + geom_histogram(binwidth=1)
 g_NA <- ggarrange(g_anx, g_ang, g_bor, g_dep, g_exh, g_nerv, ncol = 3, nrow = 2, common.legend= TRUE, legend = "bottom")
 ```
 
-    ## Warning: Removed 32667 rows containing non-finite values (stat_bin).
+    ## Warning: Removed 66045 rows containing non-finite values (stat_bin).
     
-    ## Warning: Removed 32667 rows containing non-finite values (stat_bin).
+    ## Warning: Removed 66045 rows containing non-finite values (stat_bin).
 
-    ## Warning: Removed 41602 rows containing non-finite values (stat_bin).
+    ## Warning: Removed 76349 rows containing non-finite values (stat_bin).
 
-    ## Warning: Removed 47960 rows containing non-finite values (stat_bin).
+    ## Warning: Removed 81635 rows containing non-finite values (stat_bin).
 
-    ## Warning: Removed 32693 rows containing non-finite values (stat_bin).
+    ## Warning: Removed 66072 rows containing non-finite values (stat_bin).
 
-    ## Warning: Removed 32707 rows containing non-finite values (stat_bin).
+    ## Warning: Removed 66097 rows containing non-finite values (stat_bin).
 
-    ## Warning: Removed 32692 rows containing non-finite values (stat_bin).
+    ## Warning: Removed 66073 rows containing non-finite values (stat_bin).
 
 ``` r
 g_PA <- ggarrange(g_calm, g_energ, g_insp, g_lov, g_rel, ncol = 3, nrow = 2, common.legend= TRUE, legend = "bottom")
 ```
 
-    ## Warning: Removed 32666 rows containing non-finite values (stat_bin).
+    ## Warning: Removed 66033 rows containing non-finite values (stat_bin).
 
-    ## Warning: Removed 32666 rows containing non-finite values (stat_bin).
+    ## Warning: Removed 66033 rows containing non-finite values (stat_bin).
 
-    ## Warning: Removed 32712 rows containing non-finite values (stat_bin).
+    ## Warning: Removed 66098 rows containing non-finite values (stat_bin).
 
-    ## Warning: Removed 32724 rows containing non-finite values (stat_bin).
+    ## Warning: Removed 66123 rows containing non-finite values (stat_bin).
 
-    ## Warning: Removed 41591 rows containing non-finite values (stat_bin).
+    ## Warning: Removed 76336 rows containing non-finite values (stat_bin).
 
-    ## Warning: Removed 32696 rows containing non-finite values (stat_bin).
+    ## Warning: Removed 66078 rows containing non-finite values (stat_bin).
 
 ``` r
 g_NA
 ```
 
-![](200701_Descriptives_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+![](200707_Descriptives_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 ``` r
 g_PA
 ```
 
-![](200701_Descriptives_files/figure-gfm/unnamed-chunk-19-2.png)<!-- -->
+![](200707_Descriptives_files/figure-gfm/unnamed-chunk-19-2.png)<!-- -->
 
 Stringency plots
 
@@ -548,22 +561,22 @@ g_s3 <- ggplot(data_graphs3, aes(StringencyIndex, Country)) + geom_violin(aes(fi
 g_s1
 ```
 
-    ## Warning: Removed 8938 rows containing non-finite values (stat_ydensity).
+    ## Warning: Removed 17586 rows containing non-finite values (stat_ydensity).
 
-![](200701_Descriptives_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+![](200707_Descriptives_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
 
 ``` r
 g_s2
 ```
 
-    ## Warning: Removed 8530 rows containing non-finite values (stat_ydensity).
+    ## Warning: Removed 16967 rows containing non-finite values (stat_ydensity).
 
-![](200701_Descriptives_files/figure-gfm/unnamed-chunk-21-2.png)<!-- -->
+![](200707_Descriptives_files/figure-gfm/unnamed-chunk-21-2.png)<!-- -->
 
 ``` r
 g_s3
 ```
 
-    ## Warning: Removed 15065 rows containing non-finite values (stat_ydensity).
+    ## Warning: Removed 30393 rows containing non-finite values (stat_ydensity).
 
-![](200701_Descriptives_files/figure-gfm/unnamed-chunk-21-3.png)<!-- -->
+![](200707_Descriptives_files/figure-gfm/unnamed-chunk-21-3.png)<!-- -->

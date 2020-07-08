@@ -21,8 +21,8 @@ library(papaja)
 ```
 
 ```{r load dataset corona}
-coronadata <- read.csv("Data/RMD06_Anne Margit Reitsema_2020-05-08 11-48 CEST.csv", header=TRUE)
-oxforddata <- read.csv("Data/OxCGRT_latest.csv", header=TRUE)
+coronadata <- read.csv("RMD06_Anne Margit Reitsema_2020-07-06 17-39 CEST.csv", header=TRUE)
+oxforddata <- read.csv("OxCGRT_latest.csv", header=TRUE)
 ```
 
 To check whether country names are different in both datasets:
@@ -46,6 +46,7 @@ Kyrgyzstan -> Kyrgyz Republic
 United Republic of Tanzania -> Tanzania  
 United States of America -> United States  
 Republic of Serbia -> Serbia  
+Slovakia -> Slovak Republic
 
 ```{r rename countries, echo= T, results='hide'}
 coronadata$coded_country <- 
@@ -53,7 +54,8 @@ coronadata$coded_country <-
                                        "Kyrgyzstan" = "Kyrgyz Republic",
                                        "United Republic of Tanzania" = "Tanzania", 
                                        "United States of America" = "United States",
-                                       "Republic of Serbia" = "Serbia"))
+                                       "Republic of Serbia" = "Serbia",
+                                       "Slovakia" = "Slovak Republic"))
 ```
 
 Renaming and recoding variables:
@@ -61,10 +63,9 @@ Renaming and recoding variables:
 coronadata$gender <- as.factor(coronadata$gender)
 coronadata$age <- as.factor(coronadata$age)
 coronadata$gender <- as.factor(coronadata$gender)
-coronadata$dateB<-anydate(coronadata$StartDate)
-coronadata$dateW1 <- anydate(coronadata$w1_StartDate)
+coronadata$Date<-anydate(coronadata$RecordedDate)
 
-names(coronadata)[names(coronadata) == "coded_country"] <- "country"
+names(coronadata)[names(coronadata) == "coded_country"] <- "Country"
 names(coronadata)[names(coronadata) == "X"] <- "ID"
 ```
 
@@ -80,10 +81,10 @@ coronadata$coronaClose_6[is.na(coronadata$coronaClose_6)] <- 0
 
 Delete participants with missing data on which country they currently live:
 ```{r, echo= T, results='hide'}
-coronadata$country[coronadata$country == ""] <- NA
+coronadata$Country[coronadata$Country == ""] <- NA
 
 coronadata <- coronadata %>%
-  filter(!is.na(country))
+  filter(!is.na(Country))
 ```
 
 Delete participants that are not residents of the country they currently live in:

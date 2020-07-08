@@ -1,7 +1,7 @@
 ---
 title: "Data preparation for multilevel modeling"
 author: "Anne Margit"
-date: "6/16/2020"
+date: "07/07/2020"
 output: github_document
 ---
 
@@ -32,7 +32,8 @@ data_long_min3$coded_country <-
                                        "Kyrgyzstan" = "Kyrgyz Republic",
                                        "United Republic of Tanzania" = "Tanzania", 
                                        "United States of America" = "United States",
-                                       "Republic of Serbia" = "Serbia"))
+                                       "Republic of Serbia" = "Serbia",
+                                       "Slovakia" = "Slovak Republic"))
 ```
 
 Renaming and recoding variables:
@@ -76,7 +77,7 @@ data_long_min3 <- as_tibble(data_long_min3)
 Country_N <- data_long_min3 %>%
   filter(Wave == "w0") %>%
   group_by(Country) %>%
-  summarise(N = n())
+  dplyr::summarise(N = n())
 ```
 
 ```{r}
@@ -152,7 +153,7 @@ identical(data_long_min3_str[["StringencyIndex"]],data_long_min3_str[["Stringenc
 ```
 
 Save:
-This dataset includes measurements from participants that (1) provided at least 3 measurements, (2) that are residents of the country they currently live in, (3) from countries with at least 20 participants, (4) provided data on age, and (5) with imputed Stringency index values
+This dataset includes measurements from participants that (1) provided at least 3 measurements, (2) that are residents of the country they currently live in, (3) from countries with at least 20 participants, (4) provided data on age, and (5) with imputed Stringency index values, (6) for baseline through wave 11
 ```{r}
 save(data_long_min3_str, file ="data_long_min3_str.Rdata")
 ```
@@ -169,3 +170,13 @@ save(data_long_min3_strc, file="data_long_min3_strc.Rdata")
 ```
 
 
+```{r, results = "hide"}
+data_means <- data_long_min3_str %>%
+    dplyr::group_by(ID) %>%
+    dplyr::summarise_each(funs(mean(., na.rm=TRUE)), 
+                          Ang, Anxiety, Bored, Calm, Depr, Energ, Exh, Insp, Lov, Nerv, Rel)
+```
+
+```{r, results = "hide"}
+save(data_means, file="data_means.Rdata")
+```

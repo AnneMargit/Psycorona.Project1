@@ -10,25 +10,29 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-load("data_long_min3_strc.Rdata")
+load("data_long_min3_str.Rdata")
 ```
 
 ```{r}
 library(pracma)
 library(dplyr)
 library(tidyverse)
+library(anytime)
+library(lubridate)
 ```
 Order by Stringency and Date and select rows with first day of maximum Stringency for each country
 ```{r}
-data_long_min3_strc <- as_tibble(data_long_min3_strc)
+data_long_min3_str <- as_tibble(data_long_min3_str)
 
-data_long_min3_strc$Date <- as.Date(data_long_min3_strc$Date)
+data_long_min3_str$Date <- as.Date(data_long_min3_str$Date)
 
-data_long_min3_strc <- data_long_min3_strc[with(data_long_min3_strc, order(StringencyIndex, Date)),]
+data_long_min3_str$Country <- as.factor(data_long_min3_str$Country)
 
-MaxStr <- data_long_min3_strc %>% 
+data_long_min3_str <- data_long_min3_str[with(data_long_min3_str, order(StringencyIndex, Date)),]
+
+MaxStr <- data_long_min3_str %>% 
 dplyr::group_by(Country) %>%
-arrange(desc(c(StringencyIndex)), .by_group=TRUE) %>%
+arrange(desc(c(StringencyIndex))) %>%
 slice(1) %>%
 ungroup()
 ```
@@ -37,8 +41,10 @@ Rename, select columns and merge with original data
 ```{r}
 MaxStr$MaxStr <- MaxStr$StringencyIndex
 
+MaxStr <- as_tibble(MaxStr)
+
 MaxStr2 <- MaxStr %>%
-mutate(NewDate = date(Date))
+dplyr::mutate(NewDate = date(Date))
 
 MaxStr2 <- MaxStr2 %>%
 dplyr::select(c("ID", "MaxStr", "Date", "NewDate"))
@@ -55,8 +61,6 @@ fill(NewDate, .direction = "downup")
 
 Calculate difference in days between date of maximum Stringency and current date
 ```{r}
-data4$Date <- as.Date(data4$Date)
-data4$NewDate <- as.Date(data4$NewDate)
 
 data4 <- data3 %>%
 group_by(Country) %>%
@@ -75,6 +79,8 @@ Rename
 data_long_min3_strc_newx <- data_long_min3_strc_newx %>%
   rename("DaysMax" = "Newest")
 ```
+
+This file contains the new X axis on which day of maximum Stringency of the country is coded as 0
 
 ```{r}
 data_long_min3_strc_newx$DaysMax <- as.numeric(data_long_min3_strc_newx$DaysMax)

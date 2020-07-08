@@ -1,5 +1,5 @@
 ---
-title: "Graphs"
+title: "Graphs DaysMax 2 (without age older than 85)"
 author: "Anne Margit"
 date: "6/22/2020"
 output: github_document
@@ -28,6 +28,11 @@ This dataset includes measurements from participants that (1) provided at least 
 load("data_long_min3_strc_newx.Rdata")
 ```
 
+Drop participants that are in age group 8 (85+)
+```{r, results = "hide"}
+data_long_min3_strc_newx <-data_long_min3_strc_newx %>%
+filter(age != 8)
+```
 ####################### Anxiety #######################
 
 Plot Anxiety and DaysMax for different age groups / LOESS plot (doesn't work well for large datasets? check this)

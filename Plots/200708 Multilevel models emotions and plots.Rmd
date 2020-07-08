@@ -1,5 +1,5 @@
 ---
-title: "200617 Multilevel models emotions"
+title: "200708 Multilevel models emotions"
 author: "Anne Margit"
 date: "08/07/2020"
 output: github_document
@@ -24,6 +24,12 @@ This dataset includes measurements from participants that (1) provided at least 
 
 ```{r, results = "hide"}
 load("data_long_min3_strc.Rdata")
+```
+
+Drop participants that are in age group 8 (85+)
+```{r, results = "hide"}
+data_long_min3_strc <-data_long_min3_strc %>%
+filter(age != 8)
 ```
 
 ####################### Anxiety #######################
