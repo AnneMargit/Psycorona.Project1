@@ -1,7 +1,7 @@
 CFA Multi-level cfa without bored and loved
 ================
 Anne Margit
-7/8/2020
+18/8/2020
 
 ``` r
 load(file = "data_long_min3_str.Rdata")
