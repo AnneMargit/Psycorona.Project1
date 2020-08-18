@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-load("data_long_min3_str.Rdata")
+load("data_long_min3_str_age.Rdata")
 ```
 
 ```{r}
@@ -22,15 +22,15 @@ library(lubridate)
 ```
 Order by Stringency and Date and select rows with first day of maximum Stringency for each country
 ```{r}
-data_long_min3_str <- as_tibble(data_long_min3_str)
+data_long_min3_str_age <- as_tibble(data_long_min3_str_age)
 
-data_long_min3_str$Date <- as.Date(data_long_min3_str$Date)
+data_long_min3_str_age$Date <- as.Date(data_long_min3_str_age$Date)
 
-data_long_min3_str$Country <- as.factor(data_long_min3_str$Country)
+data_long_min3_str_age$Country <- as.factor(data_long_min3_str_age$Country)
 
-data_long_min3_str <- data_long_min3_str[with(data_long_min3_str, order(StringencyIndex, Date)),]
+data_long_min3_str_age <- data_long_min3_str_age[with(data_long_min3_str_age, order(StringencyIndex, Date)),]
 
-MaxStr <- data_long_min3_str %>% 
+MaxStr <- data_long_min3_str_age %>% 
 dplyr::group_by(Country) %>%
 arrange(desc(c(StringencyIndex))) %>%
 slice(1) %>%
@@ -49,7 +49,7 @@ dplyr::mutate(NewDate = date(Date))
 MaxStr2 <- MaxStr2 %>%
 dplyr::select(c("ID", "MaxStr", "Date", "NewDate"))
 
-data2 <- full_join(data_long_min3_strc, MaxStr2, by=c("ID", "Date"))
+data2 <- full_join(data_long_min3_str_age, MaxStr2, by=c("ID", "Date"))
 ```
 
 Fill other rows of NewDate with date on which max Stringency was reached for respective country
@@ -70,20 +70,20 @@ mutate(Newest = difftime(Date, NewDate, units = "days"))
 
 Drop not used columns
 ```{r}
-data_long_min3_strc_newx <- data4 %>%
+data_long_min3_str_age_max <- data4 %>%
   select(-c("MaxStr", "NewDate"))
 ```
 
 Rename
 ```{r}
-data_long_min3_strc_newx <- data_long_min3_strc_newx %>%
+data_long_min3_str_age_max <- data_long_min3_str_age_max %>%
   rename("DaysMax" = "Newest")
 ```
 
 This file contains the new X axis on which day of maximum Stringency of the country is coded as 0
 
 ```{r}
-data_long_min3_strc_newx$DaysMax <- as.numeric(data_long_min3_strc_newx$DaysMax)
+data_long_min3_str_age_max$DaysMax <- as.numeric(data_long_min3_str_age_max$DaysMax)
 
-save(data_long_min3_strc_newx, file = "data_long_min3_strc_newx.Rdata")
+save(data_long_min3_str_age_max, file = "data_long_min3_str_age_max.Rdata")
 ```

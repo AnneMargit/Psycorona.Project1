@@ -71,7 +71,7 @@ data_long_min3 <- data_long_min3 %>%
 
 Calculate number of participants per country & select countries with >20 participants:
 ```{r}
-data_long_min3$Country <- as_factor(data_long_min3$Country)
+data_long_min3$Country <- as.factor(data_long_min3$Country)
 data_long_min3 <- as_tibble(data_long_min3)
 
 Country_N <- data_long_min3 %>%
@@ -103,6 +103,12 @@ data_long_min3_20 <-data_long_min3_20 %>%
 filter(!is.na(age))
 ```
 
+Remove participants that answered "other" to question about gender
+```{r}
+data_long_min3_20 <-data_long_min3_20 %>%
+filter(gender != 3)
+```
+
 Save
 ```{r}
 save(data_long_min3_20, file="data_long_min3_20.Rdata")
@@ -128,8 +134,6 @@ Stringency_data$StringencyIndex_imp <- Stringency_data$StringencyIndex
 
 First join, then impute
 ```{r, echo= T, results='hide'}
-data_long_min3_20$Date <- as.Date(data_long_min3_20$Date)
-Stringency_data$Date <- as.Date(Stringency_data$Date)
 
 data_long_min3_str <- left_join(data_long_min3_20, Stringency_data, by=c("Country", "Date"))
 
