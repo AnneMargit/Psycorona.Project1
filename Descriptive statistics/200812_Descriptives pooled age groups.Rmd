@@ -160,6 +160,9 @@ data_graphs<- left_join(data_long_min3_str_age, data_means2, by="ID")
 ```
 The dataframe data_graphs contains both raw scores and participant mean scores, mean scores have the addition "_mean"
 
+Plotting raw data
+
+
 Boxplots
 ```{r, results = "hide"}
 theme_set(theme_classic())

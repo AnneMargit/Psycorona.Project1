@@ -111,6 +111,15 @@ Filter participants with at least 3 measurements
 data_long_min3 <- data_long %>% filter(n > 2)
 ```
 
+Rename Wave column into Time ordered 1-12
+```{r}
+data_long_min3 <- data_long_min3 %>%
+  rename(Time = Wave)
+
+data_long_min3$Time <- data_long_min3$Time %>%
+  plyr::revalue(c("w0"="1","w1"="2","w2"="3","w3"="4","w4"="5","w5"="6","w6"="7","w7"="8","w8"="9","w9"="10","w10"="11","w11"="12"))
+```
+
 ```{r}
 save(data_long_min3, file="data_long_min3.Rdata")
 ```
@@ -121,7 +130,7 @@ data_long_min3$Country <- as.factor(data_long_min3$Country)
 data_long_min3 <- as_tibble(data_long_min3)
 
 Country_N <- data_long_min3 %>%
-  filter(Wave == "w0") %>%
+  filter(Time == "1") %>%
   group_by(Country) %>%
   dplyr::summarise(N = n())
 ```
