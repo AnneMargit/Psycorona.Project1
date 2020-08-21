@@ -1,85 +1,19 @@
 Data preparation for multilevel modeling
 ================
 Anne Margit
-07/07/2020
+08/21/2020
 
 ``` r
 library(ggplot2)
 library(dplyr)
-```
-
-    ## 
-    ## Attaching package: 'dplyr'
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
-
-``` r
 library(knitr)
 library(lme4)
-```
-
-    ## Loading required package: Matrix
-
-``` r
 library(arsenal)
-```
-
-    ## 
-    ## Attaching package: 'arsenal'
-
-    ## The following objects are masked from 'package:Matrix':
-    ## 
-    ##     head, tail
-
-``` r
 library(lmerTest)
-```
-
-    ## 
-    ## Attaching package: 'lmerTest'
-
-    ## The following object is masked from 'package:lme4':
-    ## 
-    ##     lmer
-
-    ## The following object is masked from 'package:stats':
-    ## 
-    ##     step
-
-``` r
 library(tidyverse)
-```
-
-    ## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
-
-    ## ✓ tibble  3.0.1     ✓ purrr   0.3.4
-    ## ✓ tidyr   1.1.0     ✓ stringr 1.4.0
-    ## ✓ readr   1.3.1     ✓ forcats 0.5.0
-
-    ## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-    ## x tidyr::expand() masks Matrix::expand()
-    ## x dplyr::filter() masks stats::filter()
-    ## x dplyr::lag()    masks stats::lag()
-    ## x tidyr::pack()   masks Matrix::pack()
-    ## x tidyr::unpack() masks Matrix::unpack()
-
-``` r
 library(anytime)
 library(rockchalk)
 ```
-
-    ## 
-    ## Attaching package: 'rockchalk'
-
-    ## The following object is masked from 'package:dplyr':
-    ## 
-    ##     summarize
 
 ``` r
 load("data_long.Rdata")
@@ -118,9 +52,11 @@ Renaming and recoding variables:
 
 ``` r
 data_long$age <- as.factor(data_long$age)
+names(data_long)[names(data_long) == "age"] <- "Age"
 names(data_long)[names(data_long) == "coded_country"] <- "Country"
 names(data_long)[names(data_long) == "X"] <- "ID"
 names(data_long)[names(data_long) == "RecordedDate"] <- "Date"
+names(data_long)[names(data_long) == "gender"] <- "Gender"
 ```
 
 Recoding NA into zero’s:
@@ -156,7 +92,7 @@ Delete participants with missing data on age
 
 ``` r
 data_long <-data_long %>%
-filter(!is.na(age))
+filter(!is.na(Age))
 ```
 
 Delete participants that reported their gender as other or did not
@@ -164,13 +100,20 @@ provide information:
 
 ``` r
 data_long <- data_long %>%
-  filter(gender == 1 | gender == 2)
+  filter(Gender == 1 | Gender == 2)
 ```
 
 Recode gender into male = 0 and female = 1
 
 ``` r
-data_long$gender[data_long$gender == "2"] <- 0
+data_long$Gender[data_long$Gender == "2"] <- 0
+```
+
+Delete emotion variables we don’t study (Bored, Loved, Content, Excited)
+
+``` r
+data_long <- data_long %>%
+  select(-c(Bored, Lov, Content, Exc))
 ```
 
 Add number of measurements
@@ -185,6 +128,16 @@ Filter participants with at least 3 measurements
 data_long_min3 <- data_long %>% filter(n > 2)
 ```
 
+Rename Wave column into Time ordered 1-12
+
+``` r
+data_long_min3 <- data_long_min3 %>%
+  rename(Time = Wave)
+
+data_long_min3$Time <- data_long_min3$Time %>%
+  plyr::revalue(c("w0"="1","w1"="2","w2"="3","w3"="4","w4"="5","w5"="6","w6"="7","w7"="8","w8"="9","w9"="10","w10"="11","w11"="12"))
+```
+
 ``` r
 save(data_long_min3, file="data_long_min3.Rdata")
 ```
@@ -197,7 +150,7 @@ data_long_min3$Country <- as.factor(data_long_min3$Country)
 data_long_min3 <- as_tibble(data_long_min3)
 
 Country_N <- data_long_min3 %>%
-  filter(Wave == "w0") %>%
+  filter(Time == "1") %>%
   group_by(Country) %>%
   dplyr::summarise(N = n())
 ```
@@ -215,66 +168,58 @@ data_long_min3_20 <- data_long_min3n %>%
 
 ``` r
 data_long_min3_20 <- data_long_min3_20 %>%
-  select(-Citizen)
+  select(-c(Citizen, countryCitizen))
 
 summary(data_long_min3_20)
 ```
 
-    ##        ID             Wave            Date                 age       
-    ##  Min.   :   44   w0     :10343   Min.   :2020-03-19   2      :23208  
-    ##  1st Qu.:14101   w1     :10343   1st Qu.:2020-04-18   3      :22512  
-    ##  Median :30027   w2     :10343   Median :2020-05-04   4      :22080  
-    ##  Mean   :29290   w3     :10343   Mean   :2020-05-05   5      :21480  
-    ##  3rd Qu.:42836   w4     :10343   3rd Qu.:2020-05-23   6      :16512  
-    ##  Max.   :61889   w5     :10343   Max.   :2020-06-23   1      :15972  
+    ##        ID             Time            Date                 Age       
+    ##  Min.   :   44   1      :10343   Min.   :2020-03-19   2      :23208  
+    ##  1st Qu.:14101   2      :10343   1st Qu.:2020-04-18   3      :22512  
+    ##  Median :30027   3      :10343   Median :2020-05-04   4      :22080  
+    ##  Mean   :29290   4      :10343   Mean   :2020-05-05   5      :21480  
+    ##  3rd Qu.:42836   5      :10343   3rd Qu.:2020-05-23   6      :16512  
+    ##  Max.   :61889   6      :10343   Max.   :2020-06-23   1      :15972  
     ##                  (Other):62058   NA's   :65836        (Other): 2352  
-    ##      gender                Country      countryCitizen      Ang       
-    ##  Min.   :0.0000   United States:28080   Min.   :1      Min.   :1.00   
-    ##  1st Qu.:0.0000   Spain        :12252   1st Qu.:1      1st Qu.:1.00   
-    ##  Median :1.0000   Greece       : 8088   Median :1      Median :2.00   
-    ##  Mean   :0.6689   Netherlands  : 8088   Mean   :1      Mean   :1.98   
-    ##  3rd Qu.:1.0000   Serbia       : 6072   3rd Qu.:1      3rd Qu.:3.00   
-    ##  Max.   :1.0000   Italy        : 5712   Max.   :1      Max.   :5.00   
-    ##                   (Other)      :55824                  NA's   :76349  
-    ##     Anxiety          Bored            Calm          Content      
-    ##  Min.   :1.00    Min.   :1.00    Min.   :1.00    Min.   :1.00    
-    ##  1st Qu.:1.00    1st Qu.:1.00    1st Qu.:2.00    1st Qu.:2.00    
-    ##  Median :2.00    Median :2.00    Median :3.00    Median :3.00    
-    ##  Mean   :2.37    Mean   :2.13    Mean   :3.07    Mean   :2.65    
-    ##  3rd Qu.:3.00    3rd Qu.:3.00    3rd Qu.:4.00    3rd Qu.:3.00    
-    ##  Max.   :5.00    Max.   :5.00    Max.   :5.00    Max.   :5.00    
-    ##  NA's   :66045   NA's   :81635   NA's   :66033   NA's   :113845  
-    ##       Depr           Energ            Exc              Exh       
-    ##  Min.   :1       Min.   :1.00    Min.   :1        Min.   :1.00   
-    ##  1st Qu.:1       1st Qu.:2.00    1st Qu.:1        1st Qu.:1.00   
-    ##  Median :2       Median :3.00    Median :2        Median :2.00   
-    ##  Mean   :2       Mean   :2.65    Mean   :2        Mean   :2.34   
-    ##  3rd Qu.:3       3rd Qu.:3.00    3rd Qu.:3        3rd Qu.:3.00   
-    ##  Max.   :5       Max.   :5.00    Max.   :5        Max.   :5.00   
-    ##  NA's   :66072   NA's   :66098   NA's   :113857   NA's   :66097  
-    ##       Insp            Lov             Nerv            Rel       
-    ##  Min.   :1.00    Min.   :1.00    Min.   :1.00    Min.   :1.00   
-    ##  1st Qu.:2.00    1st Qu.:3.00    1st Qu.:1.00    1st Qu.:2.00   
-    ##  Median :2.00    Median :4.00    Median :2.00    Median :3.00   
-    ##  Mean   :2.48    Mean   :3.44    Mean   :2.25    Mean   :2.88   
-    ##  3rd Qu.:3.00    3rd Qu.:4.00    3rd Qu.:3.00    3rd Qu.:4.00   
-    ##  Max.   :5.00    Max.   :5.00    Max.   :5.00    Max.   :5.00   
-    ##  NA's   :66123   NA's   :76336   NA's   :66073   NA's   :66078  
-    ##      Close1             Close2            Close3            Close4       
-    ##  Min.   :0.000000   Min.   :0.00000   Min.   :0.00000   Min.   :0.00000  
-    ##  1st Qu.:0.000000   1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000  
-    ##  Median :0.000000   Median :0.00000   Median :0.00000   Median :0.00000  
-    ##  Mean   :0.002441   Mean   :0.01691   Mean   :0.01984   Mean   :0.06133  
-    ##  3rd Qu.:0.000000   3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000  
-    ##  Max.   :1.000000   Max.   :1.00000   Max.   :1.00000   Max.   :1.00000  
-    ##                                                                          
-    ##      Close5            Close6             n                N         
-    ##  Min.   :0.00000   Min.   :0.0000   Min.   : 3.000   Min.   :  21.0  
-    ##  1st Qu.:0.00000   1st Qu.:0.0000   1st Qu.: 3.000   1st Qu.: 251.0  
-    ##  Median :0.00000   Median :0.0000   Median : 5.000   Median : 506.0  
-    ##  Mean   :0.04305   Mean   :0.3533   Mean   : 5.635   Mean   : 877.6  
-    ##  3rd Qu.:0.00000   3rd Qu.:1.0000   3rd Qu.: 8.000   3rd Qu.:1021.0  
-    ##  Max.   :1.00000   Max.   :1.0000   Max.   :12.000   Max.   :2340.0  
+    ##      Gender                Country           Ang           Anxiety     
+    ##  Min.   :0.0000   United States:28080   Min.   :1.00    Min.   :1.00   
+    ##  1st Qu.:0.0000   Spain        :12252   1st Qu.:1.00    1st Qu.:1.00   
+    ##  Median :1.0000   Greece       : 8088   Median :2.00    Median :2.00   
+    ##  Mean   :0.6689   Netherlands  : 8088   Mean   :1.98    Mean   :2.37   
+    ##  3rd Qu.:1.0000   Serbia       : 6072   3rd Qu.:3.00    3rd Qu.:3.00   
+    ##  Max.   :1.0000   Italy        : 5712   Max.   :5.00    Max.   :5.00   
+    ##                   (Other)      :55824   NA's   :76349   NA's   :66045  
+    ##       Calm            Depr           Energ            Exh       
+    ##  Min.   :1.00    Min.   :1       Min.   :1.00    Min.   :1.00   
+    ##  1st Qu.:2.00    1st Qu.:1       1st Qu.:2.00    1st Qu.:1.00   
+    ##  Median :3.00    Median :2       Median :3.00    Median :2.00   
+    ##  Mean   :3.07    Mean   :2       Mean   :2.65    Mean   :2.34   
+    ##  3rd Qu.:4.00    3rd Qu.:3       3rd Qu.:3.00    3rd Qu.:3.00   
+    ##  Max.   :5.00    Max.   :5       Max.   :5.00    Max.   :5.00   
+    ##  NA's   :66033   NA's   :66072   NA's   :66098   NA's   :66097  
+    ##       Insp            Nerv            Rel            Close1        
+    ##  Min.   :1.00    Min.   :1.00    Min.   :1.00    Min.   :0.000000  
+    ##  1st Qu.:2.00    1st Qu.:1.00    1st Qu.:2.00    1st Qu.:0.000000  
+    ##  Median :2.00    Median :2.00    Median :3.00    Median :0.000000  
+    ##  Mean   :2.48    Mean   :2.25    Mean   :2.88    Mean   :0.002441  
+    ##  3rd Qu.:3.00    3rd Qu.:3.00    3rd Qu.:4.00    3rd Qu.:0.000000  
+    ##  Max.   :5.00    Max.   :5.00    Max.   :5.00    Max.   :1.000000  
+    ##  NA's   :66123   NA's   :66073   NA's   :66078                     
+    ##      Close2            Close3            Close4            Close5       
+    ##  Min.   :0.00000   Min.   :0.00000   Min.   :0.00000   Min.   :0.00000  
+    ##  1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000  
+    ##  Median :0.00000   Median :0.00000   Median :0.00000   Median :0.00000  
+    ##  Mean   :0.01691   Mean   :0.01984   Mean   :0.06133   Mean   :0.04305  
+    ##  3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000  
+    ##  Max.   :1.00000   Max.   :1.00000   Max.   :1.00000   Max.   :1.00000  
+    ##                                                                         
+    ##      Close6             n                N         
+    ##  Min.   :0.0000   Min.   : 3.000   Min.   :  21.0  
+    ##  1st Qu.:0.0000   1st Qu.: 3.000   1st Qu.: 251.0  
+    ##  Median :0.0000   Median : 5.000   Median : 506.0  
+    ##  Mean   :0.3533   Mean   : 5.635   Mean   : 877.6  
+    ##  3rd Qu.:1.0000   3rd Qu.: 8.000   3rd Qu.:1021.0  
+    ##  Max.   :1.0000   Max.   :12.000   Max.   :2340.0  
     ## 
 
 ``` r
@@ -434,7 +379,7 @@ save(data_long_min3_strc, file="data_long_min3_strc.Rdata")
 data_means <- data_long_min3_str %>%
     dplyr::group_by(ID) %>%
     dplyr::summarise_each(funs(mean(., na.rm=TRUE)), 
-                          Ang, Anxiety, Bored, Calm, Depr, Energ, Exh, Insp, Lov, Nerv, Rel)
+                          Ang, Anxiety, Calm, Depr, Energ, Exh, Insp, Nerv, Rel)
 ```
 
     ## Warning: `summarise_each_()` is deprecated as of dplyr 0.7.0.

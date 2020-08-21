@@ -1,7 +1,7 @@
 ---
-title: "MaxStringency"
+title: "Data prep maximum stringency"
 author: "Anne Margit"
-date: "6/18/2020"
+date: "8/21/2020"
 output: github_document
 ---
 
@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 load("data_long_min3_str_age.Rdata")
 ```
 
-```{r}
+```{r, echo=T, message=F}
 library(pracma)
 library(dplyr)
 library(tidyverse)

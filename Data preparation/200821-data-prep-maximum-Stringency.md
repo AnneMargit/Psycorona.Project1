@@ -1,7 +1,7 @@
-MaxStringency
+Data prep maximum stringency
 ================
 Anne Margit
-6/18/2020
+8/21/2020
 
 ``` r
 load("data_long_min3_str_age.Rdata")
@@ -10,46 +10,10 @@ load("data_long_min3_str_age.Rdata")
 ``` r
 library(pracma)
 library(dplyr)
-```
-
-    ## 
-    ## Attaching package: 'dplyr'
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
-
-``` r
 library(tidyverse)
-```
-
-    ## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
-
-    ## ✓ ggplot2 3.3.1     ✓ purrr   0.3.4
-    ## ✓ tibble  3.0.1     ✓ stringr 1.4.0
-    ## ✓ tidyr   1.1.0     ✓ forcats 0.5.0
-    ## ✓ readr   1.3.1
-
-    ## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-    ## x purrr::cross()  masks pracma::cross()
-    ## x dplyr::filter() masks stats::filter()
-    ## x dplyr::lag()    masks stats::lag()
-
-``` r
 library(anytime)
 library(lubridate)
 ```
-
-    ## 
-    ## Attaching package: 'lubridate'
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     date, intersect, setdiff, union
 
 Order by Stringency and Date and select rows with first day of maximum
 Stringency for each country
