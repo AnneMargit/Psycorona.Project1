@@ -1,0 +1,89 @@
+---
+title: "200821 Imputatie check"
+author: "Anne Margit"
+date: "8/21/2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, results='hide'}
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(tidyverse)
+library(psych)
+library(papaja)
+```
+
+Ik heb de imputatie opnieuw uitgevoerd zonder Content en opgeslagen als selectieImputed2
+
+```{r, results='hide'}
+load("selectieImputed2.Rdata")
+load("selectie2.Rdata")
+```
+
+Summary geimputeerde data
+```{r, comment=NA}
+summary(selectieImputed2[,2:10])
+```
+De minimum en maximum waarden van anger lijken nu wel een stuk logischer (niet meer negatief zoals bij de vorige imputatie)
+
+Op eerste wave:
+```{r, comment=NA}
+summary(selectieImputed2[which(selectieImputed2$Time==1), ]$Ang)
+```
+
+Summary originele data
+```{r, comment=NA}
+summary(selectie2[,2:10])
+```
+
+Mean scores per wave voor geimputeerde en originele data
+```{r, results = "hide"}
+Means_imp <- selectieImputed2 %>%
+    group_by(Time) %>%
+    summarise_each(funs(mean(., na.rm=TRUE)), 
+                          Ang, Anxiety, Calm, Depr, Energ, Exh, Insp, Nerv, Rel)
+
+Means_original <- selectie2 %>%
+  group_by(Time) %>%
+    summarise_each(funs(mean(., na.rm=TRUE)), 
+                          Ang, Anxiety, Calm, Depr, Energ, Exh, Insp, Nerv, Rel)
+```
+
+```{r}
+apa_table(Means_imp)
+apa_table(Means_original)
+```
+
+Check de imputaties met wat plotjes:
+```{r}
+p <- ggplot(selectie2, aes(x=Time, y=Ang)) 
+p + stat_summary(geom = "point", fun = mean, size = 1) 
+```
+
+```{r, warning=F}
+p2 <- ggplot(selectieImputed2, aes(x=Time, y=Ang)) 
+p2 + stat_summary(geom = "point", fun = mean, size = 1) 
+```
+
+Maak wat plotjes met lijnen per id, op een selectie van de eerste 10 personen:
+
+```{r}
+class(selectieImputed2$ID)
+selectieImputed2$ID2 <- as.numeric(selectieImputed2$ID)
+describe(selectieImputed2$ID2)
+```
+
+Bekijk nu hoe het eerste datapunt is geimputeerd:
+```{r, warning=F}
+ggplot(data = selectieImputed2[which(selectieImputed2$ID2 <10), ], aes(x = Time, y = Ang, color=as.factor(ID2))) + geom_line() + geom_point() + facet_wrap(. ~ ID2, nrow=2)
+```
+
+```{r}
+head(selectie2[which(selectie2$Time==1), ]$Ang, n=20L)
+head(selectieImputed2[which(selectieImputed2$Time==1), ]$Ang, n=20L)
+```
