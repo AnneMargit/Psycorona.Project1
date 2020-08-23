@@ -6,46 +6,9 @@ Anne Margit
 ``` r
 library(ggplot2)
 library(dplyr)
-```
-
-    ## 
-    ## Attaching package: 'dplyr'
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
-
-``` r
 library(knitr)
 library(tidyverse)
-```
-
-    ## ── Attaching packages ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
-
-    ## ✓ tibble  3.0.1     ✓ purrr   0.3.4
-    ## ✓ tidyr   1.1.0     ✓ stringr 1.4.0
-    ## ✓ readr   1.3.1     ✓ forcats 0.5.0
-
-    ## ── Conflicts ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-    ## x dplyr::filter() masks stats::filter()
-    ## x dplyr::lag()    masks stats::lag()
-
-``` r
 library(psych)
-```
-
-    ## 
-    ## Attaching package: 'psych'
-
-    ## The following objects are masked from 'package:ggplot2':
-    ## 
-    ##     %+%, alpha
-
-``` r
 library(papaja)
 ```
 
@@ -141,28 +104,7 @@ Means_imp <- selectieImputed2 %>%
     group_by(Time) %>%
     summarise_each(funs(mean(., na.rm=TRUE)), 
                           Ang, Anxiety, Calm, Depr, Energ, Exh, Insp, Nerv, Rel)
-```
 
-    ## Warning: `summarise_each_()` is deprecated as of dplyr 0.7.0.
-    ## Please use `across()` instead.
-    ## This warning is displayed once every 8 hours.
-    ## Call `lifecycle::last_warnings()` to see where this warning was generated.
-
-    ## Warning: `funs()` is deprecated as of dplyr 0.8.0.
-    ## Please use a list of either functions or lambdas: 
-    ## 
-    ##   # Simple named list: 
-    ##   list(mean = mean, median = median)
-    ## 
-    ##   # Auto named with `tibble::lst()`: 
-    ##   tibble::lst(mean, median)
-    ## 
-    ##   # Using lambdas
-    ##   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))
-    ## This warning is displayed once every 8 hours.
-    ## Call `lifecycle::last_warnings()` to see where this warning was generated.
-
-``` r
 Means_original <- selectie2 %>%
   group_by(Time) %>%
     summarise_each(funs(mean(., na.rm=TRUE)), 
@@ -170,7 +112,7 @@ Means_original <- selectie2 %>%
 ```
 
 ``` r
-apa_table(Means_imp)
+apa_table(Means_imp, caption = "Mean scores per wave voor geimputeerde data")
 ```
 
 <caption>
@@ -181,7 +123,8 @@ apa_table(Means_imp)
 
 <div data-custom-style="Table Caption">
 
-\*\*
+*Mean scores per wave voor geimputeerde
+data*
 
 </div>
 
@@ -201,7 +144,7 @@ apa_table(Means_imp)
 | 12   | 2.00 | 2.33    | 3.06 | 1.98 | 2.71  | 2.37 | 2.54 | 2.22 | 2.90 |
 
 ``` r
-apa_table(Means_original)
+apa_table(Means_original, caption = "Mean scores per wave voor originele data")
 ```
 
 <caption>
@@ -212,7 +155,8 @@ apa_table(Means_original)
 
 <div data-custom-style="Table Caption">
 
-\*\*
+*Mean scores per wave voor originele
+data*
 
 </div>
 
@@ -270,27 +214,8 @@ Bekijk nu hoe het eerste datapunt is
 geimputeerd:
 
 ``` r
-ggplot(data = selectieImputed2[which(selectieImputed2$ID2 <10), ], aes(x = Time, y = Ang, color=as.factor(ID2))) + geom_line() + geom_point() + facet_wrap(. ~ ID2, nrow=2)
+ggplot(data = selectieImputed2[which(selectieImputed2$ID2 <11), ], aes(x = Time, y = Ang, color=as.factor(ID2))) + geom_line() + geom_point() + facet_wrap(. ~ ID2, nrow=2)
 ```
-
-    ## geom_path: Each group consists of only one observation. Do you need to adjust
-    ## the group aesthetic?
-    ## geom_path: Each group consists of only one observation. Do you need to adjust
-    ## the group aesthetic?
-    ## geom_path: Each group consists of only one observation. Do you need to adjust
-    ## the group aesthetic?
-    ## geom_path: Each group consists of only one observation. Do you need to adjust
-    ## the group aesthetic?
-    ## geom_path: Each group consists of only one observation. Do you need to adjust
-    ## the group aesthetic?
-    ## geom_path: Each group consists of only one observation. Do you need to adjust
-    ## the group aesthetic?
-    ## geom_path: Each group consists of only one observation. Do you need to adjust
-    ## the group aesthetic?
-    ## geom_path: Each group consists of only one observation. Do you need to adjust
-    ## the group aesthetic?
-    ## geom_path: Each group consists of only one observation. Do you need to adjust
-    ## the group aesthetic?
 
 ![](200821-Imputatie-check_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 

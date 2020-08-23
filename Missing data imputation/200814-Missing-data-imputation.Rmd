@@ -32,13 +32,13 @@ Selecteer de bewuste variabelen: de items voor PA en NA, en de groepsvariabele i
 ```{r}
 selectie <- data_long_min3_str_age %>%
   group_by(ID) %>%
-  select(Ang, Anxiety, Calm, Content, Depr, Energ, Exh, Insp, Nerv, Rel)
+  select(Ang, Anxiety, Calm, Depr, Energ, Exh, Insp, Nerv, Rel)
 ```
 
 ```{r}
 selectie2 <- data_long_min3_str_age %>%
   group_by(ID) %>%
-  select(Ang, Anxiety, Calm, Content, Depr, Energ, Exh, Insp, Nerv, Rel, Time)
+  select(Ang, Anxiety, Calm, Depr, Energ, Exh, Insp, Nerv, Rel, Time)
 ```
 Ik heb in de dataset voor de imputatie dus wel de ID variabele nog zitten. Is dat een probleem?
 
@@ -54,8 +54,8 @@ Imputeer ze met imputeMultilevel, waarbij je vraagt om 4 between- en 4 within fa
 selectieImputed <- imputeMultilevel(selectie, ifac=1, ncpB=4, ncpW=4)
 View(selectieImputed$completeObs)
 dim(selectieImputed$completeObs)
-
 ```
+
 Maak een time variable
 ```{r}
 selectieImputed$completeObs<-selectieImputed$completeObs %>% group_by(ID) %>%
@@ -111,6 +111,7 @@ head(selectieImputed2[which(selectieImputed2$Time==1), ]$Ang, n=20L)
 
 ```{r}
 save(selectieImputed2, file="selectieImputed2.Rdata")
+save(selectie2, file="selectie2.Rdata")
 ```
 
 !! Imputeert ook hele meetmomenten als ALLE items missen op die meting

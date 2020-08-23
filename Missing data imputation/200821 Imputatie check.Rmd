@@ -9,7 +9,7 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, results='hide'}
+```{r, results='hide', message=F}
 library(ggplot2)
 library(dplyr)
 library(knitr)
@@ -20,7 +20,7 @@ library(papaja)
 
 Ik heb de imputatie opnieuw uitgevoerd zonder Content en opgeslagen als selectieImputed2
 
-```{r, results='hide'}
+```{r, results='hide', message=F}
 load("selectieImputed2.Rdata")
 load("selectie2.Rdata")
 ```
@@ -42,7 +42,7 @@ summary(selectie2[,2:10])
 ```
 
 Mean scores per wave voor geimputeerde en originele data
-```{r, results = "hide"}
+```{r, results = "hide", message=F, warning=F}
 Means_imp <- selectieImputed2 %>%
     group_by(Time) %>%
     summarise_each(funs(mean(., na.rm=TRUE)), 
@@ -55,35 +55,35 @@ Means_original <- selectie2 %>%
 ```
 
 ```{r}
-apa_table(Means_imp)
-apa_table(Means_original)
+apa_table(Means_imp, caption = "Mean scores per wave voor geimputeerde data")
+apa_table(Means_original, caption = "Mean scores per wave voor originele data")
 ```
 
 Check de imputaties met wat plotjes:
-```{r}
+```{r, warning=F, message=F}
 p <- ggplot(selectie2, aes(x=Time, y=Ang)) 
 p + stat_summary(geom = "point", fun = mean, size = 1) 
 ```
 
-```{r, warning=F}
+```{r, warning=F, message=F}
 p2 <- ggplot(selectieImputed2, aes(x=Time, y=Ang)) 
 p2 + stat_summary(geom = "point", fun = mean, size = 1) 
 ```
 
 Maak wat plotjes met lijnen per id, op een selectie van de eerste 10 personen:
 
-```{r}
+```{r, message=F, warning=F}
 class(selectieImputed2$ID)
 selectieImputed2$ID2 <- as.numeric(selectieImputed2$ID)
 describe(selectieImputed2$ID2)
 ```
 
 Bekijk nu hoe het eerste datapunt is geimputeerd:
-```{r, warning=F}
-ggplot(data = selectieImputed2[which(selectieImputed2$ID2 <10), ], aes(x = Time, y = Ang, color=as.factor(ID2))) + geom_line() + geom_point() + facet_wrap(. ~ ID2, nrow=2)
+```{r, warning=F, message=F}
+ggplot(data = selectieImputed2[which(selectieImputed2$ID2 <11), ], aes(x = Time, y = Ang, color=as.factor(ID2))) + geom_line() + geom_point() + facet_wrap(. ~ ID2, nrow=2)
 ```
 
-```{r}
+```{r, message=F, warning=F}
 head(selectie2[which(selectie2$Time==1), ]$Ang, n=20L)
 head(selectieImputed2[which(selectieImputed2$Time==1), ]$Ang, n=20L)
 ```
