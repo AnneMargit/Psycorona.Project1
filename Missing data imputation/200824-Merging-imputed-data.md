@@ -12,7 +12,7 @@ library(psych)
 ```
 
 ``` r
-load("data_long_min3_str_age.Rdata")
+load("data_long_min3_str_age_max.Rdata")
 load("selectieImputed2.Rdata")
 ```
 
@@ -31,13 +31,14 @@ selectieNew <- selectieImputed2 %>%
          "Rel_imp" = "Rel") 
 ```
 
-Merge imputed dataset with original dataset:
+Merge imputed dataset with original
+dataset:
 
 ``` r
-data_long_min3_str_age$ID <- as.factor(data_long_min3_str_age$ID)
+data_long_min3_str_age_max$ID <- as.factor(data_long_min3_str_age_max$ID)
 selectieNew$ID <- as.factor(selectieNew$ID)
 
-data_merge1 <- left_join(data_long_min3_str_age, selectieNew, by=c("ID", "Time"))
+data_merge1 <- left_join(data_long_min3_str_age_max, selectieNew, by=c("ID", "Time"))
 ```
 
 Create new variable that indicates sum of missings:
@@ -147,7 +148,7 @@ data_imputed <- data_merge2 %>%
 Check original data
 
 ``` r
-summary(data_long_min3_str_age[,7:15])
+summary(data_long_min3_str_age_max[,7:15])
 ```
 
     ##       Ang           Anxiety           Calm            Depr      
@@ -181,28 +182,28 @@ Compare original data and imputed data
 summary(data_imputed[,20:28])
 ```
 
-    ##      Nmiss            Ang           Anxiety           Nerv      
-    ##  Min.   :0.000   Min.   :0.46    Min.   :0.62    Min.   :0.57   
-    ##  1st Qu.:0.000   1st Qu.:1.00    1st Qu.:1.00    1st Qu.:1.00   
-    ##  Median :9.000   Median :2.00    Median :2.00    Median :2.00   
-    ##  Mean   :4.874   Mean   :2.00    Mean   :2.37    Mean   :2.25   
-    ##  3rd Qu.:9.000   3rd Qu.:2.96    3rd Qu.:3.00    3rd Qu.:3.00   
-    ##  Max.   :9.000   Max.   :5.12    Max.   :5.00    Max.   :5.00   
-    ##                  NA's   :65870   NA's   :65870   NA's   :65870  
-    ##       Depr            Exh            Energ            Insp      
-    ##  Min.   :0.41    Min.   :0.69    Min.   :0.75    Min.   :0.60   
-    ##  1st Qu.:1.00    1st Qu.:1.00    1st Qu.:2.00    1st Qu.:2.00   
-    ##  Median :2.00    Median :2.00    Median :3.00    Median :2.00   
-    ##  Mean   :2.00    Mean   :2.34    Mean   :2.65    Mean   :2.48   
+    ##     DaysMax           Nmiss            Ang           Anxiety     
+    ##  Min.   :-55.00   Min.   :0.000   Min.   :0.46    Min.   :0.62   
+    ##  1st Qu.: 19.00   1st Qu.:0.000   1st Qu.:1.00    1st Qu.:1.00   
+    ##  Median : 35.00   Median :9.000   Median :2.00    Median :2.00   
+    ##  Mean   : 36.05   Mean   :4.874   Mean   :2.00    Mean   :2.37   
+    ##  3rd Qu.: 55.00   3rd Qu.:9.000   3rd Qu.:2.96    3rd Qu.:3.00   
+    ##  Max.   : 94.00   Max.   :9.000   Max.   :5.12    Max.   :5.00   
+    ##  NA's   :65836                    NA's   :65870   NA's   :65870  
+    ##       Nerv            Depr            Exh            Energ      
+    ##  Min.   :0.57    Min.   :0.41    Min.   :0.69    Min.   :0.75   
+    ##  1st Qu.:1.00    1st Qu.:1.00    1st Qu.:1.00    1st Qu.:2.00   
+    ##  Median :2.00    Median :2.00    Median :2.00    Median :3.00   
+    ##  Mean   :2.25    Mean   :2.00    Mean   :2.34    Mean   :2.65   
     ##  3rd Qu.:3.00    3rd Qu.:3.00    3rd Qu.:3.00    3rd Qu.:3.00   
     ##  Max.   :5.00    Max.   :5.00    Max.   :5.00    Max.   :5.00   
     ##  NA's   :65870   NA's   :65870   NA's   :65870   NA's   :65870  
-    ##       Calm      
-    ##  Min.   :1.00   
+    ##       Insp      
+    ##  Min.   :0.60   
     ##  1st Qu.:2.00   
-    ##  Median :3.00   
-    ##  Mean   :3.06   
-    ##  3rd Qu.:4.00   
+    ##  Median :2.00   
+    ##  Mean   :2.48   
+    ##  3rd Qu.:3.00   
     ##  Max.   :5.00   
     ##  NA's   :65870
 
@@ -212,14 +213,14 @@ Maak wat plotjes met lijnen per id, op een selectie van de eerste 15
 personen:
 
 ``` r
-class(data_long_min3_str_age$ID)
+class(data_long_min3_str_age_max$ID)
 ```
 
     ## [1] "factor"
 
 ``` r
-data_long_min3_str_age$ID2 <- as.numeric(data_long_min3_str_age$ID)
-describe(data_long_min3_str_age$ID2)
+data_long_min3_str_age_max$ID2 <- as.numeric(data_long_min3_str_age_max$ID)
+describe(data_long_min3_str_age_max$ID2)
 ```
 
     ##    vars      n mean      sd median trimmed  mad min   max range skew kurtosis
@@ -247,7 +248,7 @@ Originele
 data:
 
 ``` r
-plot1<- ggplot(data = data_long_min3_str_age[which(data_long_min3_str_age$ID2 <16), ], aes(x = Time, y = Ang, color=as.factor(ID2))) + geom_line() + geom_point() + facet_wrap(. ~ ID2, nrow=3)
+plot1<- ggplot(data = data_long_min3_str_age_max[which(data_long_min3_str_age_max$ID2 <16), ], aes(x = Time, y = Ang, color=as.factor(ID2))) + geom_line() + geom_point() + facet_wrap(. ~ ID2, nrow=3)
 
 plot1
 ```

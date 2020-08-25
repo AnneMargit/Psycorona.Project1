@@ -18,7 +18,7 @@ library(psych)
 ```
 
 ```{r, echo= T, results='hide', message=F}
-load("data_long_min3_str_age.Rdata")
+load("data_long_min3_str_age_max.Rdata")
 load("selectieImputed2.Rdata")
 ```
 
@@ -38,10 +38,10 @@ selectieNew <- selectieImputed2 %>%
 
 Merge imputed dataset with original dataset:
 ```{r, echo= T, results='hide', message=F}
-data_long_min3_str_age$ID <- as.factor(data_long_min3_str_age$ID)
+data_long_min3_str_age_max$ID <- as.factor(data_long_min3_str_age_max$ID)
 selectieNew$ID <- as.factor(selectieNew$ID)
 
-data_merge1 <- left_join(data_long_min3_str_age, selectieNew, by=c("ID", "Time"))
+data_merge1 <- left_join(data_long_min3_str_age_max, selectieNew, by=c("ID", "Time"))
 ```
 
 Create new variable that indicates sum of missings:
@@ -113,7 +113,7 @@ data_imputed <- data_merge2 %>%
 
 Check original data
 ```{r, echo= T, message=F, warning=F}
-summary(data_long_min3_str_age[,7:15])
+summary(data_long_min3_str_age_max[,7:15])
 ```
 Compare original data and imputed data
 ```{r, echo= T, message=F, warning=F}
@@ -124,9 +124,9 @@ Nu hebben alle emoties evenveel missings. Is dit logisch?
 
 Maak wat plotjes met lijnen per id, op een selectie van de eerste 15 personen:
 ```{r, echo= T, warning=F}
-class(data_long_min3_str_age$ID)
-data_long_min3_str_age$ID2 <- as.numeric(data_long_min3_str_age$ID)
-describe(data_long_min3_str_age$ID2)
+class(data_long_min3_str_age_max$ID)
+data_long_min3_str_age_max$ID2 <- as.numeric(data_long_min3_str_age_max$ID)
+describe(data_long_min3_str_age_max$ID2)
 ```
 
 ```{r, echo=T, warning=F}
@@ -137,7 +137,7 @@ describe(data_imputed$ID2)
 
 Originele data:
 ```{r, echo= T, message=F, warning=F}
-plot1<- ggplot(data = data_long_min3_str_age[which(data_long_min3_str_age$ID2 <16), ], aes(x = Time, y = Ang, color=as.factor(ID2))) + geom_line() + geom_point() + facet_wrap(. ~ ID2, nrow=3)
+plot1<- ggplot(data = data_long_min3_str_age_max[which(data_long_min3_str_age_max$ID2 <16), ], aes(x = Time, y = Ang, color=as.factor(ID2))) + geom_line() + geom_point() + facet_wrap(. ~ ID2, nrow=3)
 
 plot1
 ```
