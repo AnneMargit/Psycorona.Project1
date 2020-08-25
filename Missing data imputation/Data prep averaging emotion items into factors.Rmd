@@ -1,0 +1,64 @@
+---
+title: "Data prep averaging emotion items into factors"
+author: "Anne Margit"
+date: "8/25/2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo= T, results='hide'}
+library(dplyr)
+library(tidyverse)
+library(knitr)
+library(papaja)
+```
+
+```{r, echo= T, results='hide'}
+load("data_imputed.Rdata")
+```
+
+Create variable negative affect high arousal (Negative Affect Activated = NAA)
+```{r, echo= T, results='hide'}
+data_emomeans <- data_imputed %>%
+  mutate(NAA = (Ang + Anxiety + Nerv) / 3)
+```
+
+Create variable negative affect low arousal (Negative Affect Deactivated = NAD)
+```{r, echo= T, results='hide'}
+data_emomeans2 <- data_emomeans %>%
+  mutate(NAD = (Depr + Exh) / 2)
+```
+
+Create variable positive affect high arousal (PAA)
+```{r, echo= T, results='hide'}
+data_emomeans3 <- data_emomeans2 %>%
+  mutate(PAA = (Energ + Insp) / 2)
+```
+
+Create variable positive affect low arousal (PAD)
+```{r, echo= T, results='hide'}
+data_emomeans4 <- data_emomeans3 %>%
+  mutate(PAD = (Calm + Rel) / 2) 
+```
+
+```{r, echo= T, results='hide'}
+data_imputed_emomeans <- data_emomeans4
+```
+
+```{r, results = "hide", message=F, warning =F}
+emomeansN <- data_imputed_emomeans %>%
+  group_by(Time) %>%
+  summarise(across(NAA:PAD, .fns=list(Mean = mean, SD = sd, Median = median), na.rm=TRUE,
+                   .names="{col}_{fn}"))
+```
+
+```{r}
+apa_table(emomeansN, caption="Mean scores of averaged emotion scores per wave")
+```
+
+```{r, echo= T, results='hide'}
+save(data_imputed_emomeans, file="data_imputed_emomeans.Rdata")
+```
