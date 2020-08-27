@@ -1,0 +1,60 @@
+---
+title: "200819 Data prep averaging emotion items into factors"
+author: "Anne Margit"
+date: "8/19/2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo= T, results='hide'}
+load(dplyr)
+load(tidyverse)
+load(knitr)
+```
+
+```{r, echo= T, results='hide'}
+load("data_imputed.Rdata")
+```
+
+Create variable negative affect high arousal (Negative Affect Activated = NAA)
+```{r, echo= T, results='hide'}
+data_factorscores <- data_imputed %>%
+  group_by(ID, Time) %>%
+  mutate(NAA = (Ang + Anxiety + Nerv) / 3) %>%
+  ungroup()
+```
+
+Create variable negative affect low arousal (Negative Affect Deactivated = NAD)
+```{r, echo= T, results='hide'}
+data_factorscores2 <- data_factorscores %>%
+  group_by(ID, Time) %>%
+  mutate(NAD = (Depr + Exh) / 2) %>%
+  ungroup()
+```
+
+Create variable positive affect high arousal (PAA)
+```{r, echo= T, results='hide'}
+data_factorscores3 <- data_factorscores2 %>%
+  group_by(ID, Time) %>%
+  mutate(PAA = (Energ + Insp) / 2) %>%
+  ungroup()
+```
+
+Create variable positive affect low arousal (PAD)
+```{r, echo= T, results='hide'}
+data_factorscores4 <- data_factorscores3 %>%
+  group_by(ID, Time) %>%
+  mutate(PAD = (Calm + Content + Rel) / 3) %>%
+  ungroup()
+```
+
+```{r, echo= T, results='hide'}
+data_factorscores <- data_factorscores4
+```
+
+```{r, echo= T, results='hide'}
+save(data_factorscores, file="data_factorscores.Rdata")
+```

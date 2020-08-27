@@ -1,0 +1,177 @@
+---
+title: "Plots of emotion means against stringency or time in weeks"
+author: "Anne Margit"
+date: "8/25/2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo = F, message=F, warning=F}
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(lme4)
+library(lmerTest)
+library(tidyverse)
+library(anytime)
+library(rockchalk)
+```
+
+This dataset includes:
+1. Data from all weekly measurement waves (baseline through wave 11, Time 1 through 12) 
+2. Participants who provided at least 3 measurements 
+3. Participants who are residents of the country they currently live in
+4. Participants who provided info on age
+5. Participants who provided info on gender (either male or female)
+6. Data from countries with at least 20 participants
+7. Pooled age groups
+8. Imputed missing emotion scores
+9. Combined emotion scores (NAA, NAD, PAA, PAD)
+10. An imputed Stringency index (StringencyIndex_imp) 
+11. A variable indicating the number of days before and after the day on which maximum stringency was reached for the respective country (DaysMax)
+12. A variable indicating the number of weeks before and after the day on which maximum stringency was reached for the respective country (WeeksMax)
+13. A variable indicating the date on which maximum Stringency was reached for that country (DateMaxStr)
+
+```{r, results = "hide"}
+load("data_imputed_emomeans_maxweeks.Rdata")
+```
+
+# Negative affect high arousal
+**Median NAA against week**
+```{r, echo=T, message=F, warning=F}
+plot_NAA <- ggplot(data_imputed_emomeans_maxweeks, aes(x=Week, y=NAA))
+
+plot_NAA +  stat_summary(geom = "line", fun = median, size=1) + stat_summary(fun.data = median_hilow, 
+                                                                    fun.args = (conf.int=.5)) + ylim(1,5) + xlim(10,26)
+```
+
+**Median NAA against maximum stringency in weeks**
+```{r, echo=T, message=F, warning=F}
+plot_NAA <- ggplot(data_imputed_emomeans_maxweeks, aes(x=WeeksMax, y=NAA))
+
+plot_NAA +  stat_summary(geom = "line", fun = median, size=1) + stat_summary(fun.data = median_hilow, 
+                                                                    fun.args = (conf.int=.5)) + ylim(1,5) + xlim(-10, 15)
+```
+
+**Mean NAA against week in different age groups**
+```{r, echo=T, message=F, warning=F}
+plot_NAA <- ggplot(data_imputed_emomeans_maxweeks, aes(x=Week, y=NAA, group = Age_new, color = Age_new))
+
+plot_NAA +  stat_summary(geom = "line", fun = mean, size=1) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-44", "45-64", "65+")) + ylim(1,5) + xlim(10,26)
+```
+
+**Mean NAA against maximum stringency in weeks in different age groups**
+```{r, echo=T, message=F, warning=F}
+plot_NAA <- ggplot(data_imputed_emomeans_maxweeks, aes(x=WeeksMax, y=NAA, group = Age_new, color = Age_new))
+
+plot_NAA +  stat_summary(geom = "line", fun = mean, size=1) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-44", "45-64", "65+")) + ylim(1,5) + xlim(-10, 15)
+```
+
+# Negative affect low arousal
+**Median NAD against week**
+```{r, echo=T, message=F, warning=F}
+plot_NAD <- ggplot(data_imputed_emomeans_maxweeks, aes(x=Week, y=NAD))
+
+plot_NAD +  stat_summary(geom = "line", fun = median, size=1) + stat_summary(fun.data = median_hilow, 
+                                                                    fun.args = (conf.int=.5)) + ylim(1,5) + xlim(10,26)
+```
+
+**Median NAD against maximum stringency in weeks**
+```{r, echo=T, message=F, warning=F}
+plot_NAD <- ggplot(data_imputed_emomeans_maxweeks, aes(x=WeeksMax, y=NAD))
+
+plot_NAD +  stat_summary(geom = "line", fun = median, size=1) + stat_summary(fun.data = median_hilow, 
+                                                                    fun.args = (conf.int=.5)) + ylim(1,5) + xlim(-10, 15)
+``` 
+
+**Mean NAD against week in different age groups**
+```{r, echo=T, message=F, warning=F}
+plot_NAD <- ggplot(data_imputed_emomeans_maxweeks, aes(x=Week, y=NAD, group = Age_new, color = Age_new))
+
+plot_NAD +  stat_summary(geom = "line", fun = mean, size=1) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-44", "45-64", "65+")) + ylim(1,5) + xlim(10,26)
+```
+
+**Mean NAD against maximum stringency in weeks in different age groups**
+```{r, echo=T, message=F, warning=F}
+plot_NAD <- ggplot(data_imputed_emomeans_maxweeks, aes(x=WeeksMax, y=NAD, group = Age_new, color = Age_new))
+
+plot_NAD +  stat_summary(geom = "line", fun = mean, size=1) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-44", "45-64", "65+")) + ylim(1,5) + xlim(-10, 15)
+```
+
+
+# Positive affect high arousal
+**Median PAA against week**
+```{r, echo=T, message=F, warning=F}
+plot_PAA <- ggplot(data_imputed_emomeans_maxweeks, aes(x=Week, y=PAA))
+
+plot_PAA +  stat_summary(geom = "line", fun = median, size=1) + stat_summary(fun.data = median_hilow, 
+                                                                    fun.args = (conf.int=.5)) + ylim(1,5) + xlim(10, 26)
+```
+
+**Median PAA against maximum stringency in weeks**
+```{r, echo=T, message=F, warning=F}
+plot_PAA <- ggplot(data_imputed_emomeans_maxweeks, aes(x=WeeksMax, y=PAA))
+
+plot_PAA +  stat_summary(geom = "line", fun = median, size=1) + stat_summary(fun.data = median_hilow, 
+                                                                    fun.args = (conf.int=.5)) + ylim(1,5) + xlim(-10, 15)
+```
+
+**Mean PAA against week in different age groups**
+```{r, echo=T, message=F, warning=F}
+plot_PAA <- ggplot(data_imputed_emomeans_maxweeks, aes(x=Week, y=PAA, group = Age_new, color = Age_new))
+
+plot_PAA +  stat_summary(geom = "line", fun = mean, size=1) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-44", "45-64", "65+")) + ylim(1,5) + xlim(10, 26)
+```
+
+**Mean PAA against maximum stringency in different age groups**
+```{r, echo=T, message=F, warning=F}
+plot_PAA <- ggplot(data_imputed_emomeans_maxweeks, aes(x=WeeksMax, y=PAA, group = Age_new, color = Age_new))
+
+plot_PAA +  stat_summary(geom = "line", fun = mean, size=1) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-44", "45-64", "65+")) + ylim(1,5) + xlim(-10, 15)
+```
+
+# Positive affect low arousal
+**Median PAD against week**
+```{r, echo=T, message=F, warning=F}
+plot_PAD <- ggplot(data_imputed_emomeans_maxweeks, aes(x=Week, y=PAD))
+
+plot_PAD +  stat_summary(geom = "line", fun = median, size=1) + stat_summary(fun.data = median_hilow, 
+                                                                    fun.args = (conf.int=.5)) + ylim(1,5) + xlim(10, 26)
+```
+
+**Median PAD against maximum stringency**
+```{r, echo=T, message=F, warning=F}
+plot_PAD <- ggplot(data_imputed_emomeans_maxweeks, aes(x=WeeksMax, y=PAD))
+
+plot_PAD +  stat_summary(geom = "line", fun = median, size=1) + stat_summary(fun.data = median_hilow, 
+                                                                    fun.args = (conf.int=.5)) + ylim(1,5) + xlim(-10,15)
+```
+
+**Mean PAD against week in different age groups**
+```{r, echo=T, message=F, warning=F}
+plot_PAD <- ggplot(data_imputed_emomeans_maxweeks, aes(x=Week, y=PAD, group = Age_new, color = Age_new))
+
+plot_PAD +  stat_summary(geom = "line", fun = mean, size=1) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-44", "45-64", "65+")) + ylim(1,5) + xlim(10,26)
+```
+
+**Mean PAD against maximum stringency in different age groups**
+```{r, echo=T, message=F, warning=F}
+plot_PAD <- ggplot(data_imputed_emomeans_maxweeks, aes(x=WeeksMax, y=PAD, group = Age_new, color = Age_new))
+
+plot_PAD +  stat_summary(geom = "line", fun = mean, size=1) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-44", "45-64", "65+")) + ylim(1,5) + xlim(-10,15)
+```
+
+
+
+

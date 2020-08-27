@@ -1,0 +1,241 @@
+---
+title: "Plots of emotion means against stringency or time"
+author: "Anne Margit"
+date: "8/25/2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo = F, message=F, warning=F}
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(lme4)
+library(lmerTest)
+library(tidyverse)
+library(anytime)
+library(rockchalk)
+```
+
+This dataset includes:
+1. Participants who provided at least 3 measurements 
+2. Participants who are residents of the country they currently live in
+3. Participants who provided info on age
+4. Participants who provided info on gender (either male or female)
+5. Data from countries with at least 20 participants
+6. An imputed Stringency index (StringencyIndex_imp) 
+7. A variable indicating the number of days before and after the day on which maximum stringency was reached for the respective country (DaysMax)
+8. Data from all weekly measurement waves (baseline through wave 11) 
+9. Pooled age groups
+10. Imputed emotion scores
+11. Combined emotion scores (NAA, NAD, PAA, PAD)
+
+!!! DaysMax = 0: Day on which maximum stringency was reached for country in which participant lives. This is based on available Stringency Index data, not imputed scores !!!
+
+```{r, results = "hide"}
+load("data_imputed_emomeans.Rdata")
+```
+
+# Negative affect high arousal
+**Median NAA against date**
+```{r, echo=T, message=F, warning=F}
+plot_NAA <- ggplot(data_imputed_emomeans, aes(x=Date, y=NAA))
+
+plot_NAA +  stat_summary(geom = "line", fun = median, size=1) + stat_summary(fun.data = median_hilow, 
+                                                                    fun.args = (conf.int=.5))
+```
+
+**Median NAA against wave**
+```{r, echo=T, message=F, , warning=F}
+plot_NAA <- ggplot(data_imputed_emomeans, aes(x=Time, y=NAA))
+
+plot_NAA +  stat_summary(geom = "line", fun = median, size=1) + stat_summary(fun.data = median_hilow, 
+                                                                    fun.args = (conf.int=.5))
+```
+
+**Median NAA against maximum stringency**
+```{r, echo=T, message=F, warning=F}
+plot_NAA <- ggplot(data_imputed_emomeans, aes(x=DaysMax, y=NAA))
+
+plot_NAA +  stat_summary(geom = "line", fun = median, size=1) + stat_summary(fun.data = median_hilow, 
+                                                                    fun.args = (conf.int=.5))
+```
+
+**Mean NAA against date in different age groups**
+```{r, echo=T, message=F, warning=F}
+plot_NAA <- ggplot(data_imputed_emomeans, aes(x=Date, y=NAA, group = Age_new, color = Age_new))
+
+plot_NAA +  stat_summary(geom = "line", fun = mean, size=1) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-44", "45-64", "65+"))
+```
+
+**Mean NAA against wave in different age groups**
+```{r, echo=T, message=F, warning=F}
+plot_NAA <- ggplot(data_imputed_emomeans, aes(x=Time, y=NAA, group = Age_new, color = Age_new))
+
+plot_NAA +  stat_summary(geom = "line", fun = mean, size=1) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-44", "45-64", "65+"))
+```
+
+**Mean NAA against maximum stringency in different age groups**
+```{r, echo=T, message=F, warning=F}
+plot_NAA <- ggplot(data_imputed_emomeans, aes(x=DaysMax, y=NAA, group = Age_new, color = Age_new))
+
+plot_NAA +  stat_summary(geom = "line", fun = mean, size=1) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-44", "45-64", "65+"))
+```
+
+# Negative affect low arousal
+**Median NAD against date**
+```{r, echo=T, message=F, warning=F}
+plot_NAD <- ggplot(data_imputed_emomeans, aes(x=Date, y=NAD))
+
+plot_NAD +  stat_summary(geom = "line", fun = median, size=1) + stat_summary(fun.data = median_hilow, 
+                                                                    fun.args = (conf.int=.5))
+```
+
+**Median NAD against wave**
+```{r, echo=T, message=F, , warning=F}
+plot_NAD <- ggplot(data_imputed_emomeans, aes(x=Time, y=NAD))
+
+plot_NAD +  stat_summary(geom = "line", fun = median, size=1) + stat_summary(fun.data = median_hilow, 
+                                                                    fun.args = (conf.int=.5))
+```
+
+**Median NAD against maximum stringency**
+```{r, echo=T, message=F, warning=F}
+plot_NAD <- ggplot(data_imputed_emomeans, aes(x=DaysMax, y=NAD))
+
+plot_NAD +  stat_summary(geom = "line", fun = median, size=1) + stat_summary(fun.data = median_hilow, 
+                                                                    fun.args = (conf.int=.5))
+```
+
+**Mean NAD against date in different age groups**
+```{r, echo=T, message=F, warning=F}
+plot_NAD <- ggplot(data_imputed_emomeans, aes(x=Date, y=NAD, group = Age_new, color = Age_new))
+
+plot_NAD +  stat_summary(geom = "line", fun = mean, size=1) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-44", "45-64", "65+"))
+```
+
+**Mean NAD against wave in different age groups**
+```{r, echo=T, message=F, warning=F}
+plot_NAD <- ggplot(data_imputed_emomeans, aes(x=Time, y=NAD, group = Age_new, color = Age_new))
+
+plot_NAD +  stat_summary(geom = "line", fun = mean, size=1) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-44", "45-64", "65+"))
+```
+
+**Mean NAD against maximum stringency in different age groups**
+```{r, echo=T, message=F, warning=F}
+plot_NAD <- ggplot(data_imputed_emomeans, aes(x=DaysMax, y=NAD, group = Age_new, color = Age_new))
+
+plot_NAD +  stat_summary(geom = "line", fun = mean, size=1) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-44", "45-64", "65+"))
+```
+
+
+# Positive affect high arousal
+**Median PAA against date**
+```{r, echo=T, message=F, warning=F}
+plot_PAA <- ggplot(data_imputed_emomeans, aes(x=Date, y=PAA))
+
+plot_PAA +  stat_summary(geom = "line", fun = median, size=1) + stat_summary(fun.data = median_hilow, 
+                                                                    fun.args = (conf.int=.5))
+```
+
+**Median PAA against wave**
+```{r, echo=T, message=F, , warning=F}
+plot_PAA <- ggplot(data_imputed_emomeans, aes(x=Time, y=PAA))
+
+plot_PAA +  stat_summary(geom = "line", fun = median, size=1) + stat_summary(fun.data = median_hilow, 
+                                                                    fun.args = (conf.int=.5))
+```
+
+**Median PAA against maximum stringency**
+```{r, echo=T, message=F, warning=F}
+plot_PAA <- ggplot(data_imputed_emomeans, aes(x=DaysMax, y=PAA))
+
+plot_PAA +  stat_summary(geom = "line", fun = median, size=1) + stat_summary(fun.data = median_hilow, 
+                                                                    fun.args = (conf.int=.5))
+```
+
+**Mean PAA against date in different age groups**
+```{r, echo=T, message=F, warning=F}
+plot_PAA <- ggplot(data_imputed_emomeans, aes(x=Date, y=PAA, group = Age_new, color = Age_new))
+
+plot_PAA +  stat_summary(geom = "line", fun = mean, size=1) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-44", "45-64", "65+"))
+```
+
+**Mean PAA against wave in different age groups**
+```{r, echo=T, message=F, warning=F}
+plot_PAA <- ggplot(data_imputed_emomeans, aes(x=Time, y=PAA, group = Age_new, color = Age_new))
+
+plot_PAA +  stat_summary(geom = "line", fun = mean, size=1) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-44", "45-64", "65+"))
+```
+
+**Mean PAA against maximum stringency in different age groups**
+```{r, echo=T, message=F, warning=F}
+plot_PAA <- ggplot(data_imputed_emomeans, aes(x=DaysMax, y=PAA, group = Age_new, color = Age_new))
+
+plot_PAA +  stat_summary(geom = "line", fun = mean, size=1) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-44", "45-64", "65+"))
+```
+
+# Positive affect low arousal
+**Median PAD against date**
+```{r, echo=T, message=F, warning=F}
+plot_PAD <- ggplot(data_imputed_emomeans, aes(x=Date, y=PAD))
+
+plot_PAD +  stat_summary(geom = "line", fun = median, size=1) + stat_summary(fun.data = median_hilow, 
+                                                                    fun.args = (conf.int=.5))
+```
+
+**Median PAD against wave**
+```{r, echo=T, message=F, , warning=F}
+plot_PAD <- ggplot(data_imputed_emomeans, aes(x=Time, y=PAD))
+
+plot_PAD +  stat_summary(geom = "line", fun = median, size=1) + stat_summary(fun.data = median_hilow, 
+                                                                    fun.args = (conf.int=.5))
+```
+
+**Median PAD against maximum stringency**
+```{r, echo=T, message=F, warning=F}
+plot_PAD <- ggplot(data_imputed_emomeans, aes(x=DaysMax, y=PAD))
+
+plot_PAD +  stat_summary(geom = "line", fun = median, size=1) + stat_summary(fun.data = median_hilow, 
+                                                                    fun.args = (conf.int=.5))
+```
+
+**Mean PAD against date in different age groups**
+```{r, echo=T, message=F, warning=F}
+plot_PAD <- ggplot(data_imputed_emomeans, aes(x=Date, y=PAD, group = Age_new, color = Age_new))
+
+plot_PAD +  stat_summary(geom = "line", fun = mean, size=1) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-44", "45-64", "65+"))
+```
+
+**Mean PAD against wave in different age groups**
+```{r, echo=T, message=F, warning=F}
+plot_PAD <- ggplot(data_imputed_emomeans, aes(x=Time, y=PAD, group = Age_new, color = Age_new))
+
+plot_PAD +  stat_summary(geom = "line", fun = mean, size=1) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-44", "45-64", "65+"))
+```
+
+**Mean PAD against maximum stringency in different age groups**
+```{r, echo=T, message=F, warning=F}
+plot_PAD <- ggplot(data_imputed_emomeans, aes(x=DaysMax, y=PAD, group = Age_new, color = Age_new))
+
+plot_PAD +  stat_summary(geom = "line", fun = mean, size=1) + scale_colour_discrete(name = "Age", 
+labels = c("18-24", "25-44", "45-64", "65+"))
+```
+
+
+
+
