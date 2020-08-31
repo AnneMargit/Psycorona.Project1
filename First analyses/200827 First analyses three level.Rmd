@@ -1,5 +1,5 @@
 ---
-title: "First analyses"
+title: "First analyses three level"
 author: "Anne Margit"
 date: "8/27/2020"
 output: github_document
@@ -47,7 +47,7 @@ library(effects)
 
 # Preparation
 
-**Dummy coding stringency**
+**Dummy coding Stringency**
 *During the peak = 0 (all days with maximum stringency). Before peak = 1, after peak = 2*
 ```{r, results='hide', message=F}
 data_analyse1 <- data_imputed_emomeans_maxweeks %>%
@@ -57,64 +57,43 @@ data_analyse1 <- data_imputed_emomeans_maxweeks %>%
 data_analyse1$Str_dummy <- as_factor(data_analyse1$Str_dummy)
 ```
 
-**Country mean centering Stringency Index**
-```{r, results = "hide", message=F}
-data_analyse1_c <- gmc(data_analyse1, "StringencyIndex", "Country", FUN = mean, suffix = c("_mn", "_dev"),
-    fulldataframe = TRUE)
-```
-
-**Country mean centering emotion factor scores**
-```{r, results = "hide", message=F}
-data_analyse1_c <- gmc(data_analyse1_c, "NAA", "Country", FUN = mean, suffix = c("_mn", "_dev"),
-    fulldataframe = TRUE)
-
-data_analyse1_c <- gmc(data_analyse1_c, "NAD", "Country", FUN = mean, suffix = c("_mn", "_dev"),
-    fulldataframe = TRUE)
-
-data_analyse1_c <- gmc(data_analyse1_c, "PAA", "Country", FUN = mean, suffix = c("_mn", "_dev"),
-    fulldataframe = TRUE)
-
-data_analyse1_c <- gmc(data_analyse1_c, "PAD", "Country", FUN = mean, suffix = c("_mn", "_dev"),
-    fulldataframe = TRUE)
-```
-
 # Regression models
 
 **Negative affect high arousal**
 
 *Random intercept*
 ```{r, message=F, comment=NA}
-model_NAA0 <- lmer(NAA_dev ~ 1 + (1 | ID), data = data_analyse1_c)
+model_NAA0 <- lmer(NAA ~ 1 + (1 | Country/ID), data = data_analyse1)
 summary(model_NAA0)
 ```
 
 *Stringency Index*
 ```{r, message=F, comment=NA}
-model_NAA1 <- lmer(NAA_dev ~ 1 + StringencyIndex_dev + (1 | ID), data = data_analyse1_c)
+model_NAA1 <- lmer(NAA ~ 1 + StringencyIndex + (1 | Country/ID), data = data_analyse1)
 summary(model_NAA1)
 anova(model_NAA0, model_NAA1)
 ```
 
 *Stringency Index and dummy variable with 0 = days during maximum stringency, 1 = before, 2 = after*
 ```{r, message=F, comment=NA}
-model_NAA2 <- lmer(NAA_dev ~ 1 + StringencyIndex_dev + Str_dummy + (1 | ID), data = data_analyse1_c)
+model_NAA2 <- lmer(NAA ~ 1 + StringencyIndex + Str_dummy + (1 | Country/ID), data = data_analyse1)
 summary(model_NAA2)
 anova(model_NAA1, model_NAA2)
 ```
 
 *Stringency Index x dummy interaction*
 ```{r, message=F, comment=NA}
-model_NAA3 <- lmer(NAA_dev ~ 1 + StringencyIndex_dev + Str_dummy +  StringencyIndex_dev*Str_dummy + (1 | ID), data = data_analyse1_c)
+model_NAA3 <- lmer(NAA ~ 1 + StringencyIndex + Str_dummy +  StringencyIndex*Str_dummy + (1 | Country/ID), data = data_analyse1)
 summary(model_NAA3)
 anova(model_NAA2, model_NAA3)
 ```
 
 *Plot of predicted values*
 ```{r, results = "hide", message=F}
-ef_NAA <- effect("StringencyIndex_dev:Str_dummy", model_NAA3)
+ef_NAA <- effect("StringencyIndex:Str_dummy", model_NAA3)
 
 plot_NAA <- ggplot(as.data.frame(ef_NAA), 
-       aes(StringencyIndex_dev, fit, color=Str_dummy)) + geom_line() + 
+       aes(StringencyIndex, fit, color=Str_dummy)) + geom_line() + 
   geom_errorbar(aes(ymin=fit-se, ymax=fit+se), width=1) + theme_bw(base_size=12) + scale_color_discrete(name="Maximum stringency", labels = c("During the peak", "Before the peak", "After the peak"))
 ```
 
@@ -126,37 +105,37 @@ plot_NAA
 
 *Random intercept*
 ```{r, message=F, comment=NA}
-model_NAD0 <- lmer(NAD_dev ~ 1 + (1 | ID), data = data_analyse1_c)
+model_NAD0 <- lmer(NAD ~ 1 + (1 | Country/ID), data = data_analyse1)
 summary(model_NAD0)
 ```
 
 *Stringency Index*
 ```{r, message=F, comment=NA}
-model_NAD1 <- lmer(NAD_dev ~ 1 + StringencyIndex_dev + (1 | ID), data = data_analyse1_c)
+model_NAD1 <- lmer(NAD ~ 1 + StringencyIndex + (1 | Country/ID), data = data_analyse1)
 summary(model_NAD1)
 anova(model_NAD0, model_NAD1)
 ```
 
-*Stringency Index and dummy variable with 0 = days during maximum stringency, 1 = before, 2 = after*
+*Stringency Index and dummy variable with 0 = before maximum stringency, 1 = at or after*
 ```{r, message=F, comment=NA}
-model_NAD2 <- lmer(NAD_dev ~ 1 + StringencyIndex_dev + Str_dummy + (1 | ID), data = data_analyse1_c)
+model_NAD2 <- lmer(NAD ~ 1 + StringencyIndex + Str_dummy + (1 | Country/ID), data = data_analyse1)
 summary(model_NAD2)
 anova(model_NAD1, model_NAD2)
 ```
 
 *Stringency Index x dummy interaction*
 ```{r, message=F, comment=NA}
-model_NAD3 <- lmer(NAD_dev ~ 1 + StringencyIndex_dev + Str_dummy +  StringencyIndex_dev*Str_dummy + (1 | ID), data = data_analyse1_c)
+model_NAD3 <- lmer(NAD ~ 1 + StringencyIndex + Str_dummy +  StringencyIndex*Str_dummy + (1 | Country/ID), data = data_analyse1)
 summary(model_NAD3)
 anova(model_NAD2, model_NAD3)
 ```
 
 *Plot of predicted values*
 ```{r, results = "hide", message=F}
-ef_NAD <- effect("StringencyIndex_dev:Str_dummy", model_NAD3)
+ef_NAD <- effect("StringencyIndex:Str_dummy", model_NAD3)
 
 plot_NAD <- ggplot(as.data.frame(ef_NAD), 
-       aes(StringencyIndex_dev, fit, color=Str_dummy)) + geom_line() + 
+       aes(StringencyIndex, fit, color=Str_dummy)) + geom_line() + 
   geom_errorbar(aes(ymin=fit-se, ymax=fit+se), width=1) + theme_bw(base_size=12) + scale_color_discrete(name="Maximum stringency", labels = c("During the peak", "Before the peak", "After the peak"))
 ```
 
@@ -168,37 +147,37 @@ plot_NAD
 
 *Random intercept*
 ```{r, message=F, comment=NA}
-model_PAA0 <- lmer(PAA_dev ~ 1 + (1 | ID), data = data_analyse1_c)
+model_PAA0 <- lmer(PAA ~ 1 + (1 | Country/ID), data = data_analyse1)
 summary(model_PAA0)
 ```
 
 *Stringency Index*
 ```{r, message=F, comment=NA}
-model_PAA1 <- lmer(PAA_dev ~ 1 + StringencyIndex_dev + (1 | ID), data = data_analyse1_c)
+model_PAA1 <- lmer(PAA ~ 1 + StringencyIndex + (1 | Country/ID), data = data_analyse1)
 summary(model_PAA1)
 anova(model_PAA0, model_PAA1)
 ```
 
-*Stringency Index and dummy variable with 0 = days during maximum stringency, 1 = before, 2 = after*
+*Stringency Index and dummy variable with 0 = before maximum stringency, 1 = at or after*
 ```{r, message=F, comment=NA}
-model_PAA2 <- lmer(PAA_dev ~ 1 + StringencyIndex_dev + Str_dummy + (1 | ID), data = data_analyse1_c)
+model_PAA2 <- lmer(PAA ~ 1 + StringencyIndex + Str_dummy + (1 | Country/ID), data = data_analyse1)
 summary(model_PAA2)
 anova(model_PAA1, model_PAA2)
 ```
 
 *Stringency Index x dummy interaction*
 ```{r, message=F, comment=NA}
-model_PAA3 <- lmer(PAA_dev ~ 1 + StringencyIndex_dev + Str_dummy +  StringencyIndex_dev*Str_dummy + (1 | ID), data = data_analyse1_c)
+model_PAA3 <- lmer(PAA ~ 1 + StringencyIndex + Str_dummy +  StringencyIndex*Str_dummy + (1 | Country/ID), data = data_analyse1)
 summary(model_PAA3)
 anova(model_PAA2, model_PAA3)
 ```
 
 *Plot of predicted values*
 ```{r, results = "hide", message=F}
-ef_PAA <- effect("StringencyIndex_dev:Str_dummy", model_PAA3)
+ef_PAA <- effect("StringencyIndex:Str_dummy", model_PAA3)
 
 plot_PAA <- ggplot(as.data.frame(ef_PAA), 
-       aes(StringencyIndex_dev, fit, color=Str_dummy)) + geom_line() + 
+       aes(StringencyIndex, fit, color=Str_dummy)) + geom_line() + 
   geom_errorbar(aes(ymin=fit-se, ymax=fit+se), width=1) + theme_bw(base_size=12) + scale_color_discrete(name="Maximum stringency", labels = c("During the peak", "Before the peak", "After the peak"))
 ```
 
@@ -210,37 +189,37 @@ plot_PAA
 
 *Random intercept*
 ```{r, message=F, comment=NA}
-model_PAD0 <- lmer(PAD_dev ~ 1 + (1 | ID), data = data_analyse1_c)
+model_PAD0 <- lmer(PAD ~ 1 + (1 | Country/ID), data = data_analyse1)
 summary(model_PAD0)
 ```
 
 *Stringency Index*
 ```{r, message=F, comment=NA}
-model_PAD1 <- lmer(PAD_dev ~ 1 + StringencyIndex_dev + (1 | ID), data = data_analyse1_c)
+model_PAD1 <- lmer(PAD ~ 1 + StringencyIndex + (1 | Country/ID), data = data_analyse1)
 summary(model_PAD1)
 anova(model_PAD0, model_PAD1)
 ```
 
-*Stringency Index and dummy variable with 0 = days during maximum stringency, 1 = before, 2 = after*
+*Stringency Index and dummy variable with 0 = before maximum stringency, 1 = at or after*
 ```{r, message=F, comment=NA}
-model_PAD2 <- lmer(PAD_dev ~ 1 + StringencyIndex_dev + Str_dummy + (1 | ID), data = data_analyse1_c)
+model_PAD2 <- lmer(PAD ~ 1 + StringencyIndex + Str_dummy + (1 | Country/ID), data = data_analyse1)
 summary(model_PAD2)
 anova(model_PAD1, model_PAD2)
 ```
 
 *Stringency Index x dummy interaction*
 ```{r, message=F, comment=NA}
-model_PAD3 <- lmer(PAD_dev ~ 1 + StringencyIndex_dev + Str_dummy +  StringencyIndex_dev*Str_dummy + (1 | ID), data = data_analyse1_c)
+model_PAD3 <- lmer(PAD ~ 1 + StringencyIndex + Str_dummy +  StringencyIndex*Str_dummy + (1 | Country/ID), data = data_analyse1)
 summary(model_PAD3)
 anova(model_PAD2, model_PAD3)
 ```
 
 *Plot of predicted values*
 ```{r, results = "hide", message=F}
-ef_PAD <- effect("StringencyIndex_dev:Str_dummy", model_PAD3)
+ef_PAD <- effect("StringencyIndex:Str_dummy", model_PAD3)
 
 plot_PAD <- ggplot(as.data.frame(ef_PAD), 
-       aes(StringencyIndex_dev, fit, color=Str_dummy)) + geom_line() + 
+       aes(StringencyIndex, fit, color=Str_dummy)) + geom_line() + 
   geom_errorbar(aes(ymin=fit-se, ymax=fit+se), width=1) + theme_bw(base_size=12) + scale_color_discrete(name="Maximum stringency", labels = c("During the peak", "Before the peak", "After the peak"))
 ```
 
