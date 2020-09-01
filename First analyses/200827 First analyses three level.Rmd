@@ -33,6 +33,8 @@ This dataset includes:
 12. A variable indicating the number of weeks before and after the day on which maximum stringency was reached for the respective country (WeeksMax)
 13. A variable indicating the date on which maximum Stringency was reached for that country (DateMaxStr)
 
+> My comments are in block quotes such as this. 
+
 ```{r, message=F}
 library(dplyr)
 library(tidyverse)
@@ -55,6 +57,14 @@ data_analyse1 <- data_imputed_emomeans_maxweeks %>%
   mutate(Str_dummy = ifelse(Date < DateMaxStr, 1, ifelse(Date == DateMaxStr, 0, 2)))
 
 data_analyse1$Str_dummy <- as_factor(data_analyse1$Str_dummy)
+
+Dummy_N <- data_analyse1 %>%
+group_by(Str_dummy) %>%
+  summarise(N_dummy = n())
+```
+
+```{r, message=F}
+apa_table(Dummy_N)
 ```
 
 # Regression models
@@ -74,6 +84,8 @@ summary(model_NAA1)
 anova(model_NAA0, model_NAA1)
 ```
 
+> Overall positive relationship between stringency and NAA
+
 *Stringency Index and dummy variable with 0 = days during maximum stringency, 1 = before, 2 = after*
 ```{r, message=F, comment=NA}
 model_NAA2 <- lmer(NAA ~ 1 + StringencyIndex + Str_dummy + (1 | Country/ID), data = data_analyse1)
@@ -81,12 +93,25 @@ summary(model_NAA2)
 anova(model_NAA1, model_NAA2)
 ```
 
+> Higher NAA before the peak compared to during the peak. And lower NAA after the peak compared to during the peak. 
+
 *Stringency Index x dummy interaction*
 ```{r, message=F, comment=NA}
 model_NAA3 <- lmer(NAA ~ 1 + StringencyIndex + Str_dummy +  StringencyIndex*Str_dummy + (1 | Country/ID), data = data_analyse1)
 summary(model_NAA3)
 anova(model_NAA2, model_NAA3)
 ```
+
+> Negative relationship between stringency and NAA before the peak compared to during the peak. No difference in association between stringency and NAA after the peak compared to during the peak. This model has better fit than previous one without the interaction. 
+
+*Random slope for Stringency Index*
+```{r, message=F, comment=NA}
+model_NAA4 <- lmer(NAA ~ 1 + StringencyIndex + Str_dummy +  StringencyIndex*Str_dummy + (1 + StringencyIndex | Country/ID), data = data_analyse1)
+summary(model_NAA4)
+anova(model_NAA3, model_NAA4)
+```
+
+> Model including a random slope for stringency index is a better fit than previous model. 
 
 *Plot of predicted values*
 ```{r, results = "hide", message=F}
@@ -116,6 +141,8 @@ summary(model_NAD1)
 anova(model_NAD0, model_NAD1)
 ```
 
+> Overall positive relationship between stringency and NAD
+
 *Stringency Index and dummy variable with 0 = before maximum stringency, 1 = at or after*
 ```{r, message=F, comment=NA}
 model_NAD2 <- lmer(NAD ~ 1 + StringencyIndex + Str_dummy + (1 | Country/ID), data = data_analyse1)
@@ -123,12 +150,26 @@ summary(model_NAD2)
 anova(model_NAD1, model_NAD2)
 ```
 
+> NAD is lower before stringency peak compared to during peak, no difference in NAD after the peak compared to during the peak. Model including dummy variables is not a better fit, previous model is best. 
+
 *Stringency Index x dummy interaction*
 ```{r, message=F, comment=NA}
 model_NAD3 <- lmer(NAD ~ 1 + StringencyIndex + Str_dummy +  StringencyIndex*Str_dummy + (1 | Country/ID), data = data_analyse1)
 summary(model_NAD3)
 anova(model_NAD2, model_NAD3)
 ```
+
+> No significant interaction effect
+
+*Random slope for stringency index without dummy variable and interaction*
+```{r, message=F, comment=NA}
+model_NAD4 <- lmer(NAD ~ 1 + StringencyIndex + (1 + StringencyIndex | Country/ID), data = data_analyse1)
+summary(model_NAD4)
+anova(model_NAD1, model_NAD4)
+```
+
+> Model met random slope is beter dan met fixed slope, maar geeft wel een warning (failed to converge?)
+
 
 *Plot of predicted values*
 ```{r, results = "hide", message=F}
@@ -158,6 +199,8 @@ summary(model_PAA1)
 anova(model_PAA0, model_PAA1)
 ```
 
+> Overall negative relationship between stringency and PAA. Model with stringency index fits better than without predictors
+
 *Stringency Index and dummy variable with 0 = before maximum stringency, 1 = at or after*
 ```{r, message=F, comment=NA}
 model_PAA2 <- lmer(PAA ~ 1 + StringencyIndex + Str_dummy + (1 | Country/ID), data = data_analyse1)
@@ -165,12 +208,25 @@ summary(model_PAA2)
 anova(model_PAA1, model_PAA2)
 ```
 
+> PAA is higher after the peak compared to during the peak. No difference in PAA before the peak compared to during the peak. This model fits better than model with only stringency index as predictor.
+
 *Stringency Index x dummy interaction*
 ```{r, message=F, comment=NA}
 model_PAA3 <- lmer(PAA ~ 1 + StringencyIndex + Str_dummy +  StringencyIndex*Str_dummy + (1 | Country/ID), data = data_analyse1)
 summary(model_PAA3)
 anova(model_PAA2, model_PAA3)
 ```
+
+> Both interactions are significant: relationship between stringency and PAA is more positive before the peak compared to during the peak, as well as after the peak compared to during the peak. Model with interaction effects is a better fit. 
+
+*Random slope for Stringency Index*
+```{r, message=F, comment=NA}
+model_PAA4 <- lmer(PAA ~ 1 + StringencyIndex + Str_dummy +  StringencyIndex*Str_dummy + (1 + StringencyIndex | Country/ID), data = data_analyse1)
+summary(model_PAA4)
+anova(model_PAA3, model_PAA4)
+```
+
+> Random slope is significant
 
 *Plot of predicted values*
 ```{r, results = "hide", message=F}
@@ -200,6 +256,8 @@ summary(model_PAD1)
 anova(model_PAD0, model_PAD1)
 ```
 
+> PAD neemt af met toenemende stringency index
+
 *Stringency Index and dummy variable with 0 = before maximum stringency, 1 = at or after*
 ```{r, message=F, comment=NA}
 model_PAD2 <- lmer(PAD ~ 1 + StringencyIndex + Str_dummy + (1 | Country/ID), data = data_analyse1)
@@ -207,12 +265,25 @@ summary(model_PAD2)
 anova(model_PAD1, model_PAD2)
 ```
 
+> PAD is hoger na maximum stringency in vergelijking met tijdens de piek. Model met dummy verklaart meer dan model zonder dummy. 
+
 *Stringency Index x dummy interaction*
 ```{r, message=F, comment=NA}
 model_PAD3 <- lmer(PAD ~ 1 + StringencyIndex + Str_dummy +  StringencyIndex*Str_dummy + (1 | Country/ID), data = data_analyse1)
 summary(model_PAD3)
 anova(model_PAD2, model_PAD3)
 ```
+
+> Beide interacties zijn significant: Zowel voor als na de piek is de relatie tussen stringency en PAD positiever dan tijdens de piek. Dit model heeft een betere fit dan zonder de interactieterm.
+
+*Random slope voor stringency*
+```{r, message=F, comment=NA}
+model_PAD4 <- lmer(PAD ~ 1 + StringencyIndex + Str_dummy +  StringencyIndex*Str_dummy + (1 + StringencyIndex | Country/ID), data = data_analyse1)
+summary(model_PAD4)
+anova(model_PAD3, model_PAD4)
+```
+
+> Model met random slope heeft een betere fit
 
 *Plot of predicted values*
 ```{r, results = "hide", message=F}
