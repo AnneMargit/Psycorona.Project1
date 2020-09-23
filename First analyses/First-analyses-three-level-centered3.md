@@ -47,6 +47,8 @@ library(rockchalk)
 library(effects)
 library(nlme)
 library(lattice)
+library(broom)
+library(purrr)
 ```
 
 # Country mean centering Stringency Index
@@ -526,18 +528,18 @@ summary(model_NAA9)
             Country ID %in% Country 
                  33           10343 
 
-*Autoregressive correlation structure*
-
-> Using the corCAR1 error structure assumes that assessments are taken
-> in varying
-intervals.
+*Autoregressive correlation
+structure*
 
 ``` r
+data_analyse1_fc <- data_analyse1_fc[with(data_analyse1_fc, order(Country, ID, Time)),]
+data_analyse1_fc$Time <- as.numeric(data_analyse1_fc$Time)
+
 model_NAA10 <- lme(fixed = NAA ~ StringencyIndex_dev + Str_dummy +  StringencyIndex_dev*Str_dummy,
                    random = list (Country = pdDiag(~StringencyIndex_dev), ID = pdDiag(~StringencyIndex_dev)),
                   data = data_analyse1_fc, 
                   na.action = na.omit,
-                  correlation = corAR1())
+                  correlation = corAR1(form = ~ Time | Country/ID))
 
 summary(model_NAA10)
 ```
@@ -545,52 +547,111 @@ summary(model_NAA10)
     Linear mixed-effects model fit by REML
      Data: data_analyse1_fc 
            AIC      BIC    logLik
-      120490.1 120597.6 -60233.04
+      120097.6 120205.1 -60036.79
     
     Random effects:
      Formula: ~StringencyIndex_dev | Country
      Structure: Diagonal
             (Intercept) StringencyIndex_dev
-    StdDev:   0.2181158         0.001846225
+    StdDev:   0.2173281          0.00193539
     
      Formula: ~StringencyIndex_dev | ID %in% Country
      Structure: Diagonal
             (Intercept) StringencyIndex_dev  Residual
-    StdDev:   0.7263502         0.007169171 0.5974446
+    StdDev:    0.732129          0.00682732 0.5942301
     
-    Correlation Structure: AR(1)
-     Formula: ~1 | Country/ID 
+    Correlation Structure: ARMA(1,0)
+     Formula: ~Time | Country/ID 
      Parameter estimate(s):
-          Phi 
-    0.2559555 
+         Phi1 
+    0.3379141 
     Fixed effects: NAA ~ StringencyIndex_dev + Str_dummy + StringencyIndex_dev *      Str_dummy 
                                         Value  Std.Error    DF   t-value p-value
-    (Intercept)                     2.4684605 0.04157966 47315  59.36702  0.0000
-    StringencyIndex_dev            -0.0042924 0.00158758 47315  -2.70372  0.0069
-    Str_dummy1                     -0.2082753 0.01761456 47315 -11.82405  0.0000
-    Str_dummy2                     -0.2180320 0.01340601 47315 -16.26375  0.0000
-    StringencyIndex_dev:Str_dummy1  0.0128011 0.00206685 47315   6.19352  0.0000
-    StringencyIndex_dev:Str_dummy2  0.0076487 0.00166246 47315   4.60085  0.0000
+    (Intercept)                     2.4684585 0.04148851 47315  59.49740  0.0000
+    StringencyIndex_dev            -0.0040375 0.00164051 47315  -2.46114  0.0139
+    Str_dummy1                     -0.2095552 0.01786840 47315 -11.72770  0.0000
+    Str_dummy2                     -0.2169358 0.01369294 47315 -15.84289  0.0000
+    StringencyIndex_dev:Str_dummy1  0.0131928 0.00213088 47315   6.19122  0.0000
+    StringencyIndex_dev:Str_dummy2  0.0074276 0.00171838 47315   4.32244  0.0000
      Correlation: 
                                    (Intr) StrnI_ Str_d1 Str_d2 SI_:S_1
-    StringencyIndex_dev             0.061                             
-    Str_dummy1                     -0.173 -0.301                      
-    Str_dummy2                     -0.250 -0.167  0.485               
-    StringencyIndex_dev:Str_dummy1 -0.051 -0.550 -0.358  0.236        
-    StringencyIndex_dev:Str_dummy2 -0.059 -0.902  0.220  0.226  0.621 
+    StringencyIndex_dev             0.070                             
+    Str_dummy1                     -0.177 -0.314                      
+    Str_dummy2                     -0.255 -0.193  0.492               
+    StringencyIndex_dev:Str_dummy1 -0.060 -0.562 -0.334  0.260        
+    StringencyIndex_dev:Str_dummy2 -0.068 -0.903  0.234  0.253  0.633 
     
     Standardized Within-Group Residuals:
            Min         Q1        Med         Q3        Max 
-    -4.9101053 -0.5613243 -0.1327395  0.5025579  4.9865155 
+    -4.9197489 -0.5649914 -0.1340106  0.4994438  5.0087667 
     
     Number of Observations: 57663
     Number of Groups: 
             Country ID %in% Country 
                  33           10343 
 
-> Model NAA10 has the best fit (lowest BIC). This model has random
-> slopes for Stringency at the Country level and ID level, assumes no
-> correlation between random slope and intercept, and assumes
+*AR without random slope for country, because model without random slope
+for country was
+better*
+
+``` r
+model_NAA11 <- lme(fixed = NAA ~ StringencyIndex_dev + Str_dummy +  StringencyIndex_dev*Str_dummy,
+                  random = list (Country = ~1, ID = pdDiag(~StringencyIndex_dev)), 
+                  data = data_analyse1_fc, 
+                  na.action = na.omit,
+                  correlation = corAR1(form = ~ Time | Country/ID))
+
+summary(model_NAA11)
+```
+
+    Linear mixed-effects model fit by REML
+     Data: data_analyse1_fc 
+           AIC      BIC    logLik
+      120105.6 120204.2 -60041.81
+    
+    Random effects:
+     Formula: ~1 | Country
+            (Intercept)
+    StdDev:   0.2171807
+    
+     Formula: ~StringencyIndex_dev | ID %in% Country
+     Structure: Diagonal
+            (Intercept) StringencyIndex_dev  Residual
+    StdDev:   0.7320867         0.006880119 0.5943817
+    
+    Correlation Structure: ARMA(1,0)
+     Formula: ~Time | Country/ID 
+     Parameter estimate(s):
+         Phi1 
+    0.3380812 
+    Fixed effects: NAA ~ StringencyIndex_dev + Str_dummy + StringencyIndex_dev *      Str_dummy 
+                                        Value  Std.Error    DF   t-value p-value
+    (Intercept)                     2.4633916 0.04140610 47315  59.49344  0.0000
+    StringencyIndex_dev            -0.0043934 0.00149078 47315  -2.94707  0.0032
+    Str_dummy1                     -0.1922733 0.01633144 47315 -11.77320  0.0000
+    Str_dummy2                     -0.2130145 0.01335324 47315 -15.95227  0.0000
+    StringencyIndex_dev:Str_dummy1  0.0117440 0.00194675 47315   6.03258  0.0000
+    StringencyIndex_dev:Str_dummy2  0.0073111 0.00157454 47315   4.64334  0.0000
+     Correlation: 
+                                   (Intr) StrnI_ Str_d1 Str_d2 SI_:S_1
+    StringencyIndex_dev             0.076                             
+    Str_dummy1                     -0.181 -0.304                      
+    Str_dummy2                     -0.252 -0.228  0.546               
+    StringencyIndex_dev:Str_dummy1 -0.073 -0.645 -0.261  0.278        
+    StringencyIndex_dev:Str_dummy2 -0.074 -0.957  0.288  0.265  0.618 
+    
+    Standardized Within-Group Residuals:
+           Min         Q1        Med         Q3        Max 
+    -4.9324682 -0.5644975 -0.1352606  0.4994153  4.9877233 
+    
+    Number of Observations: 57663
+    Number of Groups: 
+            Country ID %in% Country 
+                 33           10343 
+
+> Model NAA11 has the best fit (lowest BIC), slightly better than NAA10.
+> This model has only a random slope fo Stringency at the ID level,
+> assumes no correlation between random slope and intercept, and assumes
 > autoregressive correlation structure at the measurement level.
 
 *QQ plot of residuals*
@@ -598,92 +659,91 @@ summary(model_NAA10)
 ``` r
 par(mfrow = c(1,2))
 lims <- c(-3.5,3.5)
-hist(resid(model_NAA10, type = "normalized"),
+hist(resid(model_NAA11, type = "normalized"),
 freq = FALSE, xlim = lims, ylim =  c(0,.7),main = "Histogram of Standardized Residuals")
-lines(density(scale(resid(model_NAA10))))
-qqnorm(resid(model_NAA10, type = "normalized"),
+lines(density(scale(resid(model_NAA11))))
+qqnorm(resid(model_NAA11, type = "normalized"),
 xlim = lims, ylim = lims,main = "QQ plot")
 abline(0,1, col = "red", lty = 2)
 ```
 
-![](First-analyses-three-level-centered3_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](First-analyses-three-level-centered3_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 *Residuals vs fitted*
 
 ``` r
-plot(fitted(model_NAA10, level=2), residuals(model_NAA10, level=2), 
+plot(fitted(model_NAA11, level=2), residuals(model_NAA11, level=2), 
      main="residuals vs fitted at ID level")
 abline(a=0, b=0,col="red")
-```
-
-![](First-analyses-three-level-centered3_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
-
-``` r
-plot(fitted(model_NAA10, level=1), residuals(model_NAA10, level=1), 
-    main="residuals vs fitted at Country level")
-abline(a=0, b=0,col="red")
-```
-
-![](First-analyses-three-level-centered3_files/figure-gfm/unnamed-chunk-15-2.png)<!-- -->
-
-*Plot random intercepts and
-slopes*
-
-``` r
-plot(ranef(model_NAA10, level = 1))
 ```
 
 ![](First-analyses-three-level-centered3_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 ``` r
-plot(ranef(model_NAA10, level = 2))
+plot(fitted(model_NAA11, level=1), residuals(model_NAA11, level=1), 
+    main="residuals vs fitted at Country level")
+abline(a=0, b=0,col="red")
 ```
 
 ![](First-analyses-three-level-centered3_files/figure-gfm/unnamed-chunk-16-2.png)<!-- -->
 
+*Plot random intercepts and
+slopes*
+
+``` r
+plot(ranef(model_NAA11, level = 1))
+```
+
+![](First-analyses-three-level-centered3_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+
+``` r
+plot(ranef(model_NAA11, level = 2))
+```
+
+![](First-analyses-three-level-centered3_files/figure-gfm/unnamed-chunk-17-2.png)<!-- -->
+
 *Confidence intervals*
 
 ``` r
-intervals(model_NAA10)
+intervals(model_NAA11)
 ```
 
     Approximate 95% confidence intervals
     
      Fixed effects:
                                           lower         est.        upper
-    (Intercept)                     2.386963810  2.468460527  2.549957244
-    StringencyIndex_dev            -0.007404034 -0.004292363 -0.001180691
-    Str_dummy1                     -0.242800135 -0.208275349 -0.173750564
-    Str_dummy2                     -0.244307959 -0.218031998 -0.191756036
-    StringencyIndex_dev:Str_dummy1  0.008750016  0.012801065  0.016852113
-    StringencyIndex_dev:Str_dummy2  0.004390287  0.007648739  0.010907190
+    (Intercept)                     2.382235058  2.463391606  2.544548154
+    StringencyIndex_dev            -0.007315380 -0.004393431 -0.001471483
+    Str_dummy1                     -0.224283183 -0.192273321 -0.160263459
+    Str_dummy2                     -0.239187020 -0.213014479 -0.186841938
+    StringencyIndex_dev:Str_dummy1  0.007928289  0.011743953  0.015559618
+    StringencyIndex_dev:Str_dummy2  0.004224995  0.007311108  0.010397222
     attr(,"label")
     [1] "Fixed effects:"
     
      Random Effects:
       Level: Country 
-                                  lower        est.       upper
-    sd((Intercept))         0.160616325 0.218115843 0.296199786
-    sd(StringencyIndex_dev) 0.000864417 0.001846225 0.003943174
+                        lower      est.     upper
+    sd((Intercept)) 0.1644187 0.2171807 0.2868741
       Level: ID 
-                                  lower        est.      upper
-    sd((Intercept))         0.712419031 0.726350183 0.74055376
-    sd(StringencyIndex_dev) 0.005987418 0.007169171 0.00858417
+                                  lower        est.       upper
+    sd((Intercept))         0.720202607 0.732086678 0.744166848
+    sd(StringencyIndex_dev) 0.005742046 0.006880119 0.008243757
     
      Correlation structure:
-            lower      est.     upper
-    Phi 0.2417283 0.2559555 0.2700728
+             lower      est.     upper
+    Phi1 0.3241624 0.3380812 0.3518536
     attr(,"label")
     [1] "Correlation structure:"
     
      Within-group standard error:
         lower      est.     upper 
-    0.5918638 0.5974446 0.6030781 
+    0.5892770 0.5943817 0.5995306 
 
 *Plot of predicted values*
 
 ``` r
-ef_NAA <- effect("StringencyIndex_dev:Str_dummy", model_NAA10)
+ef_NAA <- effect("StringencyIndex_dev:Str_dummy", model_NAA11)
 
 plot_NAA <- ggplot(as.data.frame(ef_NAA), 
        aes(StringencyIndex_dev, fit, color=Str_dummy)) + geom_line() + 
@@ -694,4 +754,65 @@ plot_NAA <- ggplot(as.data.frame(ef_NAA),
 plot_NAA
 ```
 
-![](First-analyses-three-level-centered3_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+![](First-analyses-three-level-centered3_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+
+``` r
+coef_NAA = tidy(model_NAA11, 
+               effects = "fixed")
+```
+
+*Effect sizes* **Within person SD and average within person SD**
+
+``` r
+ISDs <- data_analyse1_fc %>% 
+  group_by(ID) %>%
+  summarize_at(c("StringencyIndex_dev", "NAA", "NAD", "PAA", "PAD"), sd, na.rm=TRUE) %>%
+  ungroup()
+
+ISDs_av <- ISDs %>%
+  summarize_at(c("StringencyIndex_dev", "NAA", "NAD", "PAA", "PAD"), mean, na.rm=TRUE) %>%
+  stack() %>%
+  rename(sd=values) 
+```
+
+> Effect size = (regression coefficient \* average ISD of X) / average
+> ISD of Y)
+
+> For the intercept and the dummy variables (+ interaction) I only
+> standardized Y, so the effect size = (regression coefficient / average
+> ISD of Y)
+
+``` r
+coef_NAA <- coef_NAA %>%
+ left_join(., ISDs_av, by=c("term"="ind"))
+
+coef_NAA <- coef_NAA %>%
+  mutate(sd = ifelse(is.na(sd), 1, sd))
+
+coef_NAA <- coef_NAA %>%
+ mutate(e_size = (estimate * sd)/0.5046733)
+
+coef_NAA <- coef_NAA %>%
+  rename(isd = sd)
+```
+
+``` r
+coef_NAA
+```
+
+    ## # A tibble: 6 x 7
+    ##   term                           estimate std.error statistic  p.value   isd  e_size
+    ##   <chr>                             <dbl>     <dbl>     <dbl>    <dbl> <dbl>   <dbl>
+    ## 1 (Intercept)                     2.46      0.0414      59.5  0.        1     4.88  
+    ## 2 StringencyIndex_dev            -0.00439   0.00149     -2.95 3.21e- 3  6.12 -0.0533
+    ## 3 Str_dummy1                     -0.192     0.0163     -11.8  5.95e-32  1    -0.381 
+    ## 4 Str_dummy2                     -0.213     0.0134     -16.0  3.87e-57  1    -0.422 
+    ## 5 StringencyIndex_dev:Str_dummy1  0.0117    0.00195      6.03 1.63e- 9  1     0.0233
+    ## 6 StringencyIndex_dev:Str_dummy2  0.00731   0.00157      4.64 3.44e- 6  1     0.0145
+
+> Effect size interpretation: small = 0.1, medium = 0.3, large = 0.5
+
+``` r
+save(ISDs_av, file="ISDs_av.Rdata")
+save(data_analyse1_fc, file = "data_analyse1_fc.Rdata")
+```

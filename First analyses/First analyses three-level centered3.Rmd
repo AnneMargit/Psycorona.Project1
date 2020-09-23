@@ -48,6 +48,8 @@ library(rockchalk)
 library(effects)
 library(nlme)
 library(lattice)
+library(broom)
+library(purrr)
 ```
 
 # Country mean centering Stringency Index
@@ -150,56 +152,67 @@ summary(model_NAA9)
 ```
 
 *Autoregressive correlation structure*
-
-> Using the corCAR1 error structure assumes that assessments are taken in varying intervals.  
-
 ```{r, message=F, comment=NA}
+data_analyse1_fc <- data_analyse1_fc[with(data_analyse1_fc, order(Country, ID, Time)),]
+data_analyse1_fc$Time <- as.numeric(data_analyse1_fc$Time)
+
 model_NAA10 <- lme(fixed = NAA ~ StringencyIndex_dev + Str_dummy +  StringencyIndex_dev*Str_dummy,
                    random = list (Country = pdDiag(~StringencyIndex_dev), ID = pdDiag(~StringencyIndex_dev)),
                   data = data_analyse1_fc, 
                   na.action = na.omit,
-                  correlation = corAR1())
+                  correlation = corAR1(form = ~ Time | Country/ID))
 
 summary(model_NAA10)
 ```
 
-> Model NAA10 has the best fit (lowest BIC). This model has random slopes for Stringency at the Country level and ID level, assumes no correlation between random slope and intercept, and assumes autoregressive correlation structure at the measurement level. 
+*AR without random slope for country, because model without random slope for country was better*
+```{r, message=F, comment=NA}
+model_NAA11 <- lme(fixed = NAA ~ StringencyIndex_dev + Str_dummy +  StringencyIndex_dev*Str_dummy,
+                  random = list (Country = ~1, ID = pdDiag(~StringencyIndex_dev)), 
+                  data = data_analyse1_fc, 
+                  na.action = na.omit,
+                  correlation = corAR1(form = ~ Time | Country/ID))
+
+summary(model_NAA11)
+```
+
+> Model NAA11 has the best fit (lowest BIC), slightly better than NAA10. This model has only a random slope fo Stringency at the ID level, assumes no correlation between random slope and intercept, and assumes autoregressive correlation structure at the measurement level. 
 
 *QQ plot of residuals*
 ```{r, message=F, comment=NA}
 par(mfrow = c(1,2))
 lims <- c(-3.5,3.5)
-hist(resid(model_NAA10, type = "normalized"),
+hist(resid(model_NAA11, type = "normalized"),
 freq = FALSE, xlim = lims, ylim =  c(0,.7),main = "Histogram of Standardized Residuals")
-lines(density(scale(resid(model_NAA10))))
-qqnorm(resid(model_NAA10, type = "normalized"),
+lines(density(scale(resid(model_NAA11))))
+qqnorm(resid(model_NAA11, type = "normalized"),
 xlim = lims, ylim = lims,main = "QQ plot")
 abline(0,1, col = "red", lty = 2)
 ```
 
 *Residuals vs fitted*
 ```{r, message=F, comment=NA}
-plot(fitted(model_NAA10, level=2), residuals(model_NAA10, level=2), 
+plot(fitted(model_NAA11, level=2), residuals(model_NAA11, level=2), 
      main="residuals vs fitted at ID level")
 abline(a=0, b=0,col="red")
-plot(fitted(model_NAA10, level=1), residuals(model_NAA10, level=1), 
+plot(fitted(model_NAA11, level=1), residuals(model_NAA11, level=1), 
     main="residuals vs fitted at Country level")
 abline(a=0, b=0,col="red")
 ```
 
 *Plot random intercepts and slopes*
 ```{r, message=F, comment=NA}
-plot(ranef(model_NAA10, level = 1))
-plot(ranef(model_NAA10, level = 2))
+plot(ranef(model_NAA11, level = 1))
+plot(ranef(model_NAA11, level = 2))
 ```
 
 *Confidence intervals*
 ```{r, message=F, comment=NA}
-intervals(model_NAA10)
+intervals(model_NAA11)
 ```
 *Plot of predicted values*
 ```{r, results = "hide", message=F}
-ef_NAA <- effect("StringencyIndex_dev:Str_dummy", model_NAA10)
+ef_NAA <- effect("StringencyIndex_dev:Str_dummy", model_NAA11)
 
 plot_NAA <- ggplot(as.data.frame(ef_NAA), 
        aes(StringencyIndex_dev, fit, color=Str_dummy)) + geom_line() + 
@@ -210,7 +223,50 @@ plot_NAA <- ggplot(as.data.frame(ef_NAA),
 plot_NAA
 ```
 
+```{r, message=F, comment=NA}
+coef_NAA = tidy(model_NAA11, 
+               effects = "fixed")
+```
 
+*Effect sizes*
+**Within person SD and average within person SD**
+```{r, message=F, comment=NA}
+ISDs <- data_analyse1_fc %>% 
+  group_by(ID) %>%
+  summarize_at(c("StringencyIndex_dev", "NAA", "NAD", "PAA", "PAD"), sd, na.rm=TRUE) %>%
+  ungroup()
 
+ISDs_av <- ISDs %>%
+  summarize_at(c("StringencyIndex_dev", "NAA", "NAD", "PAA", "PAD"), mean, na.rm=TRUE) %>%
+  stack() %>%
+  rename(sd=values) 
+```
 
+> Effect size = (regression coefficient * average ISD of X) / average ISD of Y) 
 
+> For the intercept and the dummy variables (+ interaction) I only standardized Y, so the effect size = (regression coefficient / average ISD of Y)
+
+```{r, message=F, comment=NA}
+coef_NAA <- coef_NAA %>%
+ left_join(., ISDs_av, by=c("term"="ind"))
+
+coef_NAA <- coef_NAA %>%
+  mutate(sd = ifelse(is.na(sd), 1, sd))
+
+coef_NAA <- coef_NAA %>%
+ mutate(e_size = (estimate * sd)/0.5046733)
+
+coef_NAA <- coef_NAA %>%
+  rename(isd = sd)
+```
+
+```{r}
+coef_NAA
+```
+
+> Effect size interpretation: small = 0.1, medium = 0.3, large = 0.5
+
+```{r, message=F, comment=NA}
+save(ISDs_av, file="ISDs_av.Rdata")
+save(data_analyse1_fc, file = "data_analyse1_fc.Rdata")
+```
