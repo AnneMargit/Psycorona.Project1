@@ -1,7 +1,7 @@
 ---
 title: "WideToLong"
 author: "Anne Margit"
-date: "5/26/2020"
+date: "10/26/2020"
 output: github_document
 ---
 
@@ -20,10 +20,8 @@ library(papaja)
 ```
 
 ```{r read data, results = "hide"}
-data.all <- read.csv("RMD06_Anne Margit Reitsema_2020-07-07 10-57 CEST.csv", header=TRUE)
+data.all <- read.csv("RMD06_okt.csv", header=TRUE)
 ```
-
-
 
 ```{r dates, results = "hide"}
 data.all$StartDate <- anydate(data.all$StartDate)
@@ -59,7 +57,7 @@ apa_table(data.all[1:5,1:10])
 
 ```{r, results = "hide"}
 data_Date <- melt(data.all,
-    id.vars=c("X", "gender", "coded_country", "age","countryCitizen", "Citizen"),
+    id.vars=c("X", "gender", "coded_country", "age", "edu", "countryCitizen", "Citizen"),
     measure.vars=c("RecordedDate", "w1_RecordedDate", "w2_RecordedDate", "w3_RecordedDate", "w4_RecordedDate", "w5_RecordedDate", "w6_RecordedDate", "w7_RecordedDate",  "w8_RecordedDate",  "w9_RecordedDate",  "w10_RecordedDate",  "w11_RecordedDate"),
     variable.name="Wave",
     value.name="RecordedDate")
@@ -606,7 +604,7 @@ data_long <- data_new19
 
 ```{r, results = "hide"}
 data_long <- as_tibble(data_long)
-data_long <- data_long[,c("X", "Wave", "RecordedDate", "age", "gender", "coded_country", "countryCitizen", "Citizen",
+data_long <- data_long[,c("X", "Wave", "RecordedDate", "age", "gender", "edu", "coded_country", "countryCitizen", "Citizen",
                            "Ang", "Anxiety", "Bored", "Calm", "Content", "Depr", "Energ", "Exc", "Exh", "Insp", "Lov", "Nerv", "Rel",
                            "Close1", "Close2", "Close3", "Close4", "Close5", "Close6")]
 save(data_long, file="data_long.Rdata")

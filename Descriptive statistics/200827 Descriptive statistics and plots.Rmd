@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r, results = "hide"}
 load("data_imputed_emomeans_maxweeks.Rdata")
+load("data_long_min3_str_age.Rdata")
 ```
 
 This dataset includes:
@@ -57,11 +58,11 @@ apa_table(missing.values, caption="Missing data")
 ```
 
 # Participants
-**Number of participants per country**
+**Number of participants per country with original data**
 ```{r, results = "hide", message=F}
-data_imputed_emomeans_maxweeks$Country <- as.factor(data_imputed_emomeans_maxweeks$Country)
+data_long_min3_str_age$Country <- as.factor(data_long_min3_str_age$Country)
 
-Country_N <- data_imputed_emomeans_maxweeks %>%
+Country_N <- data_long_min3_str_age %>%
   filter(Time == "1") %>%
   group_by(Country) %>%
   summarise(NCountry = n())
@@ -71,63 +72,120 @@ Country_N <- data_imputed_emomeans_maxweeks %>%
 apa_table(Country_N, caption = "Number of participants per country on baseline")
 ```
 
-# Measurements
-**Number of measurements per wave**
+**Mean number of participants per country, SD, min and max**
 ```{r, results = "hide", message=F}
-data_imputed_emomeans_maxweeks$Time <- as.factor(data_imputed_emomeans_maxweeks$Time)
+CountryN <- data_long_min3_str_age %>%
+  group_by(Time, Country) %>%
+  filter(Nmiss <9) %>%
+  summarise(Ncountry = n_distinct(ID))
 
-Wave_N <- data_imputed_emomeans_maxweeks %>% 
-group_by(Time)%>%
-summarise(NWave = sum (!is.na(Date)), NAng= sum(!is.na(Ang)), NAnx= sum(!is.na(Anxiety)), NNerv= sum(!is.na(Nerv)), NDepr= sum(!is.na(Depr)), NExh= sum(!is.na(Exh)), NEnerg= sum(!is.na(Energ)),  NInsp= sum(!is.na(Insp)), NCalm= sum(!is.na(Calm)), NRel= sum(!is.na(Rel)), NStr = sum(!is.na(StringencyIndex)))
+CountryNdistinct <- data_long_min3_str_age %>%
+  group_by(Time) %>%
+  filter(Nmiss <9) %>%
+  summarise(Ncountry = n_distinct(Country))
+
+CountryMean <- CountryN %>%
+  group_by(Time) %>%
+  summarise(MCountry = mean(Ncountry), SDCountry = sd(Ncountry))
 ```
 
 ```{r}
-apa_table(Wave_N, caption="Number of measurements per wave")
+apa_table(CountryMean, caption = "Mean number of participants per country on baseline")
+```
+
+# Measurements
+
+**Number of participants and measurements per wave with original data**
+Create new variable that indicates sum of missings:
+```{r, results='hide', message=F}
+data_long_min3_str_age <- data_long_min3_str_age %>%
+  group_by(ID, Time) %>%
+mutate(Nmiss = sum(is.na(Ang)) + sum(is.na(Anxiety)) + sum(is.na(Nerv)) + sum(is.na(Depr)) + sum(is.na(Exh)) + 
+               sum(is.na(Energ)) + sum(is.na(Insp)) + sum(is.na(Calm)) + sum(is.na(Rel))) %>%
+  ungroup()
+```
+
+```{r, results = "hide", message=F}
+data_long_min3_str_age$Time <- as.factor(data_long_min3_str_age$Time)
+
+Wave_N_original <- data_long_min3_str_age %>% 
+group_by(Time)%>%
+summarise(NParticipants = n_distinct(ID[Nmiss<9]), NWave = sum (!is.na(Date)), NAng= sum(!is.na(Ang)), NAnx= sum(!is.na(Anxiety)), NNerv= sum(!is.na(Nerv)), NDepr= sum(!is.na(Depr)), NExh= sum(!is.na(Exh)), NEnerg= sum(!is.na(Energ)),  NInsp= sum(!is.na(Insp)), NCalm= sum(!is.na(Calm)), NRel= sum(!is.na(Rel)), NStr = sum(!is.na(StringencyIndex)))
+```
+
+```{r}
+apa_table(Wave_N_original, caption="Number of measurements per wave original data")
+```
+
+**Number of participants and measurements per wave with imputed data**
+```{r, results = "hide", message=F}
+data_imputed_emomeans_maxweeks$Time <- as.factor(data_imputed_emomeans_maxweeks$Time)
+
+Wave_N_imp <- data_imputed_emomeans_maxweeks %>% 
+group_by(Time)%>%
+summarise(NParticipants = n_distinct(ID[Nmiss<9]), NWave = sum (!is.na(Date)), NAng= sum(!is.na(Ang)), NAnx= sum(!is.na(Anxiety)), NNerv= sum(!is.na(Nerv)), NDepr= sum(!is.na(Depr)), NExh= sum(!is.na(Exh)), NEnerg= sum(!is.na(Energ)),  NInsp= sum(!is.na(Insp)), NCalm= sum(!is.na(Calm)), NRel= sum(!is.na(Rel)), NStr = sum(!is.na(StringencyIndex)))
+```
+
+```{r}
+apa_table(Wave_N_imp, caption="Number of measurements per wave imputed data")
 ```
 
 # Age
 **Number of participants per age group on baseline**
 ```{r, results = "hide", message=F}
-data_imputed_emomeans_maxweeks$Age <- as.factor(data_imputed_emomeans_maxweeks$Age)
+data_long_min3_str_age$Age <- as.factor(data_long_min3_str_age$Age)
 
-Age_N <- data_imputed_emomeans_maxweeks %>%
-  filter(Time=="1") %>%
+Age_N <- data_long_min3_str_age %>%
+  filter(Time=="1" & Nmiss <9) %>%
   group_by(Age) %>%
   summarise(NAge = n())
 ```
+
 ```{r}
-apa_table(Age_N, caption="Number of participants per age group on baseline")
+apa_table(Age_N, caption="Number of participants per age group on baseline with original data")
 ```
 
 **Number of participants per pooled age group**
 ```{r, results = "hide", message=F}
-data_imputed_emomeans_maxweeks$Age_new <- as.factor(data_imputed_emomeans_maxweeks$Age_new)
+data_long_min3_str_age$Age_new <- as.factor(data_long_min3_str_age$Age_new)
 
-Age_New <- data_imputed_emomeans_maxweeks %>%
-  filter(Time=="1") %>%
-  group_by(Age_new) %>%
+Age_New <- data_long_min3_str_age %>%
+  group_by(Time, Age_new) %>%
+  filter(Nmiss <9) %>%
   summarise(NAge = n())
 ```
 
 ```{r}
-apa_table(Age_New, caption="Number of participants per pooled age group on baseline")
+apa_table(Age_New, caption="Number of participants per pooled age group on baseline with original data")
 ```
 
-**Number of males and females per age group on baseline**     
+**Number of males and females on baseline**  
 ```{r, results = "hide", message=F}
-Age_Gender <- data_imputed_emomeans_maxweeks %>%
-  filter(Time == "1") %>%
-  select(Age, Gender) %>%
-  group_by(Age, Gender) %>%
+Gender_N <- data_long_min3_str_age %>%
+  filter(Time == "1" & Nmiss <9) %>%
+  group_by(Gender) %>%
   count(Gender)
 ```
+
 ```{r}
-apa_table(Age_Gender, caption="Number of males and females per age group on baseline", note="Age 1= 18-24; 2= 25-34; 3= 35-44; 4= 45-54; 5= 55-64; 6= 65-74; 7= 75-84; 8=85+; Gender 0= male; 1= female")
+apa_table(Gender_N, caption="Number of males and females on baseline with original data", note= "Gender 0= male; 1= female")
 ```
 
-**Number of males and females per pooled age group on baseline**
+**Number of males and females per wave with original data**     
 ```{r, results = "hide", message=F}
-Age_New_Gender <- data_imputed_emomeans_maxweeks %>%
+Gender_Wave <- data_long_min3_str_age %>%
+  group_by(Time, Gender) %>%
+    filter(Nmiss <9) %>%
+  summarize(nGender = n_distinct(ID))
+```
+
+```{r}
+apa_table(Gender_Wave, caption="Number of males and females per wave", note= "Gender 0= male; 1= female")
+```
+
+**Number of males and females per pooled age group on baseline with original data**
+```{r, results = "hide", message=F}
+Age_New_Gender <- data_long_min3_str_age %>%
   filter(Time == "1") %>%
   select(Age_new, Gender) %>%
   group_by(Age_new, Gender) %>%
@@ -142,7 +200,7 @@ apa_table(Age_New_Gender, caption = "Number of males and females per pooled age 
 # StringencyIndex
 **Mean and SD, minimum and maximum of Stringency Index and imputed Stringency Index per country**
 ```{r, results = "hide", message=F}
-StringencySummary <- data_imputed_emomeans_maxweeks %>%
+StringencySummary <- data_long_min3_str_age %>%
   group_by(Country)%>%
   summarize(Str_mean = mean(StringencyIndex, na.rm=TRUE), Str_SD = sd(StringencyIndex, na.rm=TRUE), 
             Str_max = max(StringencyIndex, na.rm=TRUE), Str_min = min(StringencyIndex, na.rm=TRUE),
@@ -151,7 +209,22 @@ StringencySummary <- data_imputed_emomeans_maxweeks %>%
 ```
 
 ```{r}
-apa_table(StringencySummary, caption="Stringency Index per country")
+apa_table(StringencySummary, caption="Stringency Index per country with original data")
+```
+
+**Mean and SD, minimum and maximum of Stringency Index and imputed Stringency Index per wave**
+```{r, results = "hide", message=F}
+StringencySummary2 <- data_long_min3_str_age %>%
+  group_by(Time)%>%
+  filter(Nmiss <9)%>%
+  summarize(Str_mean = mean(StringencyIndex, na.rm=TRUE), Str_SD = sd(StringencyIndex, na.rm=TRUE), 
+            Str_max = max(StringencyIndex, na.rm=TRUE), Str_min = min(StringencyIndex, na.rm=TRUE),
+            Str_imp_mean = mean(StringencyIndex_imp, na.rm=TRUE), Str_imp_SD = sd(StringencyIndex_imp, na.rm=TRUE), 
+            Str_imp_max = max(StringencyIndex_imp, na.rm=TRUE), Str_imp_min = min(StringencyIndex_imp, na.rm=TRUE))
+```
+
+```{r}
+apa_table(StringencySummary2, caption="Stringency Index per wave with original data")
 ```
 
 **Stringency Index violin plots**

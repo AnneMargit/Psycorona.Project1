@@ -1,7 +1,7 @@
 ---
 title: "Second analyses data prep"
 author: "Anne Margit"
-date: "9/29/2020"
+date: "10/04/2020"
 output: github_document
 ---
 
@@ -71,12 +71,15 @@ data_analyse2_p3 <- data_analyse1_fc %>%
 data_analyse2_p1 <- data_analyse2_p1[with(data_analyse2_p1, order(Date)),]
 
 data_analyse2_p1 <- data_analyse2_p1 %>%
-  mutate(DaysMax_p1 = round(difftime(DateMaxStr, Date, units = "days"), digits=0))
+  mutate(DaysMax_p1 = round(difftime(Date, DateMaxStr, units = "days"), digits=0))
 
 data_analyse2_p1 <- data_analyse2_p1 %>%
-  mutate(WeeksMax_p1 = round(difftime(DateMaxStr, Date, units = "weeks"), digits=0))
+  mutate(WeeksMax_p1 = round(difftime(Date, DateMaxStr, units = "weeks"), digits=0))
 
 data_analyse2_p1$DaysMax_p1 <- as.numeric(data_analyse2_p1$DaysMax_p1)
+
+data_analyse2_p1$Gender<- as_factor(data_analyse2_p1$Gender)
+data_analyse2_p1$Edu<- as_factor(data_analyse2_p1$Edu)
 
 save(data_analyse2_p1, file="data_analyse2_p1.Rdata")
 ```
@@ -90,6 +93,9 @@ data_analyse2_p2 <- data_analyse2_p2 %>%
   mutate(WeeksMax_p2 = round(difftime(Date, DateMaxStr, units = "weeks"), digits=0))
 
 data_analyse2_p2$DaysMax_p2 <- as.numeric(data_analyse2_p2$DaysMax_p2)
+
+data_analyse2_p2$Gender<- as_factor(data_analyse2_p2$Gender)
+data_analyse2_p2$Edu<- as_factor(data_analyse2_p2$Edu)
 
 save(data_analyse2_p2, file="data_analyse2_p2.Rdata")
 ```
@@ -120,6 +126,9 @@ data_analyse2_p3 <- StartPhase3_5 %>%
 mutate(WeeksPhase3 = round(difftime(Date, StartPhase3, units = "weeks"), digits=0))
 
 data_analyse2_p3$DaysPhase3 <- as.numeric(data_analyse2_p3$DaysPhase3)
+
+data_analyse2_p3$Gender<- as_factor(data_analyse2_p3$Gender)
+data_analyse2_p3$Edu<- as_factor(data_analyse2_p3$Edu)
 
 save(data_analyse2_p3, file="data_analyse2_p3.Rdata")
 ```

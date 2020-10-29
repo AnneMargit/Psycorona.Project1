@@ -253,6 +253,9 @@ coef_PAA <- coef_PAA %>%
   mutate(sd = ifelse(is.na(sd), 1, sd))
 
 coef_PAA <- coef_PAA %>%
+  mutate(sd = ifelse(row_number()== 5 | row_number()== 6, 6.12091, sd))
+
+coef_PAA <- coef_PAA %>%
  mutate(e_size = (estimate * sd)/0.5469834)
 
 coef_PAA <- coef_PAA %>%

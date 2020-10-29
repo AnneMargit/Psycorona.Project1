@@ -245,6 +245,9 @@ coef_NAD <- coef_NAD %>%
   mutate(sd = ifelse(is.na(sd), 1, sd))
 
 coef_NAD <- coef_NAD %>%
+  mutate(sd = ifelse(row_number()== 5 | row_number()== 6, 6.12091, sd))
+
+coef_NAD <- coef_NAD %>%
  mutate(e_size = (estimate * sd)/0.5319464)
 
 coef_NAD <- coef_NAD %>%

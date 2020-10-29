@@ -1,0 +1,127 @@
+---
+title: "Missing data imputation"
+author: "Anne Margit"
+date: "10/26/2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(tidyverse)
+library(anytime)
+library(missMDA)
+library(psych)
+```
+
+```{r}
+load("data_long_min3_str_age.Rdata")
+```
+
+order
+```{r}
+data_long_min3_str_age<-data_long_min3_str_age[with(data_long_min3_str_age, order(ID, Time)),]
+```
+
+Select the variables: items for PA and NA, and the grouping variable ID:
+```{r}
+selectie <- data_long_min3_str_age %>%
+  group_by(ID) %>%
+  select(Ang, Anxiety, Calm, Depr, Energ, Exh, Insp, Nerv, Rel)
+```
+
+```{r}
+selectie2 <- data_long_min3_str_age %>%
+  group_by(ID) %>%
+  select(Ang, Anxiety, Calm, Depr, Energ, Exh, Insp, Nerv, Rel, Time)
+```
+Grouping variable into factor 
+```{r}
+class(selectie$ID)
+selectie$ID <- factor(selectie$ID)
+is.factor(selectie$ID)
+```
+
+Impute with imputeMultilevel, with 4 4 between- and 4 within factors
+```{r}
+selectieImputed <- imputeMultilevel(selectie, ifac=1, ncpB=4, ncpW=4)
+View(selectieImputed$completeObs)
+dim(selectieImputed$completeObs)
+```
+
+Create time variable
+```{r}
+selectieImputed$completeObs<-selectieImputed$completeObs %>% group_by(ID) %>%
+  mutate(Time = 1:n()) %>% 
+  ungroup()
+View(selectieImputed$completeObs)
+View(selectie2)
+```
+
+```{r}
+selectieImputed2<-selectieImputed$completeObs
+selectieImputed2$Time <- as.factor(selectieImputed2$Time)
+```
+
+Check de imputaties met wat plotjes:
+```{r}
+p <- ggplot(selectie2, aes(x=Time, y=Ang)) 
+p + stat_summary(geom = "point", fun = mean, size = 1) 
+```
+
+
+```{r}
+p2 <- ggplot(selectieImputed2, aes(x=Time, y=Ang)) 
+p2 + stat_summary(geom = "point", fun = mean, size = 1) 
+```
+
+Vergelijk de imputaties met de oorspronkelijke data:
+```{r}
+summary(selectie2[which(selectie2$Time==1), ]$Ang)
+summary(selectieImputed2[which(selectieImputed2$Time==1), ]$Ang)
+```
+
+Door de imputatie zijn er nu niet-mogelijke scores, bv. negatieve scores en scores > 5. Is dit een probleem?
+
+
+Maak wat plotjes met lijnen per id, op een selectie van de eerste 10 personen:
+
+```{r}
+class(selectieImputed2$ID)
+selectieImputed2$ID2 <- as.numeric(selectieImputed2$ID)
+describe(selectieImputed2$ID2)
+```
+
+Bekijk nu hoe het eerste datapunt is geimputeerd:
+```{r}
+ggplot(data = selectieImputed2[which(selectieImputed2$ID2 <10), ], aes(x = Time, y = Ang, color=as.factor(ID2))) + geom_line() + geom_point() + facet_grid(. ~ ID2)
+```
+
+```{r}
+head(selectie2[which(selectie2$Time==1), ]$Ang, n=20L)
+head(selectieImputed2[which(selectieImputed2$Time==1), ]$Ang, n=20L)
+```
+
+```{r}
+save(selectieImputed2, file="selectieImputed2.Rdata")
+save(selectie2, file="selectie2.Rdata")
+```
+
+!! Imputeert ook hele meetmomenten als ALLE items missen op die meting
+!! Alleen losse items terugplaatsen op meetmomenten waarop participanten andere items wel beantwoord hebben  
+
+
+
+
+
+
+
+
+
+
+

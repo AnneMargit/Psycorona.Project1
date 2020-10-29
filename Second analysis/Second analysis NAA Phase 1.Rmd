@@ -1,7 +1,7 @@
 ---
 title: "Second analysis NAA Phase 1"
 author: "Anne Margit"
-date: "9/28/2020"
+date: "10/04/2020"
 output: github_document
 ---
 
@@ -41,15 +41,37 @@ This dataset includes:
 ```{r, message=F}
 library(dplyr)
 library(tidyverse)
-library(papaja)
 library(ggpubr)
 library(ggplot2)
 library(rockchalk)
 library(effects)
 library(nlme)
 library(lattice)
-library(broom)
+library(broom.mixed)
 library(purrr)
+```
+
+# Descriptives
+**Number of participants per age group**
+```{r, message=F, comment=NA}
+data_analyse2_p1 %>%
+  group_by(Age_new) %>%
+  summarise(NAge = n())
+```
+
+**Plots**
+**Mean NAA against max stringency in WEEKS**
+```{r, echo=T, message=F, warning=F}
+plot_NAA <- ggplot(data_analyse2_p1, aes(x=WeeksMax_p1, y=NAA, group = Age_new, color = Age_new))
+
+plot_NAA + stat_summary(fun.y=mean, geom="line", size=1)  + geom_errorbar(stat="summary", fun.data="mean_se", width=0) + scale_colour_discrete(name = "Age", labels = c("18-24", "25-44", "45-64", "65+")) + expand_limits(y=c(1, 5))
+```
+
+**Mean NAA against max stringency in DAYS**
+```{r, echo=T, message=F, warning=F}
+plot_NAA <- ggplot(data_analyse2_p1, aes(x=DaysMax_p1, y=NAA, group = Age_new, color = Age_new))
+
+plot_NAA + stat_summary(fun.y=mean, geom="line", size=1)  + geom_errorbar(stat="summary", fun.data="mean_se", width=0) + scale_colour_discrete(name = "Age", labels = c("18-24", "25-44", "45-64", "65+")) + expand_limits(y=c(1, 5))
 ```
 
 # Regression models phase 1
@@ -220,45 +242,34 @@ coef_NAA = tidy(model_NAA10,
 ```
 
 *Effect sizes*
-**Within person SD and average within person SD**
+**Within person SD and average within person SD of NAA**
 ```{r, message=F, comment=NA}
 ISDs <- data_analyse2_p1 %>% 
   group_by(ID) %>%
-  summarize_at(c("DaysMax_p1", "NAA"), sd, na.rm=TRUE) %>%
+  summarize_at(c("NAA"), sd, na.rm=TRUE) %>%
   ungroup()
 
 ISDs_av <- ISDs %>%
-  summarize_at(c("DaysMax_p1", "NAA"), mean, na.rm=TRUE) %>%
+  summarize_at(c("NAA"), mean, na.rm=TRUE) %>%
   stack() %>%
   rename(sd=values) 
 ```
+> Effect sizes for intercept and main effect of age = regression coefficient / average ISD of NAA
+> Effect size for main effect of DaysMax = (regression coefficient * 28)/ average ISD of NAA
+> Effect sizes for interaction effects = (regression coefficient * 28)/ average ISD of NAA
 
-> Effect size = (regression coefficient * average ISD of X) / average ISD of Y) 
-
-> For the intercept and the dummy variables (+ interaction) I only standardized Y, so the effect size = (regression coefficient / average ISD of Y)
+> The effect sizes for main effect of DaysMax and the interaction effects reflect the increase in SD of NAA over 4 weeks (28 days)
 
 ```{r, message=F, comment=NA}
 coef_NAA <- coef_NAA %>%
- left_join(., ISDs_av, by=c("term"="ind"))
-
-coef_NAA <- coef_NAA %>%
-  mutate(sd = ifelse(is.na(sd), 1, sd))
-
-coef_NAA <- coef_NAA %>%
-  mutate(sd = ifelse(row_number()== 6 | row_number()== 7 | row_number()== 8, 8.023393, sd))
-
-coef_NAA <- coef_NAA %>%
- mutate(e_size = (estimate * sd)/0.4676267)
-
-coef_NAA <- coef_NAA %>%
-  rename(isd = sd)
+  mutate (e_size = ifelse(row_number()== 1 | row_number()== 3) |  row_number()== 4 |  row_number()== 5,
+          estimate/0.4676267, 
+          (estimate*28)/0.4676267)
 ```
 
 ```{r}
 coef_NAA
 ```
-
-> Effect size interpretation: small = 0.1, medium = 0.3, large = 0.5
 
 > There are differences between age groups in intensity but not in rate of change dependent on DaysMax
 
