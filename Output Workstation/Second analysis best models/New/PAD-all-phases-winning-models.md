@@ -484,10 +484,7 @@ coef_PADp2 = tidy(model_PADp2,
                effects = "fixed")
 
 coef_PADp2 <- coef_PADp2 %>%
-  mutate(e_size = ifelse(row_number()== 1 | row_number()== 2 |  row_number()== 3 |  row_number()== 4 |  row_number()== 5
-                          |  row_number()== 6 |  row_number()== 7 |  row_number()== 8  |  row_number()== 10  
-                          |  row_number()== 11  |  row_number()== 12, 
-                          estimate/0.5049948, (estimate*28)/0.5049948)) %>%
+  mutate(e_size = ifelse(row_number()== 1 | row_number()== 2 |  row_number()== 3 |  row_number()== 5 |  row_number()== 6 |  row_number()== 7,  estimate/0.5049948, (estimate*28)/0.5049948)) %>%
   mutate(across(2:7, round, 2)) 
 ```
 
@@ -501,13 +498,13 @@ coef_PADp2
     ##  1 (Intercept)             2.99      0.06 20356     50.6     0      5.92
     ##  2 Gender1                -0.27      0.02  9176    -14.1     0     -0.54
     ##  3 Edu                     0.03      0.01  9176      4.95    0      0.06
-    ##  4 DaysMax_p2              0         0    20356      2.34    0.02   0.01
+    ##  4 DaysMax_p2              0         0    20356      2.34    0.02   0.19
     ##  5 Age_new1               -0.19      0.04  9176     -5.31    0     -0.39
     ##  6 Age_new2               -0.13      0.04  9176     -3.45    0     -0.26
     ##  7 Age_new3                0.06      0.05  9176      1.26    0.21   0.11
-    ##  8 DaysMax_p2:Age_new1     0         0    20356      2.05    0.04   0   
+    ##  8 DaysMax_p2:Age_new1     0         0    20356      2.05    0.04   0.12
     ##  9 DaysMax_p2:Age_new2     0         0    20356      2.62    0.01   0.16
-    ## 10 DaysMax_p2:Age_new3     0         0    20356      2.29    0.02   0.01
+    ## 10 DaysMax_p2:Age_new3     0         0    20356      2.29    0.02   0.16
 
 ``` r
 coef_PADp2 <- as.matrix(coef_PADp2)
@@ -675,10 +672,7 @@ coef_PADp3 = tidy(model_PADp3,
                effects = "fixed")
 
 coef_PADp3 <- coef_PADp3 %>%
- mutate(e_size = ifelse(row_number()== 1 | row_number()== 2 |  row_number()== 3 |  row_number()== 4 |  row_number()== 5
-                          |  row_number()== 6 |  row_number()== 7 |  row_number()== 8  |  row_number()== 10  
-                          |  row_number()== 11  |  row_number()== 12, 
-                          estimate/0.493802, (estimate*28)/0.493802)) %>%
+ mutate(e_size = ifelse(row_number()== 1 | row_number()== 2 |  row_number()== 3 |  row_number()== 5 |  row_number()== 6 |  row_number()== 7, estimate/0.493802, (estimate*28)/0.493802)) %>%
   mutate(across(2:7, round, 2)) 
 ```
 
@@ -692,13 +686,13 @@ coef_PADp3
     ##  1 (Intercept)             3.02      0.06 17940     49.7     0      6.11
     ##  2 Gender1                -0.25      0.02  7009    -11.6     0     -0.51
     ##  3 Edu                     0.03      0.01  7009      3.96    0      0.06
-    ##  4 DaysPhase3              0         0    17940     -1.84    0.07   0   
+    ##  4 DaysPhase3              0         0    17940     -1.84    0.07  -0.12
     ##  5 Age_new1               -0.06      0.04  7009     -1.49    0.14  -0.12
     ##  6 Age_new2                0.02      0.04  7009      0.42    0.68   0.03
     ##  7 Age_new3                0.2       0.05  7009      4.29    0      0.4 
-    ##  8 DaysPhase3:Age_new1     0         0    17940      2.36    0.02   0.01
+    ##  8 DaysPhase3:Age_new1     0         0    17940      2.36    0.02   0.16
     ##  9 DaysPhase3:Age_new2     0         0    17940      3.09    0      0.21
-    ## 10 DaysPhase3:Age_new3     0         0    17940      3.54    0      0.01
+    ## 10 DaysPhase3:Age_new3     0         0    17940      3.54    0      0.26
 
 ``` r
 coef_PADp3 <- as.matrix(coef_PADp3)
@@ -731,26 +725,26 @@ type="html", df = TRUE, out="star_coefallphase_PAD.doc",  single.row=TRUE, digit
     ## <tr><td colspan="7" style="border-bottom: 1px solid black"></td></tr><tr><td>(Intercept)</td><td>2.99</td><td>0.06</td><td>20356</td><td>50.63</td><td>0.00</td><td>5.92</td></tr>
     ## <tr><td>Gender1</td><td>-0.27</td><td>0.02</td><td>9176</td><td>-14.14</td><td>0.00</td><td>-0.54</td></tr>
     ## <tr><td>Edu</td><td>0.03</td><td>0.01</td><td>9176</td><td>4.95</td><td>0.00</td><td>0.06</td></tr>
-    ## <tr><td>DaysMax_p2</td><td>0.00</td><td>0.00</td><td>20356</td><td>2.34</td><td>0.02</td><td>0.01</td></tr>
+    ## <tr><td>DaysMax_p2</td><td>0.00</td><td>0.00</td><td>20356</td><td>2.34</td><td>0.02</td><td>0.19</td></tr>
     ## <tr><td>Age_new1</td><td>-0.19</td><td>0.04</td><td>9176</td><td>-5.31</td><td>0.00</td><td>-0.39</td></tr>
     ## <tr><td>Age_new2</td><td>-0.13</td><td>0.04</td><td>9176</td><td>-3.45</td><td>0.00</td><td>-0.26</td></tr>
     ## <tr><td>Age_new3</td><td>0.06</td><td>0.05</td><td>9176</td><td>1.26</td><td>0.21</td><td>0.11</td></tr>
-    ## <tr><td>DaysMax_p2:Age_new1</td><td>0.00</td><td>0.00</td><td>20356</td><td>2.05</td><td>0.04</td><td>0.00</td></tr>
+    ## <tr><td>DaysMax_p2:Age_new1</td><td>0.00</td><td>0.00</td><td>20356</td><td>2.05</td><td>0.04</td><td>0.12</td></tr>
     ## <tr><td>DaysMax_p2:Age_new2</td><td>0.00</td><td>0.00</td><td>20356</td><td>2.62</td><td>0.01</td><td>0.16</td></tr>
-    ## <tr><td>DaysMax_p2:Age_new3</td><td>0.00</td><td>0.00</td><td>20356</td><td>2.29</td><td>0.02</td><td>0.01</td></tr>
+    ## <tr><td>DaysMax_p2:Age_new3</td><td>0.00</td><td>0.00</td><td>20356</td><td>2.29</td><td>0.02</td><td>0.16</td></tr>
     ## <tr><td colspan="7" style="border-bottom: 1px solid black"></td></tr></table>
     ## 
     ## <table style="text-align:center"><tr><td colspan="7" style="border-bottom: 1px solid black"></td></tr><tr><td>term</td><td>estimate</td><td>std.error</td><td>df</td><td>statistic</td><td>p.value</td><td>e_size</td></tr>
     ## <tr><td colspan="7" style="border-bottom: 1px solid black"></td></tr><tr><td>(Intercept)</td><td>3.02</td><td>0.06</td><td>17940</td><td>49.74</td><td>0.00</td><td>6.11</td></tr>
     ## <tr><td>Gender1</td><td>-0.25</td><td>0.02</td><td>7009</td><td>-11.55</td><td>0.00</td><td>-0.51</td></tr>
     ## <tr><td>Edu</td><td>0.03</td><td>0.01</td><td>7009</td><td>3.96</td><td>0.00</td><td>0.06</td></tr>
-    ## <tr><td>DaysPhase3</td><td>0.00</td><td>0.00</td><td>17940</td><td>-1.84</td><td>0.07</td><td>0.00</td></tr>
+    ## <tr><td>DaysPhase3</td><td>0.00</td><td>0.00</td><td>17940</td><td>-1.84</td><td>0.07</td><td>-0.12</td></tr>
     ## <tr><td>Age_new1</td><td>-0.06</td><td>0.04</td><td>7009</td><td>-1.49</td><td>0.14</td><td>-0.12</td></tr>
     ## <tr><td>Age_new2</td><td>0.02</td><td>0.04</td><td>7009</td><td>0.42</td><td>0.68</td><td>0.03</td></tr>
     ## <tr><td>Age_new3</td><td>0.20</td><td>0.05</td><td>7009</td><td>4.29</td><td>0.00</td><td>0.40</td></tr>
-    ## <tr><td>DaysPhase3:Age_new1</td><td>0.00</td><td>0.00</td><td>17940</td><td>2.36</td><td>0.02</td><td>0.01</td></tr>
+    ## <tr><td>DaysPhase3:Age_new1</td><td>0.00</td><td>0.00</td><td>17940</td><td>2.36</td><td>0.02</td><td>0.16</td></tr>
     ## <tr><td>DaysPhase3:Age_new2</td><td>0.00</td><td>0.00</td><td>17940</td><td>3.09</td><td>0.00</td><td>0.21</td></tr>
-    ## <tr><td>DaysPhase3:Age_new3</td><td>0.00</td><td>0.00</td><td>17940</td><td>3.54</td><td>0.00</td><td>0.01</td></tr>
+    ## <tr><td>DaysPhase3:Age_new3</td><td>0.00</td><td>0.00</td><td>17940</td><td>3.54</td><td>0.00</td><td>0.26</td></tr>
     ## <tr><td colspan="7" style="border-bottom: 1px solid black"></td></tr></table>
 
 ``` r

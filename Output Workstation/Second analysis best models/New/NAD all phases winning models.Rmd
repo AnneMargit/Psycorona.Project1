@@ -249,10 +249,7 @@ coef_NADp2 = tidy(model_NADp2,
                effects = "fixed")
 
 coef_NADp2 <- coef_NADp2 %>%
-  mutate(e_size = ifelse(row_number()== 1 | row_number()== 2 |  row_number()== 3 |  row_number()== 4 |  row_number()== 5
-                          |  row_number()== 6 |  row_number()== 7 |  row_number()== 8  |  row_number()== 10  
-                          |  row_number()== 11  |  row_number()== 12, 
-                          estimate/0.4753929, (estimate*28)/0.4753929)) %>%
+  mutate(e_size = ifelse(row_number()== 1 | row_number()== 2 |  row_number()== 3 |  row_number()== 5 |  row_number()== 6 |  row_number()== 7, estimate/0.4753929, (estimate*28)/0.4753929)) %>%
   mutate(across(2:7, round, 2)) 
           
 ```
@@ -325,10 +322,7 @@ coef_NADp3 = tidy(model_NADp3,
                effects = "fixed")
 
 coef_NADp3 <- coef_NADp3 %>%
- mutate(e_size = ifelse(row_number()== 1 | row_number()== 2 |  row_number()== 3 |  row_number()== 4 |  row_number()== 5
-                          |  row_number()== 6 |  row_number()== 7 |  row_number()== 8  |  row_number()== 10  
-                          |  row_number()== 11  |  row_number()== 12, 
-                          estimate/0.4574414, (estimate*28)/0.4574414)) %>%
+ mutate(e_size = ifelse(row_number()== 1 | row_number()== 2 |  row_number()== 3 |  row_number()== 5 |  row_number()== 6 |  row_number()== 7,  estimate/0.4574414, (estimate*28)/0.4574414)) %>%
   mutate(across(2:7, round, 2)) 
 ```
 

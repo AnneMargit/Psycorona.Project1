@@ -135,6 +135,7 @@ model_NAAp1 <- lme(fixed = NAA ~ Gender + Edu + Age_new,
                   na.action = na.omit)
 
 summary(model_NAAp1)
+VarCorr(model_NAAp1)
 ```
 
 *Confidence intervals*
@@ -184,13 +185,6 @@ coef_NAAp1 <- coef_NAAp1 %>%
 coef_NAAp1
 coef_NAAp1 <- as.matrix(coef_NAAp1)
 ```
-
-stargazer(coef_NAAp1,
-type="html", df = TRUE, out="star_coef_NAAp1.doc",  single.row=TRUE, digits = 2, align = TRUE)
-
-stargazer(model_NAAp1,
-type="html", df = TRUE, out="star_model_NAAp1.doc",  single.row=TRUE, digits = 2, align = TRUE,
-order = c("Intercept","Gender (female)", "Education", "Age (25-44)", "Age (45-64)", "Age (65+)"), covariate.labels = c("Intercept","Gender (female)", "Education", "Age (25-44)", "Age (45-64)", "Age (65+)", "SI x Max SI (after)"))
 
 > The two oldest groups report lower NAA than the youngest group. Women report higher NAA compared to men. No difference between education levels. 
 
@@ -258,10 +252,7 @@ coef_NAAp2 = tidy(model_NAAp2,
                effects = "fixed")
 
 coef_NAAp2 <- coef_NAAp2 %>%
-  mutate(e_size = ifelse(row_number()== 1 | row_number()== 2 |  row_number()== 3 |  row_number()== 4 |  row_number()== 5
-                          |  row_number()== 6 |  row_number()== 7 |  row_number()== 8  |  row_number()== 10  
-                          |  row_number()== 11  |  row_number()== 12, 
-                          estimate/0.4557901, (estimate*28)/0.4557901)) %>%
+  mutate(e_size = ifelse(row_number()== 1 | row_number()== 2 |  row_number()== 3 |  row_number()== 5 |  row_number()== 6 |  row_number()== 7, estimate/0.4557901, (estimate*28)/0.4557901)) %>%
   mutate(across(2:7, round, 2)) 
           
 ```
@@ -270,15 +261,6 @@ coef_NAAp2 <- coef_NAAp2 %>%
 coef_NAAp2 <- as.matrix(coef_NAAp2)
 coef_NAAp2
 ```
-
-stargazer(coef_NAAp2,
-type="html", df = TRUE, out="star_coef_NAAp2.doc",  single.row=TRUE, digits = 2, align = TRUE)
-
-stargazer(model_NAAp2,
-type="html", df = TRUE, out="star_model_NAAp2.doc",  single.row=TRUE, digits = 2, align = TRUE,
-intercept.top = TRUE, intercept.bottom = FALSE ,
-order = c("Intercept","Gender (female)", "Education", "Age (25-44)", "Age (45-64)", "Age (65+)", "Days (during peak SI)", "Age (25-44) * Days (during peak SI)", "Age (45-64) * Days (during peak SI)", "Age (65+) * Days (during peak SI)"),
-covariate.labels = c("Intercept","Gender (female)", "Education", "Age (25-44)", "Age (45-64)", "Age (65+)", "Days (during peak SI)", "Age (25-44)*Days (during peak SI)", "Age (45-64)*Days (during peak SI)", "Age (65+)*Days (during peak SI)"))
 
 > NAA decreases over time for the youngest age group (main effect) and other groups in a similar way (interaction effect). The two oldest groups report lower NAA compared to the youngest group at the beginning of the peak (main effect). 
 
@@ -344,10 +326,7 @@ coef_NAAp3 = tidy(model_NAAp3,
                effects = "fixed")
 
 coef_NAAp3 <- coef_NAAp3 %>%
- mutate(e_size = ifelse(row_number()== 1 | row_number()== 2 |  row_number()== 3 |  row_number()== 4 |  row_number()== 5
-                          |  row_number()== 6 |  row_number()== 7 |  row_number()== 8  |  row_number()== 10  
-                          |  row_number()== 11  |  row_number()== 12, 
-                          estimate/0.4208346, (estimate*28)/0.4208346)) %>%
+ mutate(e_size = ifelse(row_number()== 1 | row_number()== 2 |  row_number()== 3 |  row_number()== 5 |  row_number()== 6 |  row_number()== 7, estimate/0.4208346, (estimate*28)/0.4208346)) %>%
   mutate(across(2:7, round, 2)) 
 ```
 
@@ -358,9 +337,11 @@ coef_NAAp3
 
 > Older people report lower NAA compared to younger people on the first day stringency reduces after the peak (main effect), there is no change over time in NAA for the youngest group, but the middle aged group (45-64) reports decreasing NAA over time (interaction effect). This trend is visible for the other age groups as well in the plot but not significant. 
 
+```{r}
 stargazer(coef_NAAp1, coef_NAAp2, coef_NAAp3,
 type="html", df = TRUE, out="star_coefallphase_NAA.doc",  single.row=TRUE, digits = 2, align = TRUE)
 
 stargazer(model_NAAp1, model_NAAp2, model_NAAp3,
 type="html", df = TRUE, out="starallphasesNAA.doc",  single.row=TRUE, digits = 2, align = TRUE,
 intercept.top = TRUE, intercept.bottom = FALSE)
+```

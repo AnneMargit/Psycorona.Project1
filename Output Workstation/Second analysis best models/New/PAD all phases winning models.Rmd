@@ -249,10 +249,7 @@ coef_PADp2 = tidy(model_PADp2,
                effects = "fixed")
 
 coef_PADp2 <- coef_PADp2 %>%
-  mutate(e_size = ifelse(row_number()== 1 | row_number()== 2 |  row_number()== 3 |  row_number()== 4 |  row_number()== 5
-                          |  row_number()== 6 |  row_number()== 7 |  row_number()== 8  |  row_number()== 10  
-                          |  row_number()== 11  |  row_number()== 12, 
-                          estimate/0.5049948, (estimate*28)/0.5049948)) %>%
+  mutate(e_size = ifelse(row_number()== 1 | row_number()== 2 |  row_number()== 3 |  row_number()== 5 |  row_number()== 6 |  row_number()== 7,  estimate/0.5049948, (estimate*28)/0.5049948)) %>%
   mutate(across(2:7, round, 2)) 
           
 ```
@@ -326,10 +323,7 @@ coef_PADp3 = tidy(model_PADp3,
                effects = "fixed")
 
 coef_PADp3 <- coef_PADp3 %>%
- mutate(e_size = ifelse(row_number()== 1 | row_number()== 2 |  row_number()== 3 |  row_number()== 4 |  row_number()== 5
-                          |  row_number()== 6 |  row_number()== 7 |  row_number()== 8  |  row_number()== 10  
-                          |  row_number()== 11  |  row_number()== 12, 
-                          estimate/0.493802, (estimate*28)/0.493802)) %>%
+ mutate(e_size = ifelse(row_number()== 1 | row_number()== 2 |  row_number()== 3 |  row_number()== 5 |  row_number()== 6 |  row_number()== 7, estimate/0.493802, (estimate*28)/0.493802)) %>%
   mutate(across(2:7, round, 2)) 
 ```
 

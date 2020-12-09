@@ -224,6 +224,19 @@ summary(model_NAAp1)
             Country ID %in% Country 
                  26            2747 
 
+``` r
+VarCorr(model_NAAp1)
+```
+
+``` 
+            Variance     StdDev   
+Country =   pdLogChol(1)          
+(Intercept) 0.06509293   0.2551332
+ID =        pdLogChol(1)          
+(Intercept) 0.47366595   0.6882339
+Residual    0.34466587   0.5870825
+```
+
 *Confidence intervals*
 
 ``` r
@@ -313,17 +326,6 @@ coef_NAAp1
 ``` r
 coef_NAAp1 <- as.matrix(coef_NAAp1)
 ```
-
-stargazer(coef\_NAAp1, type=“html”, df = TRUE,
-out=“star\_coef\_NAAp1.doc”, single.row=TRUE, digits = 2, align =
-TRUE)
-
-stargazer(model\_NAAp1, type=“html”, df = TRUE,
-out=“star\_model\_NAAp1.doc”, single.row=TRUE, digits = 2, align =
-TRUE, order = c(“Intercept”,“Gender (female)”, “Education”, “Age
-(25-44)”, “Age (45-64)”, “Age (65+)”), covariate.labels =
-c(“Intercept”,“Gender (female)”, “Education”, “Age (25-44)”, “Age
-(45-64)”, “Age (65+)”, “SI x Max SI (after)”))
 
 > The two oldest groups report lower NAA than the youngest group. Women
 > report higher NAA compared to men. No difference between education
@@ -490,10 +492,7 @@ coef_NAAp2 = tidy(model_NAAp2,
                effects = "fixed")
 
 coef_NAAp2 <- coef_NAAp2 %>%
-  mutate(e_size = ifelse(row_number()== 1 | row_number()== 2 |  row_number()== 3 |  row_number()== 4 |  row_number()== 5
-                          |  row_number()== 6 |  row_number()== 7 |  row_number()== 8  |  row_number()== 10  
-                          |  row_number()== 11  |  row_number()== 12, 
-                          estimate/0.4557901, (estimate*28)/0.4557901)) %>%
+  mutate(e_size = ifelse(row_number()== 1 | row_number()== 2 |  row_number()== 3 |  row_number()== 5 |  row_number()== 6 |  row_number()== 7, estimate/0.4557901, (estimate*28)/0.4557901)) %>%
   mutate(across(2:7, round, 2)) 
 ```
 
@@ -506,28 +505,13 @@ coef_NAAp2
     ##  [1,] "(Intercept)"         " 2.51"  "0.06"    "20356" " 44.07"  "0.00"  " 5.51"
     ##  [2,] "Gender1"             " 0.19"  "0.02"    " 9176" "  9.96"  "0.00"  " 0.41"
     ##  [3,] "Edu"                 "-0.01"  "0.01"    " 9176" " -2.07"  "0.04"  "-0.03"
-    ##  [4,] "DaysMax_p2"          "-0.01"  "0.00"    "20356" " -4.50"  "0.00"  "-0.01"
+    ##  [4,] "DaysMax_p2"          "-0.01"  "0.00"    "20356" " -4.50"  "0.00"  "-0.35"
     ##  [5,] "Age_new1"            " 0.00"  "0.04"    " 9176" "  0.11"  "0.91"  " 0.01"
     ##  [6,] "Age_new2"            "-0.23"  "0.04"    " 9176" " -6.08"  "0.00"  "-0.49"
     ##  [7,] "Age_new3"            "-0.49"  "0.04"    " 9176" "-11.02"  "0.00"  "-1.08"
-    ##  [8,] "DaysMax_p2:Age_new1" " 0.00"  "0.00"    "20356" " -1.35"  "0.18"  " 0.00"
+    ##  [8,] "DaysMax_p2:Age_new1" " 0.00"  "0.00"    "20356" " -1.35"  "0.18"  "-0.09"
     ##  [9,] "DaysMax_p2:Age_new2" " 0.00"  "0.00"    "20356" " -0.82"  "0.41"  "-0.05"
-    ## [10,] "DaysMax_p2:Age_new3" " 0.00"  "0.00"    "20356" " -0.21"  "0.83"  " 0.00"
-
-stargazer(coef\_NAAp2, type=“html”, df = TRUE,
-out=“star\_coef\_NAAp2.doc”, single.row=TRUE, digits = 2, align =
-TRUE)
-
-stargazer(model\_NAAp2, type=“html”, df = TRUE,
-out=“star\_model\_NAAp2.doc”, single.row=TRUE, digits = 2, align =
-TRUE, intercept.top = TRUE, intercept.bottom = FALSE , order =
-c(“Intercept”,“Gender (female)”, “Education”, “Age (25-44)”, “Age
-(45-64)”, “Age (65+)”, “Days (during peak SI)”, “Age (25-44) \* Days
-(during peak SI)”, “Age (45-64) \* Days (during peak SI)”, “Age (65+) \*
-Days (during peak SI)”), covariate.labels = c(“Intercept”,“Gender
-(female)”, “Education”, “Age (25-44)”, “Age (45-64)”, “Age (65+)”, “Days
-(during peak SI)”, “Age (25-44)*Days (during peak SI)", "Age
-(45-64)*Days (during peak SI)”, "Age (65+)\*Days (during peak SI)"))
+    ## [10,] "DaysMax_p2:Age_new3" " 0.00"  "0.00"    "20356" " -0.21"  "0.83"  "-0.02"
 
 > NAA decreases over time for the youngest age group (main effect) and
 > other groups in a similar way (interaction effect). The two oldest
@@ -689,10 +673,7 @@ coef_NAAp3 = tidy(model_NAAp3,
                effects = "fixed")
 
 coef_NAAp3 <- coef_NAAp3 %>%
- mutate(e_size = ifelse(row_number()== 1 | row_number()== 2 |  row_number()== 3 |  row_number()== 4 |  row_number()== 5
-                          |  row_number()== 6 |  row_number()== 7 |  row_number()== 8  |  row_number()== 10  
-                          |  row_number()== 11  |  row_number()== 12, 
-                          estimate/0.4208346, (estimate*28)/0.4208346)) %>%
+ mutate(e_size = ifelse(row_number()== 1 | row_number()== 2 |  row_number()== 3 |  row_number()== 5 |  row_number()== 6 |  row_number()== 7, estimate/0.4208346, (estimate*28)/0.4208346)) %>%
   mutate(across(2:7, round, 2)) 
 ```
 
@@ -705,13 +686,13 @@ coef_NAAp3
     ##  [1,] "(Intercept)"         " 2.50"  "0.06"    "17940" " 42.80"  "0.00"  " 5.94"
     ##  [2,] "Gender1"             " 0.12"  "0.02"    " 7009" "  5.61"  "0.00"  " 0.29"
     ##  [3,] "Edu"                 "-0.02"  "0.01"    " 7009" " -2.49"  "0.01"  "-0.04"
-    ##  [4,] "DaysPhase3"          " 0.00"  "0.00"    "17940" " -1.44"  "0.15"  " 0.00"
+    ##  [4,] "DaysPhase3"          " 0.00"  "0.00"    "17940" " -1.44"  "0.15"  "-0.09"
     ##  [5,] "Age_new1"            "-0.10"  "0.04"    " 7009" " -2.55"  "0.01"  "-0.24"
     ##  [6,] "Age_new2"            "-0.32"  "0.04"    " 7009" " -8.11"  "0.00"  "-0.77"
     ##  [7,] "Age_new3"            "-0.62"  "0.05"    " 7009" "-13.47"  "0.00"  "-1.46"
-    ##  [8,] "DaysPhase3:Age_new1" " 0.00"  "0.00"    "17940" " -1.34"  "0.18"  " 0.00"
+    ##  [8,] "DaysPhase3:Age_new1" " 0.00"  "0.00"    "17940" " -1.34"  "0.18"  "-0.10"
     ##  [9,] "DaysPhase3:Age_new2" " 0.00"  "0.00"    "17940" " -2.00"  "0.05"  "-0.15"
-    ## [10,] "DaysPhase3:Age_new3" " 0.00"  "0.00"    "17940" " -1.37"  "0.17"  " 0.00"
+    ## [10,] "DaysPhase3:Age_new3" " 0.00"  "0.00"    "17940" " -1.37"  "0.17"  "-0.11"
 
 > Older people report lower NAA compared to younger people on the first
 > day stringency reduces after the peak (main effect), there is no
@@ -720,10 +701,75 @@ coef_NAAp3
 > This trend is visible for the other age groups as well in the plot but
 > not significant.
 
-stargazer(coef\_NAAp1, coef\_NAAp2, coef\_NAAp3, type=“html”, df = TRUE,
-out=“star\_coefallphase\_NAA.doc”, single.row=TRUE, digits = 2, align =
-TRUE)
+``` r
+stargazer(coef_NAAp1, coef_NAAp2, coef_NAAp3,
+type="html", df = TRUE, out="star_coefallphase_NAA.doc",  single.row=TRUE, digits = 2, align = TRUE)
+```
 
-stargazer(model\_NAAp1, model\_NAAp2, model\_NAAp3, type=“html”, df =
-TRUE, out=“starallphasesNAA.doc”, single.row=TRUE, digits = 2, align =
-TRUE, intercept.top = TRUE, intercept.bottom = FALSE)
+    ## 
+    ## <table style="text-align:center"><tr><td colspan="7" style="border-bottom: 1px solid black"></td></tr><tr><td>term</td><td>estimate</td><td>std.error</td><td>df</td><td>statistic</td><td>p.value</td><td>e_size</td></tr>
+    ## <tr><td colspan="7" style="border-bottom: 1px solid black"></td></tr><tr><td>(Intercept)</td><td>2.59</td><td>0.10</td><td>2716</td><td>26.86</td><td>0.00</td><td>5.54</td></tr>
+    ## <tr><td>Gender1</td><td>0.23</td><td>0.04</td><td>2716</td><td>6.50</td><td>0.00</td><td>0.50</td></tr>
+    ## <tr><td>Edu</td><td>0.00</td><td>0.01</td><td>2716</td><td>-0.16</td><td>0.87</td><td>0.00</td></tr>
+    ## <tr><td>Age_new1</td><td>-0.07</td><td>0.05</td><td>2716</td><td>-1.49</td><td>0.14</td><td>-0.16</td></tr>
+    ## <tr><td>Age_new2</td><td>-0.36</td><td>0.05</td><td>2716</td><td>-6.83</td><td>0.00</td><td>-0.78</td></tr>
+    ## <tr><td>Age_new3</td><td>-0.64</td><td>0.08</td><td>2716</td><td>-8.42</td><td>0.00</td><td>-1.36</td></tr>
+    ## <tr><td colspan="7" style="border-bottom: 1px solid black"></td></tr></table>
+    ## 
+    ## <table style="text-align:center"><tr><td colspan="7" style="border-bottom: 1px solid black"></td></tr><tr><td>term</td><td>estimate</td><td>std.error</td><td>df</td><td>statistic</td><td>p.value</td><td>e_size</td></tr>
+    ## <tr><td colspan="7" style="border-bottom: 1px solid black"></td></tr><tr><td>(Intercept)</td><td>2.51</td><td>0.06</td><td>20356</td><td>44.07</td><td>0.00</td><td>5.51</td></tr>
+    ## <tr><td>Gender1</td><td>0.19</td><td>0.02</td><td>9176</td><td>9.96</td><td>0.00</td><td>0.41</td></tr>
+    ## <tr><td>Edu</td><td>-0.01</td><td>0.01</td><td>9176</td><td>-2.07</td><td>0.04</td><td>-0.03</td></tr>
+    ## <tr><td>DaysMax_p2</td><td>-0.01</td><td>0.00</td><td>20356</td><td>-4.50</td><td>0.00</td><td>-0.35</td></tr>
+    ## <tr><td>Age_new1</td><td>0.00</td><td>0.04</td><td>9176</td><td>0.11</td><td>0.91</td><td>0.01</td></tr>
+    ## <tr><td>Age_new2</td><td>-0.23</td><td>0.04</td><td>9176</td><td>-6.08</td><td>0.00</td><td>-0.49</td></tr>
+    ## <tr><td>Age_new3</td><td>-0.49</td><td>0.04</td><td>9176</td><td>-11.02</td><td>0.00</td><td>-1.08</td></tr>
+    ## <tr><td>DaysMax_p2:Age_new1</td><td>0.00</td><td>0.00</td><td>20356</td><td>-1.35</td><td>0.18</td><td>-0.09</td></tr>
+    ## <tr><td>DaysMax_p2:Age_new2</td><td>0.00</td><td>0.00</td><td>20356</td><td>-0.82</td><td>0.41</td><td>-0.05</td></tr>
+    ## <tr><td>DaysMax_p2:Age_new3</td><td>0.00</td><td>0.00</td><td>20356</td><td>-0.21</td><td>0.83</td><td>-0.02</td></tr>
+    ## <tr><td colspan="7" style="border-bottom: 1px solid black"></td></tr></table>
+    ## 
+    ## <table style="text-align:center"><tr><td colspan="7" style="border-bottom: 1px solid black"></td></tr><tr><td>term</td><td>estimate</td><td>std.error</td><td>df</td><td>statistic</td><td>p.value</td><td>e_size</td></tr>
+    ## <tr><td colspan="7" style="border-bottom: 1px solid black"></td></tr><tr><td>(Intercept)</td><td>2.50</td><td>0.06</td><td>17940</td><td>42.80</td><td>0.00</td><td>5.94</td></tr>
+    ## <tr><td>Gender1</td><td>0.12</td><td>0.02</td><td>7009</td><td>5.61</td><td>0.00</td><td>0.29</td></tr>
+    ## <tr><td>Edu</td><td>-0.02</td><td>0.01</td><td>7009</td><td>-2.49</td><td>0.01</td><td>-0.04</td></tr>
+    ## <tr><td>DaysPhase3</td><td>0.00</td><td>0.00</td><td>17940</td><td>-1.44</td><td>0.15</td><td>-0.09</td></tr>
+    ## <tr><td>Age_new1</td><td>-0.10</td><td>0.04</td><td>7009</td><td>-2.55</td><td>0.01</td><td>-0.24</td></tr>
+    ## <tr><td>Age_new2</td><td>-0.32</td><td>0.04</td><td>7009</td><td>-8.11</td><td>0.00</td><td>-0.77</td></tr>
+    ## <tr><td>Age_new3</td><td>-0.62</td><td>0.05</td><td>7009</td><td>-13.47</td><td>0.00</td><td>-1.46</td></tr>
+    ## <tr><td>DaysPhase3:Age_new1</td><td>0.00</td><td>0.00</td><td>17940</td><td>-1.34</td><td>0.18</td><td>-0.10</td></tr>
+    ## <tr><td>DaysPhase3:Age_new2</td><td>0.00</td><td>0.00</td><td>17940</td><td>-2.00</td><td>0.05</td><td>-0.15</td></tr>
+    ## <tr><td>DaysPhase3:Age_new3</td><td>0.00</td><td>0.00</td><td>17940</td><td>-1.37</td><td>0.17</td><td>-0.11</td></tr>
+    ## <tr><td colspan="7" style="border-bottom: 1px solid black"></td></tr></table>
+
+``` r
+stargazer(model_NAAp1, model_NAAp2, model_NAAp3,
+type="html", df = TRUE, out="starallphasesNAA.doc",  single.row=TRUE, digits = 2, align = TRUE,
+intercept.top = TRUE, intercept.bottom = FALSE)
+```
+
+    ## 
+    ## <table style="text-align:center"><tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="3"><em>Dependent variable:</em></td></tr>
+    ## <tr><td></td><td colspan="3" style="border-bottom: 1px solid black"></td></tr>
+    ## <tr><td style="text-align:left"></td><td colspan="3">NAA</td></tr>
+    ## <tr><td style="text-align:left"></td><td>(1)</td><td>(2)</td><td>(3)</td></tr>
+    ## <tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Constant</td><td>2.59<sup>***</sup> (0.10)</td><td>2.51<sup>***</sup> (0.06)</td><td>2.50<sup>***</sup> (0.06)</td></tr>
+    ## <tr><td style="text-align:left">Gender1</td><td>0.23<sup>***</sup> (0.04)</td><td>0.19<sup>***</sup> (0.02)</td><td>0.12<sup>***</sup> (0.02)</td></tr>
+    ## <tr><td style="text-align:left">Edu</td><td>-0.002 (0.01)</td><td>-0.01<sup>**</sup> (0.01)</td><td>-0.02<sup>**</sup> (0.01)</td></tr>
+    ## <tr><td style="text-align:left">DaysMax_p2</td><td></td><td>-0.01<sup>***</sup> (0.001)</td><td></td></tr>
+    ## <tr><td style="text-align:left">DaysPhase3</td><td></td><td></td><td>-0.001 (0.001)</td></tr>
+    ## <tr><td style="text-align:left">Age_new1</td><td>-0.07 (0.05)</td><td>0.004 (0.04)</td><td>-0.10<sup>**</sup> (0.04)</td></tr>
+    ## <tr><td style="text-align:left">Age_new2</td><td>-0.36<sup>***</sup> (0.05)</td><td>-0.23<sup>***</sup> (0.04)</td><td>-0.32<sup>***</sup> (0.04)</td></tr>
+    ## <tr><td style="text-align:left">Age_new3</td><td>-0.64<sup>***</sup> (0.08)</td><td>-0.49<sup>***</sup> (0.04)</td><td>-0.62<sup>***</sup> (0.05)</td></tr>
+    ## <tr><td style="text-align:left">DaysMax_p2:Age_new1</td><td></td><td>-0.001 (0.001)</td><td></td></tr>
+    ## <tr><td style="text-align:left">DaysMax_p2:Age_new2</td><td></td><td>-0.001 (0.001)</td><td></td></tr>
+    ## <tr><td style="text-align:left">DaysMax_p2:Age_new3</td><td></td><td>-0.0003 (0.001)</td><td></td></tr>
+    ## <tr><td style="text-align:left">DaysPhase3:Age_new1</td><td></td><td></td><td>-0.002 (0.001)</td></tr>
+    ## <tr><td style="text-align:left">DaysPhase3:Age_new2</td><td></td><td></td><td>-0.002<sup>**</sup> (0.001)</td></tr>
+    ## <tr><td style="text-align:left">DaysPhase3:Age_new3</td><td></td><td></td><td>-0.002 (0.001)</td></tr>
+    ## <tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Observations</td><td>4,155</td><td>29,574</td><td>24,990</td></tr>
+    ## <tr><td style="text-align:left">Log Likelihood</td><td>-5,188.19</td><td>-32,156.48</td><td>-25,993.50</td></tr>
+    ## <tr><td style="text-align:left">Akaike Inf. Crit.</td><td>10,394.38</td><td>64,346.97</td><td>52,019.00</td></tr>
+    ## <tr><td style="text-align:left">Bayesian Inf. Crit.</td><td>10,451.35</td><td>64,487.97</td><td>52,149.01</td></tr>
+    ## <tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td colspan="3" style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
+    ## </table>
