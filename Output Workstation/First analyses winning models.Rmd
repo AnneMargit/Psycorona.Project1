@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r, set-options, echo=FALSE, cache= FALSE}
 options(width=1000)
 Sys.getenv('R_MAX_VSIZE')
+options(scipen=999)
 ```
 
 ```{r, results = "hide"}
@@ -45,6 +46,7 @@ model_NAA10 <- lme(fixed = NAA ~ StringencyIndex_dev + Str_dummy +  StringencyIn
                   correlation = corAR1(form = ~ Time | Country/ID))
 
 summary(model_NAA10)
+VarCorr(model_NAA10)
 ```
 > Random ICs and slopes for country and ID, no correlation between ICS and slopes, AR structure
 
@@ -60,6 +62,7 @@ model_NAD10 <- lme(fixed = NAD ~ StringencyIndex_dev + Str_dummy +  StringencyIn
                   correlation = corAR1(form = ~ Time | Country/ID))
 
 summary(model_NAD10)
+VarCorr(model_NAD10)
 ```
 
 > This model has random slopes for Stringency at the ID and Country level, assumes no correlation between random slopes and intercepts, and assumes autoregressive correlation structure at the measurement level. 
@@ -78,6 +81,7 @@ model_PAA10 <- lme(fixed = PAA ~ StringencyIndex_dev + Str_dummy +  StringencyIn
                   correlation = corAR1(form = ~ Time | Country/ID))
 
 summary(model_PAA10)
+VarCorr(model_PAA10)
 ```
 
 > This model has random slopes for Stringency at the ID and Country level, assumes no correlation between random slopes and intercepts, and assumes autoregressive correlation structure at the measurement level. 
@@ -95,6 +99,7 @@ model_PAD10 <- lme(fixed = PAD ~ StringencyIndex_dev + Str_dummy +  StringencyIn
                   correlation = corAR1(form = ~ Time | Country/ID))
 
 summary(model_PAD10)
+VarCorr(model_PAD10)
 ```
 
 > This model has random slopes for Stringency at the ID and Country level, assumes no correlation between random slopes and intercepts, and assumes autoregressive correlation structure at the measurement level. 

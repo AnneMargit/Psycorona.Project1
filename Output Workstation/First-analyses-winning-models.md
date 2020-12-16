@@ -87,6 +87,21 @@ summary(model_NAA10)
             Country ID %in% Country 
                  33           10457 
 
+``` r
+VarCorr(model_NAA10)
+```
+
+``` 
+                    Variance                    StdDev    
+Country =           pdDiag(StringencyIndex_dev)           
+(Intercept)         0.048001738121              0.21909299
+StringencyIndex_dev 0.000003555864              0.00188570
+ID =                pdDiag(StringencyIndex_dev)           
+(Intercept)         0.534471938641              0.73107588
+StringencyIndex_dev 0.000044444358              0.00666666
+Residual            0.353281976781              0.59437528
+```
+
 > Random ICs and slopes for country and ID, no correlation between ICS
 > and slopes, AR structure
 
@@ -151,6 +166,21 @@ summary(model_NAD10)
             Country ID %in% Country 
                  33           10457 
 
+``` r
+VarCorr(model_NAD10)
+```
+
+``` 
+                    Variance                    StdDev     
+Country =           pdDiag(StringencyIndex_dev)            
+(Intercept)         0.04480625857               0.211674889
+StringencyIndex_dev 0.00001647639               0.004059112
+ID =                pdDiag(StringencyIndex_dev)            
+(Intercept)         0.59816530411               0.773411471
+StringencyIndex_dev 0.00007552396               0.008690452
+Residual            0.39495957281               0.628458092
+```
+
 > This model has random slopes for Stringency at the ID and Country
 > level, assumes no correlation between random slopes and intercepts,
 > and assumes autoregressive correlation structure at the measurement
@@ -194,12 +224,12 @@ summary(model_PAA10)
     0.2730126 
     Fixed effects: PAA ~ StringencyIndex_dev + Str_dummy + StringencyIndex_dev *      Str_dummy 
                                         Value  Std.Error    DF  t-value p-value
-    (Intercept)                     2.4507808 0.04451137 48257 55.05966   0e+00
-    StringencyIndex_dev             0.0082810 0.00204576 48257  4.04788   1e-04
-    Str_dummy1                      0.1499298 0.02084464 48257  7.19273   0e+00
-    Str_dummy2                      0.2217428 0.01452230 48257 15.26913   0e+00
-    StringencyIndex_dev:Str_dummy1 -0.0152654 0.00250151 48257 -6.10249   0e+00
-    StringencyIndex_dev:Str_dummy2 -0.0139779 0.00200346 48257 -6.97689   0e+00
+    (Intercept)                     2.4507808 0.04451137 48257 55.05966  0.0000
+    StringencyIndex_dev             0.0082810 0.00204576 48257  4.04788  0.0001
+    Str_dummy1                      0.1499298 0.02084464 48257  7.19273  0.0000
+    Str_dummy2                      0.2217428 0.01452230 48257 15.26913  0.0000
+    StringencyIndex_dev:Str_dummy1 -0.0152654 0.00250151 48257 -6.10249  0.0000
+    StringencyIndex_dev:Str_dummy2 -0.0139779 0.00200346 48257 -6.97689  0.0000
      Correlation: 
                                    (Intr) StrnI_ Str_d1 Str_d2 SI_:S_1
     StringencyIndex_dev             0.057                             
@@ -216,6 +246,21 @@ summary(model_PAA10)
     Number of Groups: 
             Country ID %in% Country 
                  33           10457 
+
+``` r
+VarCorr(model_PAA10)
+```
+
+``` 
+                    Variance                    StdDev     
+Country =           pdDiag(StringencyIndex_dev)            
+(Intercept)         0.05559292611               0.235781522
+StringencyIndex_dev 0.00002258183               0.004752035
+ID =                pdDiag(StringencyIndex_dev)            
+(Intercept)         0.48126843083               0.693735130
+StringencyIndex_dev 0.00006137559               0.007834257
+Residual            0.39271362508               0.626668672
+```
 
 > This model has random slopes for Stringency at the ID and Country
 > level, assumes no correlation between random slopes and intercepts,
@@ -282,6 +327,21 @@ summary(model_PAD10)
     Number of Groups: 
             Country ID %in% Country 
                  33           10457 
+
+``` r
+VarCorr(model_PAD10)
+```
+
+``` 
+                    Variance                    StdDev     
+Country =           pdDiag(StringencyIndex_dev)            
+(Intercept)         0.041830764285              0.204525706
+StringencyIndex_dev 0.000005427551              0.002329710
+ID =                pdDiag(StringencyIndex_dev)            
+(Intercept)         0.525183642908              0.724695552
+StringencyIndex_dev 0.000076812639              0.008764282
+Residual            0.410558920652              0.640748719
+```
 
 > This model has random slopes for Stringency at the ID and Country
 > level, assumes no correlation between random slopes and intercepts,

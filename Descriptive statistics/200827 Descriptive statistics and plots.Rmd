@@ -37,6 +37,7 @@ library(stringr)
 library(papaja)
 library(ggpubr)
 library(ggplot2)
+library(stargazer)
 ```
 
 # Missing data
@@ -86,7 +87,15 @@ CountryNdistinct <- data_long_min3_str_age %>%
 
 CountryMean <- CountryN %>%
   group_by(Time) %>%
-  summarise(MCountry = mean(Ncountry), SDCountry = sd(Ncountry))
+  summarise(MCountry = mean(Ncountry), SDCountry = sd(Ncountry)) %>%
+  mutate(across(2:3, round, 2)) 
+```
+
+```{r}
+CountryMean <- as.matrix(CountryMean)
+
+stargazer(CountryMean,
+type="html", df = TRUE, out="CountryMean.doc",  single.row=TRUE, digits = 2, flip = TRUE, align = TRUE)
 ```
 
 ```{r}
@@ -116,6 +125,14 @@ summarise(NParticipants = n_distinct(ID[Nmiss<9]), NWave = sum (!is.na(Date)), N
 ```{r}
 apa_table(Wave_N_original, caption="Number of measurements per wave original data")
 ```
+
+```{r}
+Wave_N_original <- as.matrix(Wave_N_original)
+
+stargazer(Wave_N_original,
+type="html", df = TRUE, out="Wave_N_original.doc",  single.row=TRUE, flip = TRUE, align = TRUE)
+```
+
 
 **Number of participants and measurements per wave with imputed data**
 ```{r, results = "hide", message=F}
@@ -159,6 +176,13 @@ Age_New <- data_long_min3_str_age %>%
 apa_table(Age_New, caption="Number of participants per pooled age group on baseline with original data")
 ```
 
+```{r}
+Age_New <- as.matrix(Age_New)
+
+stargazer(Age_New,
+type="html", df = TRUE, out="Age_New.doc",  single.row=TRUE, digits = 2, align = TRUE)
+```
+
 **Number of males and females on baseline**  
 ```{r, results = "hide", message=F}
 Gender_N <- data_long_min3_str_age %>%
@@ -181,6 +205,13 @@ Gender_Wave <- data_long_min3_str_age %>%
 
 ```{r}
 apa_table(Gender_Wave, caption="Number of males and females per wave", note= "Gender 0= male; 1= female")
+```
+
+```{r}
+Gender_Wave <- as.matrix(Gender_Wave)
+
+stargazer(Gender_Wave,
+type="html", df = TRUE, out="Gender_Wave.doc",  single.row=TRUE, digits = 2, flip = TRUE, align = TRUE)
 ```
 
 **Number of males and females per pooled age group on baseline with original data**
@@ -212,20 +243,27 @@ StringencySummary <- data_long_min3_str_age %>%
 apa_table(StringencySummary, caption="Stringency Index per country with original data")
 ```
 
-**Mean and SD, minimum and maximum of Stringency Index and imputed Stringency Index per wave**
+**Mean and SD, minimum and maximum of Stringency Index per wave**
 ```{r, results = "hide", message=F}
 StringencySummary2 <- data_long_min3_str_age %>%
   group_by(Time)%>%
   filter(Nmiss <9)%>%
   summarize(Str_mean = mean(StringencyIndex, na.rm=TRUE), Str_SD = sd(StringencyIndex, na.rm=TRUE), 
-            Str_max = max(StringencyIndex, na.rm=TRUE), Str_min = min(StringencyIndex, na.rm=TRUE),
-            Str_imp_mean = mean(StringencyIndex_imp, na.rm=TRUE), Str_imp_SD = sd(StringencyIndex_imp, na.rm=TRUE), 
-            Str_imp_max = max(StringencyIndex_imp, na.rm=TRUE), Str_imp_min = min(StringencyIndex_imp, na.rm=TRUE))
+            Str_max = max(StringencyIndex, na.rm=TRUE), Str_min = min(StringencyIndex, na.rm=TRUE)) %>%
+  mutate(across(2:5, round, 2))
 ```
 
 ```{r}
 apa_table(StringencySummary2, caption="Stringency Index per wave with original data")
 ```
+
+```{r}
+StringencySummary2 <- as.matrix(StringencySummary2)
+
+stargazer(StringencySummary2,
+type="html", df = TRUE, out="StringencySummary2.doc",  single.row=TRUE, digits = 2, flip = TRUE, align = TRUE)
+```
+
 
 **Stringency Index violin plots**
 ```{r, results = "hide", message=F, warning=F}
@@ -303,11 +341,22 @@ emomeansN <- data_imputed_emomeans_maxweeks %>%
   group_by(Time) %>%
   summarise(across(NAA:PAD, .fns=list(Mean = mean, SD = sd, Median = median), na.rm=TRUE,
                    .names="{col}_{fn}"))
+
+emomeansN <- emomeansN %>%
+  mutate(across(2:13, round, 2))
 ```
 
 ```{r}
 apa_table(emomeansN, caption="Mean scores of emotion factor scores per wave")
 ```
+
+```{r}
+emomeansN <- as.matrix(emomeansN)
+
+stargazer(emomeansN,
+type="html", df = TRUE, out="emomeansN.doc",  single.row=TRUE, digits = 2, flip = TRUE, align = TRUE)
+```
+
 
 **Mean, SD, and median of emotion scores**
 ```{r, results = "hide", message=F, warning =F}
