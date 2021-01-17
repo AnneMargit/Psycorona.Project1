@@ -1,0 +1,78 @@
+---
+title: "Descriptives full dataset"
+author: "Anne Margit"
+date: "1/17/2021"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message=F}
+library(dplyr)
+library(tidyverse)
+library(stringr)
+library(ggpubr)
+library(ggplot2)
+library(papaja)
+```
+
+```{r, results = "hide"}
+load("data_long_happy.Rdata")
+```
+
+```{r, results = "hide", message=F}
+#Missing data
+missing.values <- data_long_happy %>%
+  gather(key = "key", value = "val") %>%
+  dplyr::mutate(is.missing = is.na(val)) %>%
+  dplyr::group_by(key, is.missing) %>%
+  dplyr::summarise(num.missing = n()) %>%
+  dplyr::filter(is.missing==T) %>%
+  dplyr::select(-is.missing) %>%
+  dplyr::arrange(desc(num.missing))
+```
+
+```{r}
+apa_table(missing.values, caption="Missing data")
+```
+
+**Number of participants and measurements per wave with original data**
+Create new variable that indicates sum of missings:
+```{r, results='hide', message=F}
+data_long_happy <- data_long_happy %>%
+  group_by(X, Wave) %>%
+mutate(Nmiss = sum(is.na(Ang)) + sum(is.na(Anxiety)) + sum(is.na(Nerv)) + sum(is.na(Depr)) + sum(is.na(Exh)) + 
+               sum(is.na(Energ)) + sum(is.na(Insp)) + sum(is.na(Calm)) + sum(is.na(Rel)) +  sum(is.na(Happy))) %>%
+  ungroup()
+```
+
+```{r, results = "hide", message=F}
+data_long_happy$Wave <- as.factor(data_long_happy$Wave)
+
+Wave_N <- data_long_happy %>% 
+group_by(Wave)%>%
+summarise(NParticipants = n_distinct(X), NWave = sum (!is.na(RecordedDate)), NAng= sum(!is.na(Ang)), NAnx= sum(!is.na(Anxiety)), NNerv= sum(!is.na(Nerv)), NDepr= sum(!is.na(Depr)), NExh= sum(!is.na(Exh)), NEnerg= sum(!is.na(Energ)),  NInsp= sum(!is.na(Insp)), NCalm= sum(!is.na(Calm)), NRel= sum(!is.na(Rel)), NHappy = sum(!is.na(Happy)))
+```
+
+```{r}
+apa_table(Wave_N, caption="Number of measurements per wave original data")
+```
+
+Add number of measurements
+```{r, results = "hide", message=F}
+data_long_happy$RecordedDate <- as.Date(data_long_happy$RecordedDate)
+data_long_happy <- data_long_happy %>% group_by(X) %>% add_tally(wt = !is.na(RecordedDate))
+```
+
+Number of participants per number of complete assessments 
+```{r, results = "hide", message=F}
+N_measures <- data_long_happy %>%
+group_by(n)%>%
+summarize(n_distinct(X))
+```
+
+```{r}
+apa_table(N_measures, caption="Number of participants per number of complete assessments")
+```
