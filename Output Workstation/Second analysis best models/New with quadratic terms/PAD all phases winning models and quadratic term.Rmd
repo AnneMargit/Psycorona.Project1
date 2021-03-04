@@ -317,7 +317,7 @@ plot_PADp2_slope <- ggplot(data2, aes(x= DaysMax_p2.y, fill = ..x..)) +
   scale_fill_gradientn(colours = terrain.colors(5)) +
   theme_minimal()+
   theme(legend.position="none") + 
-  labs(title="Effect of days since peak stringency on PAA",
+  labs(title="Effect of days since peak stringency on PAD",
        x="Regression coefficient", y = "Count") +
   theme(plot.title = element_text(hjust = 0.5)) +
    facet_wrap(~ Age_new, labeller = labeller(Age_new = Age_labels)) 
@@ -509,7 +509,7 @@ plot_PADp3_slope <- ggplot(data2, aes(x= DaysPhase3.y, fill = ..x..)) +
   scale_fill_gradientn(colours = terrain.colors(5)) +
   theme_minimal()+
   theme(legend.position="none") + 
-  labs(title="Effect of days since decline in peak stringency on PAA",
+  labs(title="Effect of days since decline in peak stringency on PAD",
        x="Regression coefficient", y = "Count") +
   theme(plot.title = element_text(hjust = 0.5)) +
    facet_wrap(~ Age_new, labeller = labeller(Age_new = Age_labels)) 
