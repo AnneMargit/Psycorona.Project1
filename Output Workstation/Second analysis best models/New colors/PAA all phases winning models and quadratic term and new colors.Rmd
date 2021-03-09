@@ -531,7 +531,7 @@ plot_PAAp3_slope
 stargazer(coef_PAAp1, coef_PAAp2, coef_PAAp3,
 type="html", df = TRUE, out="star_coefallphase_PAA.doc",  single.row=TRUE, digits = 2, align = TRUE)
 
-stargazer(model_PAAp1, model_PAAp2, model_PAAp3,
+stargazer(model_PAAp1, model_PAAp2, model_PAAp2q, model_PAAp3,
 type="html", df = TRUE, out="starallphasesPAA.doc",  single.row=TRUE, digits = 2, align = TRUE,
 intercept.top = TRUE, intercept.bottom = FALSE)
 ```

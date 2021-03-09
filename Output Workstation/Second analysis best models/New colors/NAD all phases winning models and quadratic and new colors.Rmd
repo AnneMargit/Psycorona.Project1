@@ -532,7 +532,7 @@ plot_NADp3_slope
 stargazer(coef_NADp1, coef_NADp2, coef_NADp3,
 type="html", df = TRUE, out="star_coefallphase_NAD.doc",  single.row=TRUE, digits = 2, align = TRUE)
 
-stargazer(model_NADp1, model_NADp2, model_NADp3,
+stargazer(model_NADp1, model_NADp2, model_NADp2q, model_NADp3,
 type="html", df = TRUE, out="starallphasesNAD.doc",  single.row=TRUE, digits = 2, align = TRUE,
 intercept.top = TRUE, intercept.bottom = FALSE)
 ```
