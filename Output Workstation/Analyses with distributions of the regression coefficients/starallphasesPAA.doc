@@ -1,0 +1,33 @@
+
+<table style="text-align:center"><tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="4"><em>Dependent variable:</em></td></tr>
+<tr><td></td><td colspan="4" style="border-bottom: 1px solid black"></td></tr>
+<tr><td style="text-align:left"></td><td colspan="4">PAA</td></tr>
+<tr><td style="text-align:left"></td><td>(1)</td><td>(2)</td><td>(3)</td><td>(4)</td></tr>
+<tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Constant</td><td>2.35<sup>***</sup> (0.10)</td><td>2.33<sup>***</sup> (0.06)</td><td>2.43<sup>***</sup> (0.06)</td><td>2.47<sup>***</sup> (0.06)</td></tr>
+<tr><td style="text-align:left">Gender1</td><td>-0.15<sup>***</sup> (0.04)</td><td>-0.17<sup>***</sup> (0.02)</td><td>-0.16<sup>***</sup> (0.02)</td><td>-0.19<sup>***</sup> (0.02)</td></tr>
+<tr><td style="text-align:left">Edu</td><td>0.04<sup>***</sup> (0.01)</td><td>0.05<sup>***</sup> (0.01)</td><td>0.05<sup>***</sup> (0.01)</td><td>0.05<sup>***</sup> (0.01)</td></tr>
+<tr><td style="text-align:left">DaysMax_p2</td><td></td><td>0.01<sup>***</sup> (0.001)</td><td></td><td></td></tr>
+<tr><td style="text-align:left">DaysMax_p2_dev</td><td></td><td></td><td>0.01<sup>***</sup> (0.001)</td><td></td></tr>
+<tr><td style="text-align:left">DaysPhase3</td><td></td><td></td><td></td><td>0.003<sup>***</sup> (0.001)</td></tr>
+<tr><td style="text-align:left">Age_new1</td><td>0.005 (0.05)</td><td>-0.01 (0.03)</td><td>-0.05 (0.03)</td><td>0.06 (0.04)</td></tr>
+<tr><td style="text-align:left">Age_new2</td><td>0.09 (0.05)</td><td>0.07<sup>**</sup> (0.04)</td><td>0.02 (0.03)</td><td>0.06 (0.04)</td></tr>
+<tr><td style="text-align:left">Age_new3</td><td>0.14<sup>*</sup> (0.08)</td><td>0.08<sup>*</sup> (0.04)</td><td>0.06<sup>*</sup> (0.04)</td><td>0.09<sup>**</sup> (0.05)</td></tr>
+<tr><td style="text-align:left">DaysMax_p2:Age_new1</td><td></td><td>-0.002<sup>**</sup> (0.001)</td><td></td><td></td></tr>
+<tr><td style="text-align:left">DaysMax_p2:Age_new2</td><td></td><td>-0.003<sup>***</sup> (0.001)</td><td></td><td></td></tr>
+<tr><td style="text-align:left">DaysMax_p2:Age_new3</td><td></td><td>-0.003<sup>**</sup> (0.001)</td><td></td><td></td></tr>
+<tr><td style="text-align:left">I(DaysMax_p2_dev2)</td><td></td><td></td><td>0.0000 (0.0001)</td><td></td></tr>
+<tr><td style="text-align:left">DaysMax_p2_dev:Age_new1</td><td></td><td></td><td>-0.003<sup>**</sup> (0.001)</td><td></td></tr>
+<tr><td style="text-align:left">DaysMax_p2_dev:Age_new2</td><td></td><td></td><td>-0.003<sup>***</sup> (0.001)</td><td></td></tr>
+<tr><td style="text-align:left">DaysMax_p2_dev:Age_new3</td><td></td><td></td><td>-0.003<sup>**</sup> (0.001)</td><td></td></tr>
+<tr><td style="text-align:left">Age_new1:I(DaysMax_p2_dev2)</td><td></td><td></td><td>-0.0001 (0.0001)</td><td></td></tr>
+<tr><td style="text-align:left">Age_new2:I(DaysMax_p2_dev2)</td><td></td><td></td><td>-0.0001 (0.0001)</td><td></td></tr>
+<tr><td style="text-align:left">Age_new3:I(DaysMax_p2_dev2)</td><td></td><td></td><td>-0.0001 (0.0001)</td><td></td></tr>
+<tr><td style="text-align:left">DaysPhase3:Age_new1</td><td></td><td></td><td></td><td>0.001 (0.001)</td></tr>
+<tr><td style="text-align:left">DaysPhase3:Age_new2</td><td></td><td></td><td></td><td>0.001 (0.001)</td></tr>
+<tr><td style="text-align:left">DaysPhase3:Age_new3</td><td></td><td></td><td></td><td>0.002 (0.001)</td></tr>
+<tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Observations</td><td>4,155</td><td>29,574</td><td>29,574</td><td>24,990</td></tr>
+<tr><td style="text-align:left">Log Likelihood</td><td>-5,205.93</td><td>-33,350.44</td><td>-33,383.14</td><td>-27,994.96</td></tr>
+<tr><td style="text-align:left">Akaike Inf. Crit.</td><td>10,429.86</td><td>66,730.89</td><td>66,808.28</td><td>56,019.93</td></tr>
+<tr><td style="text-align:left">Bayesian Inf. Crit.</td><td>10,486.84</td><td>66,855.30</td><td>66,982.46</td><td>56,141.81</td></tr>
+<tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td colspan="4" style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
+</table>
