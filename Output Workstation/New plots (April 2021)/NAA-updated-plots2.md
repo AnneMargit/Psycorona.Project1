@@ -576,7 +576,8 @@ model_coef_plot <- ggplot(data = data3[which(data3$ID2 <200),],
       theme_minimal(base_size=10) + 
       scale_color_discrete() + 
       theme(plot.title = element_text(hjust = 0.5)) +
-      theme(legend.position = "none") 
+      theme(legend.position = "none") +
+       theme(panel.spacing.x = unit(1, "lines"))
 
 model_coef_plot
 ```
@@ -591,6 +592,8 @@ names(Age_labels) <- c("0","1","2","3")
 
 plot_NAAp2_slope <- ggplot(data2, aes(x= DaysMax_p2.y, fill = ..x..)) +
   geom_histogram() +
+   scale_x_continuous(breaks = seq(-0.02, 0.02, 0.01)) +
+  scale_y_continuous(breaks = seq(0, 3000, 500)) +
  scale_fill_viridis(option = "C")+
   theme_minimal(base_size=10)+
   theme(legend.position="none") + 
@@ -601,7 +604,8 @@ plot_NAAp2_slope <- ggplot(data2, aes(x= DaysMax_p2.y, fill = ..x..)) +
   labs(title="A",
        x="Regression coefficient (NAA ~ days)", y = "Count") +
   theme(plot.title = element_text(size=10)) +
-   facet_wrap(~ Age_new, labeller = labeller(Age_new = Age_labels)) 
+   facet_wrap(~ Age_new, labeller = labeller(Age_new = Age_labels)) +
+   theme(panel.spacing.x = unit(1, "lines"))
 ```
 
 ``` r
@@ -1052,7 +1056,8 @@ model_coef_plot <- ggplot(data = data3[which(data3$ID2 <200),],
       theme_minimal(base_size=12) + 
       scale_color_discrete() + 
       theme(plot.title = element_text(hjust = 0.5)) +
-      theme(legend.position = "none") 
+      theme(legend.position = "none") +
+      theme(panel.spacing.x = unit(1, "lines"))
 
 model_coef_plot
 ```
@@ -1064,6 +1069,8 @@ model_coef_plot
 ``` r
 plot_NAAp3_slope <- ggplot(data2, aes(x= DaysPhase3.y, fill = ..x..)) +
   geom_histogram() +
+   scale_x_continuous(breaks = seq(-0.02, 0.02, 0.01)) +
+  scale_y_continuous(breaks = seq(0, 3000, 500)) +
  scale_fill_viridis(option = "C") +
   theme_minimal(base_size=10)+
   theme(legend.position="none") + 
@@ -1074,7 +1081,8 @@ plot_NAAp3_slope <- ggplot(data2, aes(x= DaysPhase3.y, fill = ..x..)) +
   labs(title="B",
        x="Regression coefficient (NAA ~ days)", y = "Count") +
   theme(plot.title = element_text(size=10)) +
-   facet_wrap(~ Age_new, labeller = labeller(Age_new = Age_labels)) 
+   facet_wrap(~ Age_new, labeller = labeller(Age_new = Age_labels)) +
+   theme(panel.spacing.x = unit(1, "lines"))
 ```
 
 ``` r
