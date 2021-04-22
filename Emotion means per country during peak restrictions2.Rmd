@@ -1,0 +1,103 @@
+---
+title: "Emotion means per country during peak restrictions"
+author: "Anne Margit"
+date: "04/21/2021"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, set-options, echo=FALSE, cache= FALSE}
+options(width=1000)
+Sys.getenv('R_MAX_VSIZE')
+options(scipen=999)
+```
+
+```{r, results = "hide"}
+load("data_analyse2_p2.Rdata")
+```
+
+
+```{r, message=F}
+library(dplyr)
+library(tidyverse)
+library(papaja)
+library(ggpubr)
+library(ggplot2)
+library(rockchalk)
+library(effects)
+library(nlme)
+library(lattice)
+library(broom.mixed)
+library(purrr)
+library(stargazer)
+library("viridis")  
+```
+
+NAA
+```{r}
+country_means_NAA <- data_analyse2_p2 %>%
+  group_by(Country) %>%
+  summarise(NAA_mean= mean(NAA,na.rm=TRUE), NAA_SD = sd(NAA,na.rm=TRUE), NAA_min = min(NAA,na.rm=TRUE), NAA_max = max(NAA,na.rm=TRUE))
+```
+
+```{r}
+apa_table(country_means_NAA)
+
+country_means_NAA %>% summarise(min=min(NAA_mean, na.rm=TRUE), max=max(NAA_mean, na.rm=TRUE))
+```
+
+NAD
+```{r}
+country_means_NAD <- data_analyse2_p2 %>%
+  group_by(Country) %>%
+  summarise(NAD_mean= mean(NAD,na.rm=TRUE), NAD_SD = sd(NAD,na.rm=TRUE), NAA_min = min(NAD,na.rm=TRUE), NAD_max = max(NAD,na.rm=TRUE))
+```
+
+```{r}
+apa_table(country_means_NAD)
+
+country_means_NAD %>% summarise(min=min(NAD_mean, na.rm=TRUE), max=max(NAD_mean, na.rm=TRUE))
+```
+
+PAA
+```{r}
+country_means_PAA <- data_analyse2_p2 %>%
+  group_by(Country) %>%
+  summarise(PAA_mean= mean(PAA,na.rm=TRUE), PAA_SD = sd(PAA,na.rm=TRUE), PAA_min = min(PAA,na.rm=TRUE), PAA_max = max(PAA,na.rm=TRUE))
+```
+
+```{r}
+apa_table(country_means_PAA)
+
+country_means_PAA %>% summarise(min=min(PAA_mean, na.rm=TRUE), max=max(PAA_mean, na.rm=TRUE))
+```
+
+PAD
+```{r}
+country_means_PAD <- data_analyse2_p2 %>%
+  group_by(Country) %>%
+  summarise(PAD_mean= mean(PAD,na.rm=TRUE), PAD_SD = sd(PAD,na.rm=TRUE), PAD_min = min(PAD,na.rm=TRUE), PAD_max = max(PAD,na.rm=TRUE))
+```
+
+```{r}
+apa_table(country_means_PAD)
+
+country_means_PAD %>% summarise(min=min(PAD_mean, na.rm=TRUE), max=max(PAD_mean, na.rm=TRUE))
+```
+
+
+```{r}
+N_Country <- data_analyse2_p2 %>%
+  group_by(Country) %>%
+  summarise(Ncountry = n_distinct(ID))
+```
+
+```{r}
+apa_table(N_Country)
+```
+
+
+
