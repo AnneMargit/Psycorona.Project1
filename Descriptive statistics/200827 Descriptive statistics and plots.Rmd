@@ -1,7 +1,7 @@
 ---
-title: "Descriptive statistics and plots"
+title: "Descriptive statistics and plots Updated"
 author: "Anne Margit"
-date: "8/27/2020"
+date: "4/21/2021"
 output: github_document
 ---
 
@@ -133,6 +133,15 @@ stargazer(Wave_N_original,
 type="html", df = TRUE, out="Wave_N_original.doc",  single.row=TRUE, flip = TRUE, align = TRUE)
 ```
 
+Mean number of assessments per participant
+```{r}
+pp_numbers <- data_long_min3_str_age  %>% 
+ group_by(ID)%>%
+  summarise(n_count = n_distinct(Date))
+
+mean(pp_numbers$n_count)
+sd(pp_numbers$n_count)
+```
 
 **Number of participants and measurements per wave with imputed data**
 ```{r, results = "hide", message=F}
@@ -313,17 +322,68 @@ g_s6
 
 **Stringency Index over time per country**
 ```{r, results = "hide", message=F, warning=F}
-g_s7 <- ggplot(data_graphs1, aes(x=Date, y=StringencyIndex)) + geom_line(aes(colour=factor(Country)), size=1) + expand_limits(y=c(20, 100))
+g_s7 <- ggplot(data_graphs1, aes(x=Date, y=StringencyIndex)) + geom_line(aes(colour=factor(Country)), size=1) + 
+  theme_minimal(base_size=10) +
+  labs(title= "Severity of societal restrictions from March 2020 - July 2020", x="Date",
+       y="Stringency Index") +
+  theme(legend.position="bottom") +
+  theme(legend.title = element_blank()) +
+  theme(plot.title = element_text(hjust=0.5)) +
+  expand_limits(y=c(20, 100)) +
+  scale_x_continuous(labels=c("March", "April", "May", "June", "July"))
 
-g_s8 <- ggplot(data_graphs2, aes(x=Date, y=StringencyIndex)) + geom_line(aes(colour=factor(Country)), size=1) + expand_limits(y=c(20, 100))
+g_s8 <- ggplot(data_graphs2, aes(x=Date, y=StringencyIndex)) + geom_line(aes(colour=factor(Country)), size=1) + 
+  theme_minimal(base_size=10) +
+  labs(title= "Severity of societal restrictions from March 2020 - July 2020", x="Date",
+       y="Stringency Index") +
+  theme(legend.position="bottom") +
+  theme(legend.title = element_blank()) +
+  theme(plot.title = element_text(hjust=0.5)) +
+  expand_limits(y=c(20, 100)) +
+  scale_x_continuous(labels=c("March", "April", "May", "June", "July"))
 
-g_s9 <- ggplot(data_graphs3, aes(x=Date, y=StringencyIndex)) + geom_line(aes(colour=factor(Country)), size=1) + expand_limits(y=c(20, 100))
+g_s9 <- ggplot(data_graphs3, aes(x=Date, y=StringencyIndex)) +
+  geom_line(aes(colour=factor(Country)), size=1) + 
+  theme_minimal(base_size=10) +
+  labs(title= "Severity of societal restrictions from March 2020 - July 2020", x="Date",
+       y="Stringency Index") +
+  theme(legend.position="bottom") +
+  theme(legend.title = element_blank()) +
+  theme(plot.title = element_text(hjust=0.5)) +
+  scale_x_continuous(labels=c("March", "April", "May", "June", "July")) +
+  expand_limits(y=c(20, 100))
 
-g_s10 <- ggplot(data_graphs4, aes(x=Date, y=StringencyIndex)) + geom_line(aes(colour=factor(Country)), size=1) + expand_limits(y=c(20, 100))
+g_s10 <- ggplot(data_graphs4, aes(x=Date, y=StringencyIndex)) + geom_line(aes(colour=factor(Country)), size=1) +
+  theme_minimal(base_size=10) +
+  labs(title= "Severity of societal restrictions from March 2020 - July 2020", x="Date",
+       y="Stringency Index") +
+  theme(legend.position="bottom") +
+  theme(legend.title = element_blank()) +
+  theme(plot.title = element_text(hjust=0.5)) +
+  expand_limits(y=c(20, 100)) +
+  scale_x_continuous(labels=c("March", "April", "May", "June", "July"))
 
-g_s11 <- ggplot(data_graphs5, aes(x=Date, y=StringencyIndex)) + geom_line(aes(colour=factor(Country)), size=1) + expand_limits(y=c(20, 100))
+g_s11 <- ggplot(data_graphs5, aes(x=Date, y=StringencyIndex)) +
+  geom_line(aes(colour=factor(Country)), size=1) + 
+  theme_minimal(base_size=10) +
+  labs(title= "Severity of societal restrictions from March 2020 - July 2020", x="Date",
+       y="Stringency Index") +
+  theme(legend.position="bottom") +
+  theme(legend.title = element_blank()) +
+  theme(plot.title = element_text(hjust=0.5)) +
+  expand_limits(y=c(20, 100)) +
+  scale_x_continuous(labels=c("March", "April", "May", "June", "July"))
 
-g_s12 <- ggplot(data_graphs6, aes(x=Date, y=StringencyIndex)) + geom_line(aes(colour=factor(Country)), size=1) + expand_limits(y=c(20, 100))
+g_s12 <- ggplot(data_graphs6, aes(x=Date, y=StringencyIndex)) +
+  geom_line(aes(colour=factor(Country)), size=1) + 
+  theme_minimal(base_size=10) +
+  labs(title= "Severity of societal restrictions from March 2020 - July 2020", x="Date",
+       y="Stringency Index") +
+  theme(legend.position="bottom") +
+  theme(legend.title = element_blank()) +
+  theme(plot.title = element_text(hjust=0.5)) +
+  expand_limits(y=c(20, 100)) +
+  scale_x_continuous(labels=c("March", "April", "May", "June", "July"))
 ```
 ```{r, warning=F}
 g_s7
