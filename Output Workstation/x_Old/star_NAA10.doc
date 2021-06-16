@@ -1,0 +1,17 @@
+
+<table style="text-align:center"><tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="4"><em>Dependent variable:</em></td></tr>
+<tr><td></td><td colspan="4" style="border-bottom: 1px solid black"></td></tr>
+<tr><td style="text-align:left"></td><td>NAA</td><td>NAD</td><td>PAA</td><td>PAD</td></tr>
+<tr><td style="text-align:left"></td><td>(1)</td><td>(2)</td><td>(3)</td><td>(4)</td></tr>
+<tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Intercept</td><td>-0.004<sup>**</sup> (0.002)</td><td>0.003 (0.002)</td><td>0.01<sup>***</sup> (0.002)</td><td>0.005<sup>**</sup> (0.002)</td></tr>
+<tr><td style="text-align:left">SI</td><td>-0.21<sup>***</sup> (0.02)</td><td>-0.01 (0.02)</td><td>0.15<sup>***</sup> (0.02)</td><td>0.17<sup>***</sup> (0.02)</td></tr>
+<tr><td style="text-align:left">Max SI (during)</td><td>-0.21<sup>***</sup> (0.01)</td><td>0.01 (0.01)</td><td>0.22<sup>***</sup> (0.01)</td><td>0.16<sup>***</sup> (0.01)</td></tr>
+<tr><td style="text-align:left">Max SI (after)</td><td>0.01<sup>***</sup> (0.002)</td><td>0.001 (0.002)</td><td>-0.02<sup>***</sup> (0.003)</td><td>-0.01<sup>***</sup> (0.002)</td></tr>
+<tr><td style="text-align:left">SI x Max SI (during)</td><td>0.01<sup>***</sup> (0.002)</td><td>-0.002 (0.002)</td><td>-0.01<sup>***</sup> (0.002)</td><td>-0.01<sup>***</sup> (0.002)</td></tr>
+<tr><td style="text-align:left">SI x Max SI (after)</td><td>2.47<sup>***</sup> (0.04)</td><td>2.24<sup>***</sup> (0.04)</td><td>2.45<sup>***</sup> (0.04)</td><td>2.83<sup>***</sup> (0.04)</td></tr>
+<tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Observations</td><td>58,719</td><td>58,719</td><td>58,719</td><td>58,719</td></tr>
+<tr><td style="text-align:left">Log Likelihood</td><td>-61,049.33</td><td>-65,244.98</td><td>-64,315.41</td><td>-66,056.70</td></tr>
+<tr><td style="text-align:left">Akaike Inf. Crit.</td><td>122,122.70</td><td>130,514.00</td><td>128,654.80</td><td>132,137.40</td></tr>
+<tr><td style="text-align:left">Bayesian Inf. Crit.</td><td>122,230.40</td><td>130,621.70</td><td>128,762.60</td><td>132,245.20</td></tr>
+<tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td colspan="4" style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
+</table>

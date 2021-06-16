@@ -1,0 +1,165 @@
+---
+title: "HGiNL Baseline"
+author: "Anne Margit"
+date: "11/30/2020"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, set-options, echo=FALSE, cache= FALSE}
+options(width=1000)
+```
+
+install.packages("lavaan")
+install.packages("GPArotation")
+
+```{r, message=F}
+library(dplyr)
+library(tidyverse)
+library(lavaan)
+library(GPArotation)
+library(psych)
+library(ggpubr)
+library(ggplot2)
+library(lme4)
+library(lmerTest)
+library(rockchalk)
+library(effects)
+library(nlme)
+library(lattice)
+```
+
+```{r}
+demoHG <- profile_export %>%
+  select(profile_id, gender, birth_year, birth_month, country)
+
+baselineHG <- left_join(stemming, demoHG, by = "profile_id")
+```
+
+
+```{r}
+baselineHG <- baselineHG %>%
+  rename(completed_at_b = completed_at,
+    Geinteresseerd_b = v_1,
+         Bedroefd_b = v_2,
+         Opgewekt_b = v_3,
+         Teneergeslagen_b = v_4,
+         Sterk_b = v_5,
+         Schuldig_b = v_6,
+         Angstig_b = v_7,
+         Vijandig_b = v_8,
+         Enthousiast_b = v_9,
+         Zelfverzekerd_b = v_10,
+         Geirriteerd_b = v_11,
+         Alert_b = v_12,
+         Beschaamd_b = v_13,
+         Inspiratie_b = v_14,
+         Gespannen_b = v_15,
+         Vastberaden_b = v_16,
+         Aandachtig_b = v_17,
+         Zenuwachtig_b = v_18,
+         Energiek_b = v_19,
+         Bang_b = v_20)
+```
+
+```{r}
+
+
+```
+
+# Completed at = wanneer emoties gemeten zijn
+```{r}
+emoHG <- baselineHG %>%
+  select(profile_id, completed_at_b, gender, birth_year, birth_month, country, Geinteresseerd_b,
+         Bedroefd_b, Opgewekt_b, Teneergeslagen_b, Sterk_b, Schuldig_b, Angstig_b, Vijandig_b,
+         Enthousiast_b, Zelfverzekerd_b, Geirriteerd_b, Alert_b, Beschaamd_b, Inspiratie_b, 
+         Gespannen_b, Vastberaden_b, Aandachtig_b, Zenuwachtig_b, Energiek_b, Bang_b)
+```
+
+```{r}
+emoHG_red <- emoHG %>%
+select(profile_id, completed_at_b, Angstig_b, Geirriteerd_b, Zenuwachtig_b, Bedroefd_b, 
+       Teneergeslagen_b, Inspiratie_b, Energiek_b)
+```
+
+```{r}
+emoPsy <- X200421_HNDPsyC19_Base
+```
+
+```{r}
+emoPsy <- emoPsy %>%
+  rename(Angstig = v_1,
+         Verveeld = v_2,
+         Kalm = v_3,
+         Tevreden = v_4,
+         Somber = v_5,
+         Energiek = v_6,
+         Opgewonden = v_7,
+         Nerveus = v_8,
+         Uitgeput = v_9,
+         Geinspireerd = v_10,
+         Ontspannen = v_11,
+         Alert = v_12,
+         Schuldig = v_13,
+         Gespannen = v_14,
+         Boos = v_15,
+         Beschaamd = v_16)
+```
+
+```{r}
+emoPsy <- emoPsy %>%
+  select(profile_id, completed_at, Angstig, Verveeld, Kalm, Tevreden, Somber,
+         Energiek, Opgewonden, Nerveus, Uitgeput, Geinspireerd, Ontspannen,
+         Alert, Schuldig, Gespannen, Boos, Beschaamd)
+```
+
+emoPsy_red <- emoPsy %>%
+select(profile_id, completed_at, Angstig, Kalm, Somber, Energiek, Nerveus, Uitgeput, Geinspireerd, Ontspannen, Boos)
+
+
+emodata <- left_join(emoHG_red, emoPsy_red, by = "profile_id")
+
+```{r}
+parallel <- fa.parallel(emoHG_red[,-1], fm="ml", main="Scree plot", fa= "pc", n.iter=50, SMC=TRUE, quant = .95 )
+```
+
+NAA: Angstig, Vijandig, Geirriteerd, Gespannen, Zenuwachtig, Bang
+NAD: Bedroefd, Teneergeslagen, Schuldig, Beschaamd, 
+PAA: Geinteresseerd, Opgewekt, Sterk, Enthousiast, Alert, Inspiratie, Energiek, 
+
+Anders: Zelfverzekerd, Vastberaden, Aandachtig, 
+
+```{r}
+threepca <- principal(emoHG_red[,-1], nfactors = 3, rotate = "varimax")
+threepca
+```
+
+
+```{r}
+model <- '
+f1 =~ Angstig + Vijandig + Geirriteerd + Gespannen + Zenuwachtig + Bang
+f2 =~ Bedroefd + Teneergeslagen + Schuldig + Beschaamd
+f3 =~ Geinteresseerd + Opgewekt + Sterk + Enthousiast + Alert + Inspiratie + Energiek
+'
+```
+
+```{r}
+fit <- cfa(model, data = emoHG, std.lv=TRUE, missing="fiml", estimator = "MLR")
+```
+
+
+```{r}
+summary(fit)
+```
+
+
+
+
+
+
+
+
+

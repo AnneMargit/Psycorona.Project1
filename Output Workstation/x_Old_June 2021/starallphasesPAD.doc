@@ -1,0 +1,33 @@
+
+<table style="text-align:center"><tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="4"><em>Dependent variable:</em></td></tr>
+<tr><td></td><td colspan="4" style="border-bottom: 1px solid black"></td></tr>
+<tr><td style="text-align:left"></td><td colspan="4">PAD</td></tr>
+<tr><td style="text-align:left"></td><td>(1)</td><td>(2)</td><td>(3)</td><td>(4)</td></tr>
+<tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Constant</td><td>2.943<sup>***</sup> (0.102)</td><td>2.988<sup>***</sup> (0.059)</td><td>3.035<sup>***</sup> (0.055)</td><td>3.018<sup>***</sup> (0.061)</td></tr>
+<tr><td style="text-align:left">Gender1</td><td>-0.274<sup>***</sup> (0.037)</td><td>-0.270<sup>***</sup> (0.019)</td><td>-0.264<sup>***</sup> (0.019)</td><td>-0.253<sup>***</sup> (0.022)</td></tr>
+<tr><td style="text-align:left">Edu</td><td>0.017 (0.014)</td><td>0.031<sup>***</sup> (0.006)</td><td>0.031<sup>***</sup> (0.006)</td><td>0.029<sup>***</sup> (0.007)</td></tr>
+<tr><td style="text-align:left">DaysMax_p2</td><td></td><td>0.003<sup>**</sup> (0.001)</td><td></td><td></td></tr>
+<tr><td style="text-align:left">DaysMax_p2_dev</td><td></td><td></td><td>0.003<sup>**</sup> (0.002)</td><td></td></tr>
+<tr><td style="text-align:left">DaysPhase3</td><td></td><td></td><td></td><td>-0.002<sup>*</sup> (0.001)</td></tr>
+<tr><td style="text-align:left">Age_new1</td><td>-0.160<sup>***</sup> (0.052)</td><td>-0.195<sup>***</sup> (0.037)</td><td>-0.146<sup>***</sup> (0.031)</td><td>-0.061 (0.041)</td></tr>
+<tr><td style="text-align:left">Age_new2</td><td>-0.007 (0.055)</td><td>-0.130<sup>***</sup> (0.038)</td><td>-0.054<sup>*</sup> (0.031)</td><td>0.017 (0.040)</td></tr>
+<tr><td style="text-align:left">Age_new3</td><td>0.223<sup>***</sup> (0.079)</td><td>0.058 (0.046)</td><td>0.141<sup>***</sup> (0.037)</td><td>0.199<sup>***</sup> (0.046)</td></tr>
+<tr><td style="text-align:left">DaysMax_p2:Age_new1</td><td></td><td>0.002<sup>**</sup> (0.001)</td><td></td><td></td></tr>
+<tr><td style="text-align:left">DaysMax_p2:Age_new2</td><td></td><td>0.003<sup>***</sup> (0.001)</td><td></td><td></td></tr>
+<tr><td style="text-align:left">DaysMax_p2:Age_new3</td><td></td><td>0.003<sup>**</sup> (0.001)</td><td></td><td></td></tr>
+<tr><td style="text-align:left">I(DaysMax_p2_dev2)</td><td></td><td></td><td>-0.0001<sup>**</sup> (0.0001)</td><td></td></tr>
+<tr><td style="text-align:left">DaysMax_p2_dev:Age_new1</td><td></td><td></td><td>0.003<sup>**</sup> (0.001)</td><td></td></tr>
+<tr><td style="text-align:left">DaysMax_p2_dev:Age_new2</td><td></td><td></td><td>0.003<sup>***</sup> (0.001)</td><td></td></tr>
+<tr><td style="text-align:left">DaysMax_p2_dev:Age_new3</td><td></td><td></td><td>0.003<sup>**</sup> (0.001)</td><td></td></tr>
+<tr><td style="text-align:left">Age_new1:I(DaysMax_p2_dev2)</td><td></td><td></td><td>-0.00002 (0.0001)</td><td></td></tr>
+<tr><td style="text-align:left">Age_new2:I(DaysMax_p2_dev2)</td><td></td><td></td><td>0.00000 (0.0001)</td><td></td></tr>
+<tr><td style="text-align:left">Age_new3:I(DaysMax_p2_dev2)</td><td></td><td></td><td>0.00004 (0.0001)</td><td></td></tr>
+<tr><td style="text-align:left">DaysPhase3:Age_new1</td><td></td><td></td><td></td><td>0.003<sup>**</sup> (0.001)</td></tr>
+<tr><td style="text-align:left">DaysPhase3:Age_new2</td><td></td><td></td><td></td><td>0.004<sup>***</sup> (0.001)</td></tr>
+<tr><td style="text-align:left">DaysPhase3:Age_new3</td><td></td><td></td><td></td><td>0.005<sup>***</sup> (0.001)</td></tr>
+<tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Observations</td><td>4,155</td><td>29,574</td><td>29,574</td><td>24,990</td></tr>
+<tr><td style="text-align:left">Log Likelihood</td><td>-5,445.532</td><td>-34,199.030</td><td>-34,190.770</td><td>-28,499.180</td></tr>
+<tr><td style="text-align:left">Akaike Inf. Crit.</td><td>10,909.060</td><td>68,430.060</td><td>68,423.540</td><td>57,030.350</td></tr>
+<tr><td style="text-align:left">Bayesian Inf. Crit.</td><td>10,966.040</td><td>68,562.770</td><td>68,597.720</td><td>57,160.360</td></tr>
+<tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td colspan="4" style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
+</table>

@@ -41,7 +41,7 @@ NAA
 country_means_NAA <- data_analyse2_p2 %>%
   group_by(Country) %>%
   summarise(NAA_mean= mean(NAA,na.rm=TRUE), NAA_SD = sd(NAA,na.rm=TRUE), NAA_min = min(NAA,na.rm=TRUE), NAA_max = max(NAA,na.rm=TRUE)) %>%
-  mutate(across(2:5, round, 3)) 
+  mutate(across(2:5, round, 2)) 
 ```
 
 ```{r}
@@ -55,7 +55,7 @@ NAD
 country_means_NAD <- data_analyse2_p2 %>%
   group_by(Country) %>%
   summarise(NAD_mean= mean(NAD,na.rm=TRUE), NAD_SD = sd(NAD,na.rm=TRUE), NAA_min = min(NAD,na.rm=TRUE), NAD_max = max(NAD,na.rm=TRUE)) %>%
-   mutate(across(2:5, round, 3))
+   mutate(across(2:5, round, 2))
 ```
 
 ```{r}
@@ -69,7 +69,7 @@ PAA
 country_means_PAA <- data_analyse2_p2 %>%
   group_by(Country) %>%
   summarise(PAA_mean= mean(PAA,na.rm=TRUE), PAA_SD = sd(PAA,na.rm=TRUE), PAA_min = min(PAA,na.rm=TRUE), PAA_max = max(PAA,na.rm=TRUE)) %>%
-   mutate(across(2:5, round, 3))
+   mutate(across(2:5, round, 2))
 ```
 
 ```{r}
@@ -83,7 +83,7 @@ PAD
 country_means_PAD <- data_analyse2_p2 %>%
   group_by(Country) %>%
   summarise(PAD_mean= mean(PAD,na.rm=TRUE), PAD_SD = sd(PAD,na.rm=TRUE), PAD_min = min(PAD,na.rm=TRUE), PAD_max = max(PAD,na.rm=TRUE)) %>%
-   mutate(across(2:5, round, 3))
+   mutate(across(2:5, round, 2))
 ```
 
 ```{r}
