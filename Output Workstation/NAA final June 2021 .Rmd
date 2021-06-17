@@ -302,16 +302,23 @@ rownames_to_column("ID")
 model_coefs_NAAp2 <- model_coefs_NAAp2 %>%
 separate(col = 1, into = c("Country", "ID"), sep = "\\/") %>%
 dplyr::rename("Intercept" = "(Intercept)")
+
+data_agep2 <- data_analyse2_p2 %>%
+  select(ID, Age_new) %>%
+  group_by(ID) %>%
+  slice(1) %>%
+  ungroup()
+
+data_NAAp2 <- left_join(model_coefs_NAAp2, data_agep2, by= "ID")
   
-data_NAAp2 <- left_join(data_analyse2_p2, model_coefs_NAAp2, by= "ID")
 
 data_NAAp2 <- data_NAAp2 %>%
-  mutate(reg_coef_Age1 = .[[52]] + .[[56]],
-         reg_coef_Age2 = .[[52]] + .[[57]],
-         reg_coef_Age3 = .[[52]] + .[[58]])
+  mutate(reg_coef_Age1 = .[[6]] + .[[10]],
+         reg_coef_Age2 = .[[6]] + .[[11]],
+         reg_coef_Age3 = .[[6]] + .[[12]])
 
 data_NAAp2 <- data_NAAp2 %>%
-  mutate(reg_coef = case_when(Age_new == 0 ~ DaysMax_p2.y,
+  mutate(reg_coef = case_when(Age_new == 0 ~ DaysMax_p2,
                               Age_new == 1 ~ reg_coef_Age1,
                               Age_new == 2 ~ reg_coef_Age2,
                               Age_new == 3 ~ reg_coef_Age3))
@@ -327,14 +334,14 @@ names(Age_labels) <- c("0","1","2","3")
 plot_NAAp2_slope <- ggplot(data_NAAp2, aes(x= reg_coef, fill = ..x..)) +
   geom_histogram() +
    scale_x_continuous(breaks = seq(-0.02, 0.02, 0.01)) +
-  scale_y_continuous(breaks = seq(0, 3000, 500)) +
+  scale_y_continuous(breaks = seq(0, 700, 100)) +
  scale_fill_viridis(option = "C")+
   theme_minimal(base_size=10)+
   theme(legend.position="none") + 
   geom_vline(xintercept = 0, linetype="dashed", 
                 color = "grey", size=.5) + 
   xlim(-0.02, 0.02)+
-  ylim(0,2500)+
+  ylim(0,700)+
   labs(title="A",
        x="Regression coefficient (NA ~ days)", y = "Count") +
   theme(plot.title = element_text(size=10)) +
@@ -356,17 +363,17 @@ data_NAAp2 %>%
   filter(reg_coef > 0) %>%
   summarise(N = n())
 
-# 2175
+# 449
 
 data_NAAp2 %>%
   filter(reg_coef < 0) %>%
   summarise(N = n())
 
-#27411
+#8765
 
-2175 / (2175 + 27411) * 100
+449 / (449 + 8765) * 100
 
-#7.35%
+#4.87%
 
 ```
 
@@ -374,12 +381,12 @@ data_NAAp2 %>%
 Mean regression coefficients per country
 ```{r, message=F, comment=NA}
 reg_country_NAA <- data_NAAp2 %>%
-  group_by(Country.x) %>%
+  group_by(Country) %>%
   summarise(reg_mean = mean(reg_coef, na.rm=TRUE), reg_sd = sd (reg_coef, na.rm=TRUE), reg_min = min(reg_coef, na.rm=TRUE), reg_max=max(reg_coef, na.rm=TRUE)) %>%
   mutate(across(2:5, round, 3)) 
 
 IC_country_NAA <- data_NAAp2 %>%
-  group_by(Country.x) %>%
+  group_by(Country) %>%
   summarise(IC_mean = mean(Intercept, na.rm=TRUE), IC_sd = sd (Intercept, na.rm=TRUE)) %>%
   mutate(across(2:3, round, 3)) 
 
@@ -560,16 +567,22 @@ model_coefs_NAAp3 <- model_coefs_NAAp3 %>%
 separate(col = 1, into = c("Country", "ID"), sep = "\\/") %>%
 dplyr::rename("Intercept" = "(Intercept)")
   
-data_NAA_p3 <- left_join(data_analyse2_p3, model_coefs_NAAp3, by= "ID")
+data_agep3 <- data_analyse2_p3 %>%
+  select(ID, Age_new) %>%
+  group_by(ID) %>%
+  slice(1) %>%
+  ungroup()
+
+data_NAAp3 <- left_join(model_coefs_NAAp3, data_agep3, by= "ID")
   
 
-data_NAA_p3 <- data_NAA_p3 %>%
-  mutate(reg_coef_Age1 = .[[53]] + .[[57]],
-         reg_coef_Age2 = .[[53]] + .[[58]],
-         reg_coef_Age3 = .[[53]] + .[[59]])
+data_NAAp3 <- data_NAAp3 %>%
+  mutate(reg_coef_Age1 = .[[6]] + .[[10]],
+         reg_coef_Age2 = .[[6]] + .[[11]],
+         reg_coef_Age3 = .[[6]] + .[[12]])
 
-data_NAA_p3 <- data_NAA_p3 %>%
-  mutate(reg_coef = case_when(Age_new == 0 ~ DaysPhase3.y,
+data_NAAp3 <- data_NAAp3 %>%
+  mutate(reg_coef = case_when(Age_new == 0 ~ DaysPhase3,
                               Age_new == 1 ~ reg_coef_Age1,
                               Age_new == 2 ~ reg_coef_Age2,
                               Age_new == 3 ~ reg_coef_Age3))
@@ -578,17 +591,17 @@ data_NAA_p3 <- data_NAA_p3 %>%
 
 # Random slope variation plot
 ```{r, message=F}
-plot_NAAp3_slope <- ggplot(data_NAA_p3, aes(x= reg_coef, fill = ..x..)) +
+plot_NAAp3_slope <- ggplot(data_NAAp3, aes(x= reg_coef, fill = ..x..)) +
   geom_histogram() +
    scale_x_continuous(breaks = seq(-0.02, 0.02, 0.01)) +
-  scale_y_continuous(breaks = seq(0, 3000, 500)) +
+  scale_y_continuous(breaks = seq(0, 700, 50)) +
  scale_fill_viridis(option = "C") +
   theme_minimal(base_size=10)+
   theme(legend.position="none") + 
    geom_vline(xintercept = 0, linetype="dashed", 
                 color = "grey", size=.5) + 
   xlim(-0.02, 0.02)+
-  ylim(0,2500)+
+  ylim(0,700)+
   labs(title="B",
        x="Regression coefficient (NAA ~ days)", y = "Count") +
   theme(plot.title = element_text(size=10)) +
@@ -616,22 +629,22 @@ plot_NAAp2and3_slope
 
 Distribution 
 ```{r}
-data_NAA_p3<- as_tibble(data_NAA_p3)
-data_NAA_p3 %>%
+data_NAAp3<- as_tibble(data_NAAp3)
+data_NAAp3 %>%
   filter(reg_coef > 0) %>%
   summarise(N = n())
 
-#4222
+#968
 
-data_NAA_p3 %>%
+data_NAAp3 %>%
   filter(reg_coef < 0) %>%
   summarise(N = n())
 
-#20788
+#6078
 
-4222 / (4222 + 20788) * 100
+968 / (6078 + 968) * 100
 
-#16.88%
+#13.74%
 ```
 
 ```{r}

@@ -286,16 +286,22 @@ rownames_to_column("ID")
 model_coefs_NADp2 <- model_coefs_NADp2 %>%
 separate(col = 1, into = c("Country", "ID"), sep = "\\/") %>%
 dplyr::rename("Intercept" = "(Intercept)")
-  
-data_NADp2 <- left_join(data_analyse2_p2, model_coefs_NADp2, by= "ID")
+
+data_agep2 <- data_analyse2_p2 %>%
+  select(ID, Age_new) %>%
+  group_by(ID) %>%
+  slice(1) %>%
+  ungroup()
+
+data_NADp2 <- left_join(model_coefs_NADp2, data_agep2, by= "ID")
 
 data_NADp2 <- data_NADp2 %>%
-  mutate(reg_coef_Age1 = .[[52]] + .[[56]],
-         reg_coef_Age2 = .[[52]] + .[[57]],
-         reg_coef_Age3 = .[[52]] + .[[58]])
+  mutate(reg_coef_Age1 = .[[6]] + .[[10]],
+         reg_coef_Age2 = .[[6]] + .[[11]],
+         reg_coef_Age3 = .[[6]] + .[[12]])
 
 data_NADp2 <- data_NADp2 %>%
-  mutate(reg_coef = case_when(Age_new == 0 ~ DaysMax_p2.y,
+  mutate(reg_coef = case_when(Age_new == 0 ~ DaysMax_p2,
                               Age_new == 1 ~ reg_coef_Age1,
                               Age_new == 2 ~ reg_coef_Age2,
                               Age_new == 3 ~ reg_coef_Age3))
@@ -313,7 +319,8 @@ names(Age_labels) <- c("0","1","2","3")
 plot_NADp2_slope <- ggplot(data_NADp2, aes(x= reg_coef, fill = ..x..)) +
   geom_histogram() +
   scale_x_continuous(breaks = seq(-0.02, 0.02, 0.01)) +
-  scale_y_continuous(breaks = seq(0, 4000, 1000)) +
+  scale_y_continuous(breaks = seq(0, 1500, 250)) +
+  ylim(0,1500) +
  scale_fill_viridis(option = "C")+
   theme_minimal(base_size=10)+
   theme(legend.position="none") + 
@@ -341,28 +348,28 @@ data_NADp2 %>%
   filter(reg_coef > 0) %>%
   summarise(N = n())
 
-#10254
+#2927
 
 data_NADp2 %>%
   filter(reg_coef < 0) %>%
   summarise(N = n())
 
-#19332
+#6287
 
-10254 / (10254 + 19332) * 100
+2927 / (2927 + 6287) * 100
 
-#34.66%
+#31.77%
 
 ```
 Mean regression coefficients per country
 ```{r, message=F, comment=NA}
 reg_country_NAD <- data_NADp2 %>%
-  group_by(Country.x) %>%
+  group_by(Country) %>%
   summarise(reg_mean = mean(reg_coef, na.rm=TRUE), reg_sd = sd (reg_coef, na.rm=TRUE), reg_min = min(reg_coef, na.rm=TRUE), reg_max=max(reg_coef, na.rm=TRUE)) %>%
    mutate(across(2:5, round, 3))
 
 IC_country_NAD <- data_NADp2 %>%
-  group_by(Country.x) %>%
+  group_by(Country) %>%
   summarise(IC_mean = mean(Intercept, na.rm=TRUE), IC_sd = sd (Intercept, na.rm=TRUE)) %>%
   mutate(across(2:3, round, 3)) 
 
@@ -536,15 +543,21 @@ model_coefs_NADp3 <- model_coefs_NADp3 %>%
 separate(col = 1, into = c("Country", "ID"), sep = "\\/") %>%
 dplyr::rename("Intercept" = "(Intercept)")
   
-data_NADp3 <- left_join(data_analyse2_p3, model_coefs_NADp3, by= "ID")
+data_agep3 <- data_analyse2_p3 %>%
+  select(ID, Age_new) %>%
+  group_by(ID) %>%
+  slice(1) %>%
+  ungroup()
+
+data_NADp3 <- left_join(model_coefs_NADp3, data_agep3, by= "ID")
   
 data_NADp3 <- data_NADp3 %>%
-  mutate(reg_coef_Age1 = .[[53]] + .[[57]],
-         reg_coef_Age2 = .[[53]] + .[[58]],
-         reg_coef_Age3 = .[[53]] + .[[59]])
+  mutate(reg_coef_Age1 = .[[6]] + .[[10]],
+         reg_coef_Age2 = .[[6]] + .[[10]],
+         reg_coef_Age3 = .[[6]] + .[[10]])
 
 data_NADp3 <- data_NADp3 %>%
-  mutate(reg_coef = case_when(Age_new == 0 ~ DaysPhase3.y,
+  mutate(reg_coef = case_when(Age_new == 0 ~ DaysPhase3,
                               Age_new == 1 ~ reg_coef_Age1,
                               Age_new == 2 ~ reg_coef_Age2,
                               Age_new == 3 ~ reg_coef_Age3))
@@ -556,7 +569,8 @@ data_NADp3 <- data_NADp3 %>%
 plot_NADp3_slope <- ggplot(data_NADp3, aes(x= reg_coef, fill = ..x..)) +
   geom_histogram() +
   scale_x_continuous(breaks = seq(-0.02, 0.02, 0.01)) +
-  scale_y_continuous(breaks = seq(0, 4000, 1000)) +
+  scale_y_continuous(breaks = seq(0, 1500, 250)) +
+  ylim(0, 1500) +
  scale_fill_viridis(option = "C") +
   theme_minimal(base_size=10)+
   theme(legend.position="none") + 
@@ -593,17 +607,17 @@ data_NADp3 %>%
   filter(reg_coef > 0) %>%
   summarise(N = n())
 
-#9248
+#2408
 
 data_NADp3 %>%
   filter(reg_coef < 0) %>%
   summarise(N = n())
 
-#15762
+#4638
 
-9248 / (9248 + 15762) * 100
+2408 / (2408 + 4638) * 100
 
-#36.98%
+#34.18%
 
 ```
 

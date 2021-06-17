@@ -285,15 +285,21 @@ model_coefs_PADp2 <- model_coefs_PADp2 %>%
 separate(col = 1, into = c("Country", "ID"), sep = "\\/") %>%
 dplyr::rename("Intercept" = "(Intercept)")
   
-data_PADp2 <- left_join(data_analyse2_p2, model_coefs_PADp2, by= "ID")
+data_agep2 <- data_analyse2_p2 %>%
+  select(ID, Age_new) %>%
+  group_by(ID) %>%
+  slice(1) %>%
+  ungroup()
+
+data_PADp2 <- left_join(model_coefs_PADp2, data_agep2, by= "ID")
 
 data_PADp2 <- data_PADp2 %>%
-  mutate(reg_coef_Age1 = .[[52]] + .[[56]],
-         reg_coef_Age2 = .[[52]] + .[[57]],
-         reg_coef_Age3 = .[[52]] + .[[58]])
+  mutate(reg_coef_Age1 = .[[6]] + .[[10]],
+         reg_coef_Age2 = .[[6]] + .[[11]],
+         reg_coef_Age3 = .[[6]] + .[[12]])
 
 data_PADp2 <- data_PADp2 %>%
-  mutate(reg_coef = case_when(Age_new == 0 ~ DaysMax_p2.y,
+  mutate(reg_coef = case_when(Age_new == 0 ~ DaysMax_p2,
                               Age_new == 1 ~ reg_coef_Age1,
                               Age_new == 2 ~ reg_coef_Age2,
                               Age_new == 3 ~ reg_coef_Age3))
@@ -310,7 +316,7 @@ plot_PADp2_slope <- ggplot(data_PADp2, aes(x= reg_coef, fill = ..x..)) +
   geom_histogram() +
  scale_fill_viridis(option = "C")+
   scale_x_continuous(breaks = seq(-0.02, 0.02, 0.01)) +
-  scale_y_continuous(breaks = seq(0, 2000, 500), limits=c(0,2000)) +
+  scale_y_continuous(breaks = seq(0, 700, 200), limits=c(0,700)) +
   theme_minimal(base_size=10)+
   theme(legend.position="none") + 
   geom_vline(xintercept = 0, linetype="dashed", 
@@ -335,31 +341,31 @@ data_PADp2 %>%
   filter(reg_coef > 0) %>%
   summarise(N = n())
 
-#27201
+#8649
 
 data_PADp2 %>%
   filter(reg_coef < 0) %>%
   summarise(N = n())
 
-#2385
+#565
 
 #Decrease in PAD:
 
-2385 / (2385 + 27201) * 100
+565 / (565 + 8649) * 100
 
-#8.06%
+#6.13%
 
 ```
 
 Mean regression coefficients per country
 ```{r, message=F, comment=NA}
 reg_country_PAD <- data_PADp2 %>%
-  group_by(Country.x) %>%
+  group_by(Country) %>%
   summarise(reg_mean = mean(reg_coef, na.rm=TRUE), reg_sd = sd (reg_coef, na.rm=TRUE), reg_min = min(reg_coef, na.rm=TRUE), reg_max=max(reg_coef, na.rm=TRUE)) %>%
   mutate(across(2:5, round, 3))
 
 IC_country_PAD <- data_PADp2 %>%
-  group_by(Country.x) %>%
+  group_by(Country) %>%
   summarise(IC_mean = mean(Intercept, na.rm=TRUE), IC_sd = sd (Intercept, na.rm=TRUE)) %>%
   mutate(across(2:3, round, 3)) 
 
@@ -532,15 +538,21 @@ model_coefs_PADp3 <- model_coefs_PADp3 %>%
 separate(col = 1, into = c("Country", "ID"), sep = "\\/") %>%
 dplyr::rename("Intercept" = "(Intercept)")
   
-data_PADp3 <- left_join(data_analyse2_p3, model_coefs_PADp3, by= "ID")
+data_agep3 <- data_analyse2_p3 %>%
+  select(ID, Age_new) %>%
+  group_by(ID) %>%
+  slice(1) %>%
+  ungroup()
+
+data_PADp3 <- left_join(model_coefs_PADp3, data_agep3, by= "ID")
   
 data_PADp3 <- data_PADp3 %>%
-  mutate(reg_coef_Age1 = .[[53]] + .[[57]],
-         reg_coef_Age2 = .[[53]] + .[[58]],
-         reg_coef_Age3 = .[[53]] + .[[59]])
+  mutate(reg_coef_Age1 = .[[6]] + .[[10]],
+         reg_coef_Age2 = .[[6]] + .[[11]],
+         reg_coef_Age3 = .[[6]] + .[[12]])
 
 data_PADp3 <- data_PADp3 %>%
-  mutate(reg_coef = case_when(Age_new == 0 ~ DaysPhase3.y,
+  mutate(reg_coef = case_when(Age_new == 0 ~ DaysPhase3,
                               Age_new == 1 ~ reg_coef_Age1,
                               Age_new == 2 ~ reg_coef_Age2,
                               Age_new == 3 ~ reg_coef_Age3))
@@ -551,7 +563,7 @@ data_PADp3 <- data_PADp3 %>%
 plot_PADp3_slope <- ggplot(data_PADp3, aes(x= reg_coef, fill = ..x..)) +
   geom_histogram() +
   scale_x_continuous(breaks = seq(-0.02, 0.02, 0.01)) +
-  scale_y_continuous(breaks = seq(0, 2000, 500), limits=c(0,2000)) +
+  scale_y_continuous(breaks = seq(0, 700, 200), limits=c(0,700)) +
  scale_fill_viridis(option = "C") +
   theme_minimal(base_size=10)+
   theme(legend.position="none") + 
@@ -589,19 +601,19 @@ data_PADp3 %>%
   filter(reg_coef > 0) %>%
   summarise(N = n())
 
-#16019
+#4478
 
 data_PADp3 %>%
   filter(reg_coef < 0) %>%
   summarise(N = n())
 
-#8991
+#2568
 
 #Decrease in PAD:
 
-8991 / (8991 + 16019) * 100
+2568 / (2568 + 4478) * 100
 
-#35.95%
+#36.44%
 
 ```
 

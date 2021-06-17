@@ -1,0 +1,36 @@
+
+<table style="text-align:center"><tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Country</td><td>IC_mean</td><td>IC_sd</td></tr>
+<tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Argentina</td><td>2.355</td><td>0.614</td></tr>
+<tr><td style="text-align:left">Australia</td><td>2.668</td><td>0.612</td></tr>
+<tr><td style="text-align:left">Brazil</td><td>2.549</td><td>0.683</td></tr>
+<tr><td style="text-align:left">Canada</td><td>2.928</td><td>0.785</td></tr>
+<tr><td style="text-align:left">Chile</td><td>2.803</td><td>0.691</td></tr>
+<tr><td style="text-align:left">Croatia</td><td>2.327</td><td>0.635</td></tr>
+<tr><td style="text-align:left">France</td><td>2.410</td><td>0.625</td></tr>
+<tr><td style="text-align:left">Germany</td><td>2.439</td><td>0.580</td></tr>
+<tr><td style="text-align:left">Greece</td><td>2.526</td><td>0.647</td></tr>
+<tr><td style="text-align:left">Hungary</td><td>2.599</td><td>0.698</td></tr>
+<tr><td style="text-align:left">Indonesia</td><td>2.626</td><td>0.693</td></tr>
+<tr><td style="text-align:left">Italy</td><td>2.450</td><td>0.647</td></tr>
+<tr><td style="text-align:left">Japan</td><td>2.550</td><td>0.605</td></tr>
+<tr><td style="text-align:left">Kazakhstan</td><td>2.309</td><td>0.756</td></tr>
+<tr><td style="text-align:left">Kosovo</td><td>2.396</td><td>0.526</td></tr>
+<tr><td style="text-align:left">Malaysia</td><td>2.415</td><td>0.670</td></tr>
+<tr><td style="text-align:left">Netherlands</td><td>2.289</td><td>0.608</td></tr>
+<tr><td style="text-align:left">Peru</td><td>2.786</td><td>0.372</td></tr>
+<tr><td style="text-align:left">Philippines</td><td>2.578</td><td>0.586</td></tr>
+<tr><td style="text-align:left">Poland</td><td>2.758</td><td>0.760</td></tr>
+<tr><td style="text-align:left">Romania</td><td>2.439</td><td>0.685</td></tr>
+<tr><td style="text-align:left">Russia</td><td>2.794</td><td>0.641</td></tr>
+<tr><td style="text-align:left">Saudi Arabia</td><td>2.460</td><td>0.624</td></tr>
+<tr><td style="text-align:left">Serbia</td><td>2.472</td><td>0.636</td></tr>
+<tr><td style="text-align:left">Singapore</td><td>2.653</td><td>0.636</td></tr>
+<tr><td style="text-align:left">South Africa</td><td>2.607</td><td>0.689</td></tr>
+<tr><td style="text-align:left">South Korea</td><td>3.184</td><td>1.192</td></tr>
+<tr><td style="text-align:left">Spain</td><td>2.448</td><td>0.661</td></tr>
+<tr><td style="text-align:left">Turkey</td><td>2.596</td><td>0.646</td></tr>
+<tr><td style="text-align:left">Ukraine</td><td>2.381</td><td>0.642</td></tr>
+<tr><td style="text-align:left">United Kingdom</td><td>2.451</td><td>0.658</td></tr>
+<tr><td style="text-align:left">United States</td><td>2.601</td><td>0.725</td></tr>
+<tr><td style="text-align:left">Vietnam</td><td>2.972</td><td></td></tr>
+<tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr></table>

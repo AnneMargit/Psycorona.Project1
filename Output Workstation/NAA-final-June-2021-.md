@@ -562,16 +562,23 @@ rownames_to_column("ID")
 model_coefs_NAAp2 <- model_coefs_NAAp2 %>%
 separate(col = 1, into = c("Country", "ID"), sep = "\\/") %>%
 dplyr::rename("Intercept" = "(Intercept)")
+
+data_agep2 <- data_analyse2_p2 %>%
+  select(ID, Age_new) %>%
+  group_by(ID) %>%
+  slice(1) %>%
+  ungroup()
+
+data_NAAp2 <- left_join(model_coefs_NAAp2, data_agep2, by= "ID")
   
-data_NAAp2 <- left_join(data_analyse2_p2, model_coefs_NAAp2, by= "ID")
 
 data_NAAp2 <- data_NAAp2 %>%
-  mutate(reg_coef_Age1 = .[[52]] + .[[56]],
-         reg_coef_Age2 = .[[52]] + .[[57]],
-         reg_coef_Age3 = .[[52]] + .[[58]])
+  mutate(reg_coef_Age1 = .[[6]] + .[[10]],
+         reg_coef_Age2 = .[[6]] + .[[11]],
+         reg_coef_Age3 = .[[6]] + .[[12]])
 
 data_NAAp2 <- data_NAAp2 %>%
-  mutate(reg_coef = case_when(Age_new == 0 ~ DaysMax_p2.y,
+  mutate(reg_coef = case_when(Age_new == 0 ~ DaysMax_p2,
                               Age_new == 1 ~ reg_coef_Age1,
                               Age_new == 2 ~ reg_coef_Age2,
                               Age_new == 3 ~ reg_coef_Age3))
@@ -586,14 +593,14 @@ names(Age_labels) <- c("0","1","2","3")
 plot_NAAp2_slope <- ggplot(data_NAAp2, aes(x= reg_coef, fill = ..x..)) +
   geom_histogram() +
    scale_x_continuous(breaks = seq(-0.02, 0.02, 0.01)) +
-  scale_y_continuous(breaks = seq(0, 3000, 500)) +
+  scale_y_continuous(breaks = seq(0, 700, 100)) +
  scale_fill_viridis(option = "C")+
   theme_minimal(base_size=10)+
   theme(legend.position="none") + 
   geom_vline(xintercept = 0, linetype="dashed", 
                 color = "grey", size=.5) + 
   xlim(-0.02, 0.02)+
-  ylim(0,2500)+
+  ylim(0,700)+
   labs(title="A",
        x="Regression coefficient (NA ~ days)", y = "Count") +
   theme(plot.title = element_text(size=10)) +
@@ -607,7 +614,7 @@ plot_NAAp2_slope
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
-    ## Warning: Removed 22 rows containing non-finite values (stat_bin).
+    ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 
     ## Warning: Removed 4 rows containing missing values (geom_bar).
 
@@ -625,10 +632,10 @@ data_NAAp2 %>%
     ## # A tibble: 1 x 1
     ##       N
     ##   <int>
-    ## 1  2175
+    ## 1   449
 
 ``` r
-# 2175
+# 449
 
 data_NAAp2 %>%
   filter(reg_coef < 0) %>%
@@ -638,30 +645,30 @@ data_NAAp2 %>%
     ## # A tibble: 1 x 1
     ##       N
     ##   <int>
-    ## 1 27411
+    ## 1  8765
 
 ``` r
-#27411
+#8765
 
-2175 / (2175 + 27411) * 100
+449 / (449 + 8765) * 100
 ```
 
-    ## [1] 7.35145
+    ## [1] 4.873019
 
 ``` r
-#7.35%
+#4.87%
 ```
 
 Mean regression coefficients per country
 
 ``` r
 reg_country_NAA <- data_NAAp2 %>%
-  group_by(Country.x) %>%
+  group_by(Country) %>%
   summarise(reg_mean = mean(reg_coef, na.rm=TRUE), reg_sd = sd (reg_coef, na.rm=TRUE), reg_min = min(reg_coef, na.rm=TRUE), reg_max=max(reg_coef, na.rm=TRUE)) %>%
   mutate(across(2:5, round, 3)) 
 
 IC_country_NAA <- data_NAAp2 %>%
-  group_by(Country.x) %>%
+  group_by(Country) %>%
   summarise(IC_mean = mean(Intercept, na.rm=TRUE), IC_sd = sd (Intercept, na.rm=TRUE)) %>%
   mutate(across(2:3, round, 3)) 
 ```
@@ -679,7 +686,7 @@ reg_country_NAA_overall
     ## # A tibble: 1 x 2
     ##   max_across min_across
     ##        <dbl>      <dbl>
-    ## 1     -0.002     -0.012
+    ## 1     -0.001     -0.012
 
 ``` r
 IC_country_NAA_overall
@@ -688,7 +695,7 @@ IC_country_NAA_overall
     ## # A tibble: 1 x 2
     ##   max_across min_across
     ##        <dbl>      <dbl>
-    ## 1       2.91       2.00
+    ## 1       2.85       2.01
 
 # Quadratic term
 
@@ -1062,16 +1069,22 @@ model_coefs_NAAp3 <- model_coefs_NAAp3 %>%
 separate(col = 1, into = c("Country", "ID"), sep = "\\/") %>%
 dplyr::rename("Intercept" = "(Intercept)")
   
-data_NAA_p3 <- left_join(data_analyse2_p3, model_coefs_NAAp3, by= "ID")
+data_agep3 <- data_analyse2_p3 %>%
+  select(ID, Age_new) %>%
+  group_by(ID) %>%
+  slice(1) %>%
+  ungroup()
+
+data_NAAp3 <- left_join(model_coefs_NAAp3, data_agep3, by= "ID")
   
 
-data_NAA_p3 <- data_NAA_p3 %>%
-  mutate(reg_coef_Age1 = .[[53]] + .[[57]],
-         reg_coef_Age2 = .[[53]] + .[[58]],
-         reg_coef_Age3 = .[[53]] + .[[59]])
+data_NAAp3 <- data_NAAp3 %>%
+  mutate(reg_coef_Age1 = .[[6]] + .[[10]],
+         reg_coef_Age2 = .[[6]] + .[[11]],
+         reg_coef_Age3 = .[[6]] + .[[12]])
 
-data_NAA_p3 <- data_NAA_p3 %>%
-  mutate(reg_coef = case_when(Age_new == 0 ~ DaysPhase3.y,
+data_NAAp3 <- data_NAAp3 %>%
+  mutate(reg_coef = case_when(Age_new == 0 ~ DaysPhase3,
                               Age_new == 1 ~ reg_coef_Age1,
                               Age_new == 2 ~ reg_coef_Age2,
                               Age_new == 3 ~ reg_coef_Age3))
@@ -1080,17 +1093,17 @@ data_NAA_p3 <- data_NAA_p3 %>%
 # Random slope variation plot
 
 ``` r
-plot_NAAp3_slope <- ggplot(data_NAA_p3, aes(x= reg_coef, fill = ..x..)) +
+plot_NAAp3_slope <- ggplot(data_NAAp3, aes(x= reg_coef, fill = ..x..)) +
   geom_histogram() +
    scale_x_continuous(breaks = seq(-0.02, 0.02, 0.01)) +
-  scale_y_continuous(breaks = seq(0, 3000, 500)) +
+  scale_y_continuous(breaks = seq(0, 700, 50)) +
  scale_fill_viridis(option = "C") +
   theme_minimal(base_size=10)+
   theme(legend.position="none") + 
    geom_vline(xintercept = 0, linetype="dashed", 
                 color = "grey", size=.5) + 
   xlim(-0.02, 0.02)+
-  ylim(0,2500)+
+  ylim(0,700)+
   labs(title="B",
        x="Regression coefficient (NAA ~ days)", y = "Count") +
   theme(plot.title = element_text(size=10)) +
@@ -1104,7 +1117,7 @@ plot_NAAp3_slope
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
-    ## Warning: Removed 36 rows containing non-finite values (stat_bin).
+    ## Warning: Removed 5 rows containing non-finite values (stat_bin).
 
     ## Warning: Removed 4 rows containing missing values (geom_bar).
 
@@ -1115,11 +1128,11 @@ plot_NAAp2and3_slope <- ggarrange(plot_NAAp2_slope, plot_NAAp3_slope ,
           ncol = 2, nrow = 1)
 ```
 
-    ## Warning: Removed 22 rows containing non-finite values (stat_bin).
+    ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 
     ## Warning: Removed 4 rows containing missing values (geom_bar).
 
-    ## Warning: Removed 36 rows containing non-finite values (stat_bin).
+    ## Warning: Removed 5 rows containing non-finite values (stat_bin).
 
     ## Warning: Removed 4 rows containing missing values (geom_bar).
 
@@ -1136,8 +1149,8 @@ plot_NAAp2and3_slope
 Distribution
 
 ``` r
-data_NAA_p3<- as_tibble(data_NAA_p3)
-data_NAA_p3 %>%
+data_NAAp3<- as_tibble(data_NAAp3)
+data_NAAp3 %>%
   filter(reg_coef > 0) %>%
   summarise(N = n())
 ```
@@ -1145,12 +1158,12 @@ data_NAA_p3 %>%
     ## # A tibble: 1 x 1
     ##       N
     ##   <int>
-    ## 1  4222
+    ## 1   968
 
 ``` r
-#4222
+#968
 
-data_NAA_p3 %>%
+data_NAAp3 %>%
   filter(reg_coef < 0) %>%
   summarise(N = n())
 ```
@@ -1158,18 +1171,18 @@ data_NAA_p3 %>%
     ## # A tibble: 1 x 1
     ##       N
     ##   <int>
-    ## 1 20788
+    ## 1  6078
 
 ``` r
-#20788
+#6078
 
-4222 / (4222 + 20788) * 100
+968 / (6078 + 968) * 100
 ```
 
-    ## [1] 16.88125
+    ## [1] 13.73829
 
 ``` r
-#16.88%
+#13.74%
 ```
 
 ``` r
@@ -1256,10 +1269,10 @@ stargazer(reg_country_NAA, df= TRUE, type="html", out="reg_country_NAA.doc")
 ```
 
     ## 
-    ## <table style="text-align:center"><tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Country.x</td><td>reg_mean</td><td>reg_sd</td><td>reg_min</td><td>reg_max</td></tr>
-    ## <tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Argentina</td><td>-0.008</td><td>0.002</td><td>-0.014</td><td>-0.002</td></tr>
+    ## <table style="text-align:center"><tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Country</td><td>reg_mean</td><td>reg_sd</td><td>reg_min</td><td>reg_max</td></tr>
+    ## <tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Argentina</td><td>-0.008</td><td>0.001</td><td>-0.014</td><td>-0.002</td></tr>
     ## <tr><td style="text-align:left">Australia</td><td>-0.007</td><td>0.001</td><td>-0.009</td><td>-0.006</td></tr>
-    ## <tr><td style="text-align:left">Brazil</td><td>-0.003</td><td>0.002</td><td>-0.008</td><td>0.002</td></tr>
+    ## <tr><td style="text-align:left">Brazil</td><td>-0.003</td><td>0.001</td><td>-0.008</td><td>0.002</td></tr>
     ## <tr><td style="text-align:left">Canada</td><td>-0.007</td><td>0.001</td><td>-0.009</td><td>-0.005</td></tr>
     ## <tr><td style="text-align:left">Chile</td><td>-0.004</td><td>0.002</td><td>-0.007</td><td>0.001</td></tr>
     ## <tr><td style="text-align:left">Croatia</td><td>-0.012</td><td>0.002</td><td>-0.018</td><td>-0.007</td></tr>
@@ -1272,10 +1285,10 @@ stargazer(reg_country_NAA, df= TRUE, type="html", out="reg_country_NAA.doc")
     ## <tr><td style="text-align:left">Japan</td><td>-0.006</td><td>0.001</td><td>-0.008</td><td>-0.004</td></tr>
     ## <tr><td style="text-align:left">Kazakhstan</td><td>-0.006</td><td>0.002</td><td>-0.014</td><td>0.000</td></tr>
     ## <tr><td style="text-align:left">Kosovo</td><td>-0.006</td><td>0.001</td><td>-0.009</td><td>-0.005</td></tr>
-    ## <tr><td style="text-align:left">Malaysia</td><td>-0.005</td><td>0.002</td><td>-0.008</td><td>-0.002</td></tr>
+    ## <tr><td style="text-align:left">Malaysia</td><td>-0.006</td><td>0.001</td><td>-0.008</td><td>-0.002</td></tr>
     ## <tr><td style="text-align:left">Netherlands</td><td>-0.007</td><td>0.002</td><td>-0.013</td><td>-0.001</td></tr>
     ## <tr><td style="text-align:left">Peru</td><td>-0.007</td><td>0.001</td><td>-0.008</td><td>-0.006</td></tr>
-    ## <tr><td style="text-align:left">Philippines</td><td>-0.011</td><td>0.003</td><td>-0.018</td><td>-0.001</td></tr>
+    ## <tr><td style="text-align:left">Philippines</td><td>-0.011</td><td>0.002</td><td>-0.018</td><td>-0.001</td></tr>
     ## <tr><td style="text-align:left">Poland</td><td>-0.008</td><td>0.002</td><td>-0.014</td><td>0.002</td></tr>
     ## <tr><td style="text-align:left">Romania</td><td>-0.004</td><td>0.002</td><td>-0.009</td><td>0.005</td></tr>
     ## <tr><td style="text-align:left">Russia</td><td>-0.007</td><td>0.001</td><td>-0.010</td><td>-0.005</td></tr>
@@ -1286,10 +1299,10 @@ stargazer(reg_country_NAA, df= TRUE, type="html", out="reg_country_NAA.doc")
     ## <tr><td style="text-align:left">South Korea</td><td>-0.006</td><td>0.001</td><td>-0.007</td><td>-0.004</td></tr>
     ## <tr><td style="text-align:left">Spain</td><td>-0.003</td><td>0.002</td><td>-0.011</td><td>0.006</td></tr>
     ## <tr><td style="text-align:left">Turkey</td><td>-0.008</td><td>0.001</td><td>-0.011</td><td>-0.006</td></tr>
-    ## <tr><td style="text-align:left">Ukraine</td><td>-0.002</td><td>0.002</td><td>-0.008</td><td>0.006</td></tr>
+    ## <tr><td style="text-align:left">Ukraine</td><td>-0.001</td><td>0.002</td><td>-0.008</td><td>0.006</td></tr>
     ## <tr><td style="text-align:left">United Kingdom</td><td>-0.011</td><td>0.002</td><td>-0.016</td><td>-0.001</td></tr>
     ## <tr><td style="text-align:left">United States</td><td>-0.005</td><td>0.004</td><td>-0.021</td><td>0.023</td></tr>
-    ## <tr><td style="text-align:left">Vietnam</td><td>-0.006</td><td>0.000</td><td>-0.006</td><td>-0.006</td></tr>
+    ## <tr><td style="text-align:left">Vietnam</td><td>-0.006</td><td></td><td>-0.006</td><td>-0.006</td></tr>
     ## <tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr></table>
 
 ``` r
@@ -1298,38 +1311,38 @@ stargazer(IC_country_NAA, df= TRUE, type="html", out="IC_country_NAA.doc")
 ```
 
     ## 
-    ## <table style="text-align:center"><tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Country.x</td><td>IC_mean</td><td>IC_sd</td></tr>
-    ## <tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Argentina</td><td>2.560</td><td>0.587</td></tr>
-    ## <tr><td style="text-align:left">Australia</td><td>2.729</td><td>0.543</td></tr>
-    ## <tr><td style="text-align:left">Brazil</td><td>2.626</td><td>0.742</td></tr>
+    ## <table style="text-align:center"><tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Country</td><td>IC_mean</td><td>IC_sd</td></tr>
+    ## <tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Argentina</td><td>2.591</td><td>0.576</td></tr>
+    ## <tr><td style="text-align:left">Australia</td><td>2.765</td><td>0.551</td></tr>
+    ## <tr><td style="text-align:left">Brazil</td><td>2.638</td><td>0.705</td></tr>
     ## <tr><td style="text-align:left">Canada</td><td>2.677</td><td>0.628</td></tr>
-    ## <tr><td style="text-align:left">Chile</td><td>2.604</td><td>0.649</td></tr>
-    ## <tr><td style="text-align:left">Croatia</td><td>2.565</td><td>0.610</td></tr>
-    ## <tr><td style="text-align:left">France</td><td>2.328</td><td>0.590</td></tr>
-    ## <tr><td style="text-align:left">Germany</td><td>2.224</td><td>0.534</td></tr>
-    ## <tr><td style="text-align:left">Greece</td><td>2.646</td><td>0.609</td></tr>
-    ## <tr><td style="text-align:left">Hungary</td><td>2.495</td><td>0.686</td></tr>
-    ## <tr><td style="text-align:left">Indonesia</td><td>2.381</td><td>0.609</td></tr>
-    ## <tr><td style="text-align:left">Italy</td><td>2.484</td><td>0.623</td></tr>
-    ## <tr><td style="text-align:left">Japan</td><td>2.830</td><td>0.517</td></tr>
-    ## <tr><td style="text-align:left">Kazakhstan</td><td>2.329</td><td>0.657</td></tr>
-    ## <tr><td style="text-align:left">Kosovo</td><td>2.072</td><td>0.477</td></tr>
-    ## <tr><td style="text-align:left">Malaysia</td><td>2.085</td><td>0.640</td></tr>
-    ## <tr><td style="text-align:left">Netherlands</td><td>2.005</td><td>0.524</td></tr>
+    ## <tr><td style="text-align:left">Chile</td><td>2.642</td><td>0.666</td></tr>
+    ## <tr><td style="text-align:left">Croatia</td><td>2.546</td><td>0.600</td></tr>
+    ## <tr><td style="text-align:left">France</td><td>2.346</td><td>0.602</td></tr>
+    ## <tr><td style="text-align:left">Germany</td><td>2.249</td><td>0.527</td></tr>
+    ## <tr><td style="text-align:left">Greece</td><td>2.665</td><td>0.587</td></tr>
+    ## <tr><td style="text-align:left">Hungary</td><td>2.503</td><td>0.673</td></tr>
+    ## <tr><td style="text-align:left">Indonesia</td><td>2.397</td><td>0.612</td></tr>
+    ## <tr><td style="text-align:left">Italy</td><td>2.472</td><td>0.622</td></tr>
+    ## <tr><td style="text-align:left">Japan</td><td>2.844</td><td>0.517</td></tr>
+    ## <tr><td style="text-align:left">Kazakhstan</td><td>2.333</td><td>0.662</td></tr>
+    ## <tr><td style="text-align:left">Kosovo</td><td>2.031</td><td>0.490</td></tr>
+    ## <tr><td style="text-align:left">Malaysia</td><td>2.101</td><td>0.608</td></tr>
+    ## <tr><td style="text-align:left">Netherlands</td><td>2.007</td><td>0.522</td></tr>
     ## <tr><td style="text-align:left">Peru</td><td>2.660</td><td>0.357</td></tr>
-    ## <tr><td style="text-align:left">Philippines</td><td>2.913</td><td>0.604</td></tr>
-    ## <tr><td style="text-align:left">Poland</td><td>2.704</td><td>0.675</td></tr>
-    ## <tr><td style="text-align:left">Romania</td><td>2.398</td><td>0.654</td></tr>
+    ## <tr><td style="text-align:left">Philippines</td><td>2.853</td><td>0.580</td></tr>
+    ## <tr><td style="text-align:left">Poland</td><td>2.720</td><td>0.670</td></tr>
+    ## <tr><td style="text-align:left">Romania</td><td>2.411</td><td>0.652</td></tr>
     ## <tr><td style="text-align:left">Russia</td><td>2.554</td><td>0.556</td></tr>
     ## <tr><td style="text-align:left">Saudi Arabia</td><td>2.530</td><td>0.555</td></tr>
-    ## <tr><td style="text-align:left">Serbia</td><td>2.701</td><td>0.583</td></tr>
-    ## <tr><td style="text-align:left">Singapore</td><td>2.581</td><td>0.646</td></tr>
-    ## <tr><td style="text-align:left">South Africa</td><td>2.731</td><td>0.715</td></tr>
+    ## <tr><td style="text-align:left">Serbia</td><td>2.721</td><td>0.567</td></tr>
+    ## <tr><td style="text-align:left">Singapore</td><td>2.563</td><td>0.619</td></tr>
+    ## <tr><td style="text-align:left">South Africa</td><td>2.733</td><td>0.696</td></tr>
     ## <tr><td style="text-align:left">South Korea</td><td>2.501</td><td>0.768</td></tr>
-    ## <tr><td style="text-align:left">Spain</td><td>2.383</td><td>0.653</td></tr>
-    ## <tr><td style="text-align:left">Turkey</td><td>2.644</td><td>0.598</td></tr>
-    ## <tr><td style="text-align:left">Ukraine</td><td>2.301</td><td>0.619</td></tr>
-    ## <tr><td style="text-align:left">United Kingdom</td><td>2.540</td><td>0.628</td></tr>
-    ## <tr><td style="text-align:left">United States</td><td>2.602</td><td>0.669</td></tr>
-    ## <tr><td style="text-align:left">Vietnam</td><td>2.113</td><td>0.000</td></tr>
+    ## <tr><td style="text-align:left">Spain</td><td>2.391</td><td>0.645</td></tr>
+    ## <tr><td style="text-align:left">Turkey</td><td>2.629</td><td>0.595</td></tr>
+    ## <tr><td style="text-align:left">Ukraine</td><td>2.307</td><td>0.615</td></tr>
+    ## <tr><td style="text-align:left">United Kingdom</td><td>2.566</td><td>0.631</td></tr>
+    ## <tr><td style="text-align:left">United States</td><td>2.606</td><td>0.662</td></tr>
+    ## <tr><td style="text-align:left">Vietnam</td><td>2.113</td><td></td></tr>
     ## <tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr></table>

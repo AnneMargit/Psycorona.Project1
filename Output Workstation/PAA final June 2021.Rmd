@@ -284,15 +284,21 @@ model_coefs_PAAp2 <- model_coefs_PAAp2 %>%
 separate(col = 1, into = c("Country", "ID"), sep = "\\/") %>%
 dplyr::rename("Intercept" = "(Intercept)")
   
-data_PAAp2 <- left_join(data_analyse2_p2, model_coefs_PAAp2, by= "ID")
+data_agep2 <- data_analyse2_p2 %>%
+  select(ID, Age_new) %>%
+  group_by(ID) %>%
+  slice(1) %>%
+  ungroup()
+
+data_PAAp2 <- left_join(model_coefs_PAAp2, data_agep2, by= "ID")
 
 data_PAAp2 <- data_PAAp2 %>%
-  mutate(reg_coef_Age1 = .[[52]] + .[[56]],
-         reg_coef_Age2 = .[[52]] + .[[57]],
-         reg_coef_Age3 = .[[52]] + .[[58]])
+  mutate(reg_coef_Age1 = .[[6]] + .[[10]],
+         reg_coef_Age2 = .[[6]] + .[[11]],
+         reg_coef_Age3 = .[[6]] + .[[12]])
 
 data_PAAp2 <- data_PAAp2 %>%
-  mutate(reg_coef = case_when(Age_new == 0 ~ DaysMax_p2.y,
+  mutate(reg_coef = case_when(Age_new == 0 ~ DaysMax_p2,
                               Age_new == 1 ~ reg_coef_Age1,
                               Age_new == 2 ~ reg_coef_Age2,
                               Age_new == 3 ~ reg_coef_Age3))
@@ -307,7 +313,7 @@ names(Age_labels) <- c("0","1","2","3")
 plot_PAAp2_slope <- ggplot(data_PAAp2, aes(x= reg_coef, fill = ..x..)) +
   geom_histogram() +
   scale_x_continuous(breaks = seq(-0.02, 0.02, 0.01)) +
-  scale_y_continuous(breaks = seq(0, 2000, 500)) +
+  scale_y_continuous(breaks = seq(0, 1000, 250)) +
  scale_fill_viridis(option = "C")+
   theme_minimal(base_size=10)+
   theme(legend.position="none") + 
@@ -332,30 +338,30 @@ data_PAAp2 %>%
   filter(reg_coef > 0) %>%
   summarise(N = n())
 
-#28040
+#8960
 
 data_PAAp2 %>%
   filter(reg_coef < 0) %>%
   summarise(N = n())
 
-#1546
+#254
 
 #Decrease in PAA:
 
-1546 / (1546 + 28040) * 100
+254 / (254 + 8960) * 100
 
-#5.23%
+#2.76%
 
 ```
 Mean regression coefficients per country
 ```{r, message=F, comment=NA}
 reg_country_PAA <- data_PAAp2 %>%
-  group_by(Country.x) %>%
+  group_by(Country) %>%
   summarise(reg_mean = mean(reg_coef, na.rm=TRUE), reg_sd = sd (reg_coef, na.rm=TRUE), reg_min = min(reg_coef, na.rm=TRUE), reg_max=max(reg_coef, na.rm=TRUE)) %>%
   mutate(across(2:5, round, 3))
 
 IC_country_PAA <- data_PAAp2 %>%
-  group_by(Country.x) %>%
+  group_by(Country) %>%
   summarise(IC_mean = mean(Intercept, na.rm=TRUE), IC_sd = sd (Intercept, na.rm=TRUE)) %>%
   mutate(across(2:3, round, 3)) 
 
@@ -531,15 +537,22 @@ model_coefs_PAAp3 <- model_coefs_PAAp3 %>%
 separate(col = 1, into = c("Country", "ID"), sep = "\\/") %>%
 dplyr::rename("Intercept" = "(Intercept)")
   
-data_PAAp3 <- left_join(data_analyse2_p3, model_coefs_PAAp3, by= "ID")
+data_agep3 <- data_analyse2_p3 %>%
+  select(ID, Age_new) %>%
+  group_by(ID) %>%
+  slice(1) %>%
+  ungroup()
+
+data_PAAp3 <- left_join(model_coefs_PAAp3, data_agep3, by= "ID")
+  
   
 data_PAAp3 <- data_PAAp3 %>%
-  mutate(reg_coef_Age1 = .[[53]] + .[[57]],
-         reg_coef_Age2 = .[[53]] + .[[58]],
-         reg_coef_Age3 = .[[53]] + .[[59]])
+  mutate(reg_coef_Age1 = .[[6]] + .[[10]],
+         reg_coef_Age2 = .[[6]] + .[[11]],
+         reg_coef_Age3 = .[[6]] + .[[12]])
 
 data_PAAp3 <- data_PAAp3 %>%
-  mutate(reg_coef = case_when(Age_new == 0 ~ DaysPhase3.y,
+  mutate(reg_coef = case_when(Age_new == 0 ~ DaysPhase3,
                               Age_new == 1 ~ reg_coef_Age1,
                               Age_new == 2 ~ reg_coef_Age2,
                               Age_new == 3 ~ reg_coef_Age3))
@@ -551,7 +564,7 @@ plot_PAAp3_slope <- ggplot(data_PAAp3, aes(x= reg_coef, fill = ..x..)) +
   geom_histogram() +
  scale_fill_viridis(option = "C") +
   scale_x_continuous(breaks = seq(-0.02, 0.02, 0.01)) +
-  scale_y_continuous(breaks = seq(0, 2000, 500)) +
+  scale_y_continuous(breaks = seq(0, 1000, 250)) +
   theme_minimal(base_size=10)+
   theme(legend.position="none") + 
   geom_vline(xintercept = 0, linetype="dashed", 
@@ -589,19 +602,19 @@ data_PAAp3 %>%
   filter(reg_coef > 0) %>%
   summarise(N = n())
 
-#23694
+#6812
 
 data_PAAp3 %>%
   filter(reg_coef < 0) %>%
   summarise(N = n())
 
-#1316
+#234
 
 #Decrease in PAA
 
-1316 / (1316 + 23694) * 100
+234 / (234 + 6812) * 100
 
-#5.26%
+#3.32%
 
 ```
 
