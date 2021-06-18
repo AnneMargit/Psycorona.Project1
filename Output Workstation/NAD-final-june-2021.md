@@ -1065,8 +1065,8 @@ data_NADp3 <- left_join(model_coefs_NADp3, data_agep3, by= "ID")
   
 data_NADp3 <- data_NADp3 %>%
   mutate(reg_coef_Age1 = .[[6]] + .[[10]],
-         reg_coef_Age2 = .[[6]] + .[[10]],
-         reg_coef_Age3 = .[[6]] + .[[10]])
+         reg_coef_Age2 = .[[6]] + .[[11]],
+         reg_coef_Age3 = .[[6]] + .[[12]])
 
 data_NADp3 <- data_NADp3 %>%
   mutate(reg_coef = case_when(Age_new == 0 ~ DaysPhase3,
@@ -1126,10 +1126,10 @@ data_NADp3 %>%
     ## # A tibble: 1 x 1
     ##       N
     ##   <int>
-    ## 1  2408
+    ## 1  2490
 
 ``` r
-#2408
+#2490
 
 data_NADp3 %>%
   filter(reg_coef < 0) %>%
@@ -1139,18 +1139,18 @@ data_NADp3 %>%
     ## # A tibble: 1 x 1
     ##       N
     ##   <int>
-    ## 1  4638
+    ## 1  4556
 
 ``` r
-#4638
+#4556
 
-2408 / (2408 + 4638) * 100
+2490 / (2490 + 4556) * 100
 ```
 
-    ## [1] 34.17542
+    ## [1] 35.3392
 
 ``` r
-#34.18%
+#35.34%
 ```
 
 ``` r
